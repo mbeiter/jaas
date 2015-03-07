@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>JAAS by mbeiter</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>JAAS</h1>
+        <p>This JAAS library provides an extendable framework to easily create JAAS modules with auditing and message queue support.</p>
+
+        <p class="view"><a href="https://github.com/mbeiter/jaas">View the Project on GitHub <small>mbeiter/jaas</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/mbeiter/jaas/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mbeiter/jaas/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mbeiter/jaas">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="jaas-library" class="anchor" href="#jaas-library" aria-hidden="true"><span class="octicon octicon-link"></span></a>JAAS Library</h1>
+
+<p>This JAAS library provides an extendable framework to easily create JAAS modules with auditing and message queue support.</p>
+
+<h2>
+<a id="components-and-usage" class="anchor" href="#components-and-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Components and Usage</h2>
+
+<h3>
+<a id="common" class="anchor" href="#common" aria-hidden="true"><span class="octicon octicon-link"></span></a>Common</h3>
+
+<p>The actual JAAS modules, plus interfaces and reference implementations for extension points such as audit and message queue integration. </p>
+
+<p>The following extension points are supported:</p>
+
+<ul>
+<li>Auditing</li>
+<li>Message queues</li>
+<li>Credential validators (i.e. the component that actually validates a provided credential)</li>
+<li>Authenticators (i.e. the component that performs the actual authentication, for instance, against a data store like a JDBC database)</li>
+</ul>
+
+<p>Contents:</p>
+
+<ul>
+<li>JAAS modules:
+
+<ul>
+<li>JAAS module for <strong>username / password based authentication</strong>, with support for white label domains</li>
+</ul>
+</li>
+<li>Authenticators:
+
+<ul>
+<li>
+<strong>Dummy authenticator</strong> for username / password based authentication: This is meant as an example on how to implement an authenticator, and for testing. Validation in this module passes if the provided password matches the provided username.</li>
+</ul>
+</li>
+<li>Validators:
+
+<ul>
+<li>
+<strong>Plain text password validator</strong>: This is meant as an example on how to implement a password validator and for testing - <strong>not for production</strong>.</li>
+</ul>
+</li>
+<li>Auditing:
+
+<ul>
+<li>
+<strong>Audit logger</strong>: This implementation of the audit interface logs audit events to the console log, and is usually not intended for production.</li>
+</ul>
+</li>
+<li>Message Queues:
+
+<ul>
+<li>
+<strong>Message logger</strong>: This implementation of the message queue interface logs messages to the console log, and is certainly not intended for production.</li>
+</ul>
+</li>
+</ul>
+
+<h4>
+<a id="maven-dependency" class="anchor" href="#maven-dependency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maven Dependency</h4>
+
+<p>See project documentation.</p>
+
+<h4>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h4>
+
+<ul>
+<li>1.0: 
+
+<ul>
+<li><a href="http://mbeiter.github.io/jaas/docs/1.0/db/">Maven Project Docs</a></li>
+<li>
+<a href="http://mbeiter.github.io/jaas/docs/1.0/db/apidocs/index.html">Java Docs</a> </li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="jdbc-password-authenticator" class="anchor" href="#jdbc-password-authenticator" aria-hidden="true"><span class="octicon octicon-link"></span></a>JDBC Password Authenticator</h3>
+
+<p>This authenticator allows to perform username / password based authentication against databases, with support for white label domains. The database connection is made either through a configurable JDBC connection pool, or through a JNDI (pooled) connection.</p>
+
+<h4>
+<a id="maven-dependency-1" class="anchor" href="#maven-dependency-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maven Dependency</h4>
+
+<p>See project documentation.</p>
+
+<h4>
+<a id="documentation-1" class="anchor" href="#documentation-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h4>
+
+<ul>
+<li>1.0: 
+
+<ul>
+<li><a href="http://mbeiter.github.io/jaas/docs/1.0/db/">Maven Project Docs</a></li>
+<li>
+<a href="http://mbeiter.github.io/jaas/docs/1.0/db/apidocs/index.html">Java Docs</a> </li>
+</ul>
+</li>
+</ul>
+
+<h2>
+<a id="useful-links" class="anchor" href="#useful-links" aria-hidden="true"><span class="octicon octicon-link"></span></a>Useful Links</h2>
+
+<ul>
+<li><a href="http://www.michael.beiter.org">Mike's Blog</a></li>
+<li><a href="https://github.com/mbeiter/jaas/issues">GitHub Issue Tracker</a></li>
+<li><a href="https://github.com/mbeiter/jaas">Source on GitHub</a></li>
+<li><a href="https://github.com/mbeiter/jaas/blob/master/CONFIG.md">Configuration parameters</a></li>
+<li><a href="https://github.com/mbeiter/jaas/blob/master/CHANGELOG.md">Changelog</a></li>
+<li><a href="https://github.com/mbeiter/jaas/blob/master/CONTRIBUTING.md">How to contribute</a></li>
+<li><a href="https://github.com/mbeiter/jaas/blob/master/BUILD.md">How to build from source</a></li>
+</ul>
+
+<h2>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h2>
+
+<ul>
+<li><a href="https://github.com/mbeiter" class="user-mention">@mbeiter</a></li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/mbeiter">mbeiter</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
