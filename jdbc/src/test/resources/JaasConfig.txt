@@ -1,0 +1,52 @@
+PWLoginJdbcAuthenticatorJaasConfig {
+    org.beiter.michael.authn.jaas.common.PasswordLoginModule required
+
+    // audit configuration
+    jaas.audit.class="org.beiter.michael.authn.jaas.common.audit.AuditLogger"
+    jaas.audit.enabled=true
+
+    // message queue configuration
+    jaas.messageq.class="org.beiter.michael.authn.jaas.common.messageq.MessageLogger"
+    jaas.messageq.enabled=true
+
+    // password validator configuration
+    jaas.validator.password.class="org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator"
+
+    // password authenticator configuration
+    jaas.authenticator.password.class="org.beiter.michael.authn.jaas.authenticator.jdbc.JdbcPasswordAuthenticator"
+
+
+    // JNDI Configuration (when using JNDI)
+    // ------------------
+    // jaas.jdbc.jndi.name = JNDINAME
+
+    // JDBC Pool Configuration (when using the connection pool)
+    // -----------------------
+    jaas.jdbc.pool.driver="org.h2.Driver"
+    jaas.jdbc.pool.url="jdbc:h2:mem:h2test_db
+    jaas.jdbc.pool.user="someUser"
+    jaas.jdbc.pool.password="noPassword"
+
+    // jaas.jdbc.pool.maxTotal=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.maxIdle=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.minIdle=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.maxWaitMillis=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.testOnCreate=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.testOnBorrow=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.testOnReturn=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.testWhileIdle=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.timeBetweenEvictionRuns=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.numTestsPerEvictionRun=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.isLIFO=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.autoCommit=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.readOnly=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.transactionIsolation=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.validationQuery=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.pool.maxConnLifetime=CONFIGURE_AS_NEEDED
+
+    // SQL Query to find the user, always required
+    // ---------
+    jaas.jdbc.sql.userQuery="SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?"
+
+    ;
+};
