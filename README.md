@@ -7,12 +7,13 @@ Extension points in the library include:
 - Custom auditing
 - Custom message queues
 - Custom credential validation
+- Custom authenticators
 
 The library includes a sample "Plain text password validator" (which should not be used in production deployments) as
 an example on how to implement credential validators.
 
-The library also includes a production ready JAAS module for JDBC backends using either a connection pool or a JNDI 
-connection (which may or may not be pooled, depending on the JNDI configuration).
+The library also includes a production ready authenticator for JDBC backends using either a JDBC connection pool or a 
+JNDI connection (which may or may not be pooled, depending on the JNDI configuration).
 
 ## Useful Links
 
@@ -21,6 +22,7 @@ connection (which may or may not be pooled, depending on the JNDI configuration)
 - [Build instructions](BUILD.md)
 - [GitHub Issue Tracker](https://github.com/mbeiter/jaas/issues)
 - [Contribute](CONTRIBUTING.md) - Some pointers for contributing
+- [Configuration instructions](CONFIG.md)
 
 ## License
 
