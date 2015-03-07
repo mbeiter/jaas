@@ -1,0 +1,5 @@
+org.beiter.michael.authn.jaas.common
+org.beiter.michael.authn.jaas.common.audit
+org.beiter.michael.authn.jaas.common.authenticator
+org.beiter.michael.authn.jaas.common.messageq
+org.beiter.michael.authn.jaas.common.validator
