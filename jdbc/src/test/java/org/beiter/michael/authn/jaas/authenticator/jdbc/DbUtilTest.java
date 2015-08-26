@@ -33,9 +33,9 @@
 package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
 import org.beiter.michael.db.ConnectionFactory;
-import org.beiter.michael.db.ConnectionPoolSpec;
-import org.beiter.michael.db.ConnectionSpec;
+import org.beiter.michael.db.ConnectionProperties;
 import org.beiter.michael.db.FactoryException;
+import org.beiter.michael.db.propsbuilder.MapBasedConnPropsBuilder;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -101,13 +101,16 @@ public class DbUtilTest {
     @Test
     public void closeConnectionTest() {
 
-        ConnectionSpec connSpec = new ConnectionSpec(URL, USER, PASSWORD);
-        ConnectionPoolSpec poolSpec = new ConnectionPoolSpec();
-        poolSpec.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+        ConnectionProperties connSpec = MapBasedConnPropsBuilder.buildDefault();
+        connSpec.setDriver(DRIVER);
+        connSpec.setUrl(URL);
+        connSpec.setUsername(USER);
+        connSpec.setPassword(PASSWORD);
+        connSpec.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
         Connection conn;
         try {
-            conn = ConnectionFactory.getConnection(DRIVER, connSpec, poolSpec);
+            conn = ConnectionFactory.getConnection(connSpec);
 
             String error = "The DB connection is null";
             assertThat(error, conn, notNullValue());
@@ -144,14 +147,17 @@ public class DbUtilTest {
     @Test
     public void closeStatementTest() {
 
-        ConnectionSpec connSpec = new ConnectionSpec(URL, USER, PASSWORD);
-        ConnectionPoolSpec poolSpec = new ConnectionPoolSpec();
-        poolSpec.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+        ConnectionProperties connSpec = MapBasedConnPropsBuilder.buildDefault();
+        connSpec.setDriver(DRIVER);
+        connSpec.setUrl(URL);
+        connSpec.setUsername(USER);
+        connSpec.setPassword(PASSWORD);
+        connSpec.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
         Connection conn;
         PreparedStatement statement;
         try {
-            conn = ConnectionFactory.getConnection(DRIVER, connSpec, poolSpec);
+            conn = ConnectionFactory.getConnection(connSpec);
             statement = conn.prepareStatement("SELECT COUNT(id) AS count FROM user_plaintext");
 
             String error = "The prepared statement is null";
@@ -195,15 +201,18 @@ public class DbUtilTest {
     @Test
     public void closeResultSetTest() {
 
-        ConnectionSpec connSpec = new ConnectionSpec(URL, USER, PASSWORD);
-        ConnectionPoolSpec poolSpec = new ConnectionPoolSpec();
-        poolSpec.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+        ConnectionProperties connSpec = MapBasedConnPropsBuilder.buildDefault();
+        connSpec.setDriver(DRIVER);
+        connSpec.setUrl(URL);
+        connSpec.setUsername(USER);
+        connSpec.setPassword(PASSWORD);
+        connSpec.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
         Connection conn;
         PreparedStatement statement;
         ResultSet resultSet;
         try {
-            conn = ConnectionFactory.getConnection(DRIVER, connSpec, poolSpec);
+            conn = ConnectionFactory.getConnection(connSpec);
             statement = conn.prepareStatement("SELECT COUNT(id) AS count FROM user_plaintext");
 
             resultSet = statement.executeQuery();

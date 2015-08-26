@@ -32,14 +32,15 @@
  */
 package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.beiter.michael.authn.jaas.common.ConfigOptions;
+import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedConnPropsBuilder;
+import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder;
 import org.beiter.michael.authn.jaas.common.UserPrincipal;
 import org.beiter.michael.authn.jaas.common.Util;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator;
 import org.beiter.michael.authn.jaas.common.validator.PasswordValidator;
-import org.beiter.michael.db.ConnectionSpec;
-import org.beiter.michael.db.ConnectionPoolSpec;
+import org.beiter.michael.db.ConnectionProperties;
 import org.beiter.michael.db.ConnectionFactory;
 import org.beiter.michael.db.FactoryException;
 import org.slf4j.Logger;
@@ -73,35 +74,14 @@ public class JdbcPasswordAuthenticator
      */
     // Using an AtomicReference is not required here, but will not add any significant overhead, makes Findbugs happy,
     // and may be useful in the future for compare-and-set operations.
-    private static AtomicReference<String> jndiName = new AtomicReference<>();
+    private static AtomicReference<DbProperties> dbProps = new AtomicReference<>();
 
     /**
-     * The JDBC driver to use (if a connection pool is being used)
+     * The connection pool spec (if a connection pool is being used instead of JNDI)
      */
     // Using an AtomicReference is not required here, but will not add any significant overhead, makes Findbugs happy,
     // and may be useful in the future for compare-and-set operations.
-    private static AtomicReference<String> driver = new AtomicReference<>();
-
-    /**
-     * The connection spec in case a connection pool is being used
-     */
-    // Using an AtomicReference is not required here, but will not add any significant overhead, makes Findbugs happy,
-    // and may be useful in the future for compare-and-set operations.
-    private static AtomicReference<ConnectionSpec> connectionSpec = new AtomicReference<>();
-
-    /**
-     * The connection pool spec in case a connection pool is being used
-     */
-    // Using an AtomicReference is not required here, but will not add any significant overhead, makes Findbugs happy,
-    // and may be useful in the future for compare-and-set operations.
-    private static AtomicReference<ConnectionPoolSpec> connPoolSpec = new AtomicReference<>();
-
-    /**
-     * The SQL query to retrieve the userID + credential of the user to be authenticated
-     */
-    // Using an AtomicReference is not required here, but will not add any significant overhead, makes Findbugs happy,
-    // and may be useful in the future for compare-and-set operations.
-    private static AtomicReference<String> sqlQuery = new AtomicReference<>();
+    private static AtomicReference<ConnectionProperties> connProps = new AtomicReference<>();
 
     /**
      * {@inheritDoc}
@@ -115,37 +95,34 @@ public class JdbcPasswordAuthenticator
 
         // no need for defensive copies here, as all internal config values are calculated
 
-        if (getOption(JdbcConfigOptions.JNDI_NAME, properties) != null
-                && String.class.isInstance(getOption(JdbcConfigOptions.JNDI_NAME, properties))) {
-            jndiName.set((String) getOption(JdbcConfigOptions.JNDI_NAME, properties));
-        } else {
-            jndiName.set(null);
-        }
+        // avoid if possible to parse the configuration multiple times, and store the config for later use
 
-        // only init the connection driver and pool configuration if JNDI is not being used
-        if (jndiName.get() == null) {
+        if (connProps.get() == null) {
+            synchronized (JdbcPasswordAuthenticator.class) {
+                if (connProps.get() == null) {
 
-            LOG.info("JNDI name is not configured, trying to create a connection pool instead");
+                    // this call is thread safe even without the double if check and extra synchronization. However, it
+                    // might happen that the configuration is parsed multiple times. While additional copies would be
+                    // simply thrown away, we want to avoid the performance hit.
+                    LOG.info("Connection properties are not configured, parsing configuration");
 
-            if (getOption(JdbcConfigOptions.POOL_DRIVER, properties) != null
-                    && String.class.isInstance(getOption(JdbcConfigOptions.POOL_DRIVER, properties))) {
-                driver.set((String) getOption(JdbcConfigOptions.POOL_DRIVER, properties));
-            } else {
-                driver.set(null);
+                    connProps.set(JaasPropsBasedConnPropsBuilder.build(properties));
+                }
             }
-
-            // the connection spec is cached, so that it has to be created only when init() is called
-            connectionSpec.set(ConfigUtil.getConnectionSpec(properties));
-
-            // the connection pool spec is cached, so that it has to be created only when init() is called
-            connPoolSpec.set(ConfigUtil.getConnectionPoolSpec(properties));
         }
 
-        if (getOption(JdbcConfigOptions.SQL_USERQUERY, properties) != null
-                && String.class.isInstance(getOption(JdbcConfigOptions.SQL_USERQUERY, properties))) {
-            sqlQuery.set((String) getOption(JdbcConfigOptions.SQL_USERQUERY, properties));
-        } else {
-            sqlQuery.set(null);
+        if (dbProps.get() == null) {
+            synchronized (JdbcPasswordAuthenticator.class) {
+                if (dbProps.get() == null) {
+
+                    // this call is thread safe even without the double if check and extra synchronization. However, it
+                    // might happen that the configuration is parsed multiple times. While additional copies would be
+                    // simply thrown away, we want to avoid the performance hit.
+                    LOG.info("Database properties are not configured, parsing configuration");
+
+                    dbProps.set(JaasPropsBasedDbPropsBuilder.build(properties));
+                }
+            }
         }
     }
 
@@ -200,7 +177,7 @@ public class JdbcPasswordAuthenticator
         }
 
         // SQL query is required
-        if (sqlQuery.get() == null || sqlQuery.get().length() == 0) {
+        if (!StringUtils.isNotEmpty(dbProps.get().getSqlUserQuery())) {
             final String error = "Invalid SQL user authentication query (query is null or empty)";
             LOG.warn(error);
             throw new LoginException(error);
@@ -276,7 +253,7 @@ public class JdbcPasswordAuthenticator
         try {
             connection = getDatabaseConnection();
 
-            statement = connection.prepareStatement(sqlQuery.get());
+            statement = connection.prepareStatement(dbProps.get().getSqlUserQuery());
             statement.setString(1, domain);
             statement.setString(2, userName);
 
@@ -317,9 +294,9 @@ public class JdbcPasswordAuthenticator
             throws LoginException {
 
         Connection connection;
-        if (jndiName.get() != null && jndiName.get().length() > 0) {
+        if (StringUtils.isNotEmpty(dbProps.get().getJndiConnectionName())) {
             try {
-                connection = ConnectionFactory.getConnection(jndiName.get());
+                connection = ConnectionFactory.getConnection(dbProps.get().getJndiConnectionName());
             } catch (FactoryException e) {
                 final String error = "Could not retrieve JNDI database connection";
                 LOG.warn(error, e);
@@ -327,20 +304,28 @@ public class JdbcPasswordAuthenticator
             }
         } else {
             try {
-                // driver is required
-                if (driver.get() == null || driver.get().length() == 0) {
-                    final String error = "Invalid database driver (driver name is null or empty)";
-                    LOG.warn(error);
-                    throw new FactoryException(error);
-                }
-
-                if (connectionSpec.get() == null || connPoolSpec.get() == null) {
+                // connection spec is required
+                if (connProps.get() == null) {
                     final String error = "Database connection pool configuration has not been provided or initialized";
                     LOG.warn(error);
                     throw new FactoryException(error);
                 }
 
-                connection = ConnectionFactory.getConnection(driver.get(), connectionSpec.get(), connPoolSpec.get());
+                // driver is required
+                if (!StringUtils.isNotEmpty(connProps.get().getDriver())) {
+                    final String error = "Invalid database driver (driver name is null or empty)";
+                    LOG.warn(error);
+                    throw new FactoryException(error);
+                }
+
+                // url is required
+                if (!StringUtils.isNotEmpty(connProps.get().getUrl())) {
+                    final String error = "Invalid database URL (URL is null or empty)";
+                    LOG.warn(error);
+                    throw new FactoryException(error);
+                }
+
+                connection = ConnectionFactory.getConnection(connProps.get());
 
             } catch (FactoryException e) {
                 final String error = "Could not create pooled database connection";
@@ -350,22 +335,5 @@ public class JdbcPasswordAuthenticator
         }
 
         return connection;
-    }
-
-    /**
-     * Return the value of a JAAS configuration parameter.
-     *
-     * @param <T>        The type of the element
-     * @param key        The key to retrieve from the options
-     * @param properties The properties to retrieve values from
-     * @return The configuration value for the provided key
-     */
-    @SuppressWarnings("unchecked")
-    private static <T> T getOption(final ConfigOptions key, final Map<String, ?> properties) {
-
-        // private method asserts
-        assert key != null : "The key cannot be null";
-
-        return (T) properties.get(key.getName());
     }
 }

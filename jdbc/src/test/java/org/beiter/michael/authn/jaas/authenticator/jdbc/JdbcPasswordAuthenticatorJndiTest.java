@@ -32,6 +32,7 @@
  */
 package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
+import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder;
 import org.beiter.michael.authn.jaas.common.JaasConfigOptions;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator;
 import org.beiter.michael.authn.jaas.common.validator.PasswordValidator;
@@ -138,7 +139,7 @@ public class JdbcPasswordAuthenticatorJndiTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
 
         // create plain text password validator
@@ -178,8 +179,8 @@ public class JdbcPasswordAuthenticatorJndiTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.JNDI_NAME.getName(), JNDI_NAME);
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_JNDI_CONNECTION_NAME, JNDI_NAME);
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
 
         // create plain text password validator

@@ -32,6 +32,8 @@
  */
 package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
+import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedConnPropsBuilder;
+import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder;
 import org.beiter.michael.authn.jaas.common.JaasConfigOptions;
 import org.beiter.michael.authn.jaas.common.UserPrincipal;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator;
@@ -113,10 +115,10 @@ public class JdbcPasswordAuthenticatorTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.POOL_DRIVER.getName(), DRIVER);
-        properties.put(JdbcConfigOptions.POOL_URL.getName(), URL);
-        properties.put(JdbcConfigOptions.POOL_USER.getName(), USER);
-        properties.put(JdbcConfigOptions.POOL_PASSWORD.getName(), PASSWORD);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
@@ -155,11 +157,11 @@ public class JdbcPasswordAuthenticatorTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.POOL_DRIVER.getName(), DRIVER);
-        properties.put(JdbcConfigOptions.POOL_URL.getName(), URL);
-        properties.put(JdbcConfigOptions.POOL_USER.getName(), USER);
-        properties.put(JdbcConfigOptions.POOL_PASSWORD.getName(), PASSWORD);
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "id, password FROM user_plaintext WHERE domain = ? AND username = ?");
 
         // create plain text password validator
@@ -199,11 +201,11 @@ public class JdbcPasswordAuthenticatorTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.POOL_DRIVER.getName(), DRIVER);
-        properties.put(JdbcConfigOptions.POOL_URL.getName(), URL);
-        properties.put(JdbcConfigOptions.POOL_USER.getName(), USER);
-        properties.put(JdbcConfigOptions.POOL_PASSWORD.getName(), PASSWORD);
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM invalid_table WHERE domain = ? AND username = ?");
 
         // create plain text password validator
@@ -244,11 +246,11 @@ public class JdbcPasswordAuthenticatorTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.POOL_DRIVER.getName(), DRIVER);
-        properties.put(JdbcConfigOptions.POOL_URL.getName(), URL);
-        properties.put(JdbcConfigOptions.POOL_USER.getName(), USER);
-        properties.put(JdbcConfigOptions.POOL_PASSWORD.getName(), PASSWORD);
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE username = ?");
 
         // create plain text password validator
@@ -289,11 +291,11 @@ public class JdbcPasswordAuthenticatorTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.POOL_DRIVER.getName(), DRIVER);
-        properties.put(JdbcConfigOptions.POOL_URL.getName(), URL);
-        properties.put(JdbcConfigOptions.POOL_USER.getName(), USER);
-        properties.put(JdbcConfigOptions.POOL_PASSWORD.getName(), PASSWORD);
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ? AND password = ?");
 
         // create plain text password validator
@@ -333,11 +335,11 @@ public class JdbcPasswordAuthenticatorTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.POOL_DRIVER.getName(), DRIVER);
-        properties.put(JdbcConfigOptions.POOL_URL.getName(), URL);
-        properties.put(JdbcConfigOptions.POOL_USER.getName(), USER);
-        properties.put(JdbcConfigOptions.POOL_PASSWORD.getName(), PASSWORD);
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT password FROM user_plaintext WHERE domain = ? AND username = ?");
 
         // create plain text password validator
@@ -377,11 +379,11 @@ public class JdbcPasswordAuthenticatorTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.POOL_DRIVER.getName(), DRIVER);
-        properties.put(JdbcConfigOptions.POOL_URL.getName(), URL);
-        properties.put(JdbcConfigOptions.POOL_USER.getName(), USER);
-        properties.put(JdbcConfigOptions.POOL_PASSWORD.getName(), PASSWORD);
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
 
         // create plain text password validator
@@ -410,11 +412,11 @@ public class JdbcPasswordAuthenticatorTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.POOL_DRIVER.getName(), DRIVER);
-        properties.put(JdbcConfigOptions.POOL_URL.getName(), URL);
-        properties.put(JdbcConfigOptions.POOL_USER.getName(), USER);
-        properties.put(JdbcConfigOptions.POOL_PASSWORD.getName(), PASSWORD);
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
 
         // create plain text password validator
@@ -444,11 +446,11 @@ public class JdbcPasswordAuthenticatorTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.POOL_DRIVER.getName(), DRIVER);
-        properties.put(JdbcConfigOptions.POOL_URL.getName(), URL);
-        properties.put(JdbcConfigOptions.POOL_USER.getName(), USER);
-        properties.put(JdbcConfigOptions.POOL_PASSWORD.getName(), PASSWORD);
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
 
         // create plain text password validator
@@ -488,11 +490,11 @@ public class JdbcPasswordAuthenticatorTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.POOL_DRIVER.getName(), DRIVER);
-        properties.put(JdbcConfigOptions.POOL_URL.getName(), URL);
-        properties.put(JdbcConfigOptions.POOL_USER.getName(), USER);
-        properties.put(JdbcConfigOptions.POOL_PASSWORD.getName(), PASSWORD);
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
 
         // create plain text password validator
@@ -526,11 +528,11 @@ public class JdbcPasswordAuthenticatorTest {
         Map<String, String> properties = new ConcurrentHashMap<>();
         properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
         properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        properties.put(JdbcConfigOptions.POOL_DRIVER.getName(), DRIVER);
-        properties.put(JdbcConfigOptions.POOL_URL.getName(), URL);
-        properties.put(JdbcConfigOptions.POOL_USER.getName(), USER);
-        properties.put(JdbcConfigOptions.POOL_PASSWORD.getName(), PASSWORD);
-        properties.put(JdbcConfigOptions.SQL_USERQUERY.getName(),
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
+        properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
+        properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
 
         // create plain text password validator

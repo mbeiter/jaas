@@ -33,9 +33,9 @@
 package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
 import org.beiter.michael.db.ConnectionFactory;
-import org.beiter.michael.db.ConnectionPoolSpec;
-import org.beiter.michael.db.ConnectionSpec;
+import org.beiter.michael.db.ConnectionProperties;
 import org.beiter.michael.db.FactoryException;
+import org.beiter.michael.db.propsbuilder.MapBasedConnPropsBuilder;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.h2.tools.Server;
 import org.slf4j.Logger;
@@ -80,10 +80,13 @@ public class H2Server {
 
         LOG.info("Initializing the in-memory database server with a default schema and default values");
 
-        ConnectionSpec connSpec = new ConnectionSpec(URL, USER, PASSWORD);
-        ConnectionPoolSpec poolSpec = new ConnectionPoolSpec();
+        ConnectionProperties connSpec = MapBasedConnPropsBuilder.buildDefault();
+        connSpec.setDriver(DRIVER);
+        connSpec.setUrl(URL);
+        connSpec.setUsername(USER);
+        connSpec.setPassword(PASSWORD);
 
-        Connection con = ConnectionFactory.getConnection(DRIVER, connSpec, poolSpec);
+        Connection con = ConnectionFactory.getConnection(connSpec);
 
         String stmt = "DROP TABLE IF EXISTS user_plaintext";
         con.prepareStatement(stmt).execute();
