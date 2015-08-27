@@ -126,7 +126,7 @@ public final class JaasPropsBasedDbPropsBuilder {
         }
 
         tmp = getOption(KEY_SQL_USER_QUERY, properties);
-        if (StringUtils.isNotEmpty(tmp)) { // url cannot be blank, defaulting to null to catch it
+        if (StringUtils.isNotEmpty(tmp)) { // sql query cannot be null or empty, defaulting to null to catch it
             dbSpec.setSqlUserQuery(tmp);
             logValue(KEY_SQL_USER_QUERY, tmp);
         } else {

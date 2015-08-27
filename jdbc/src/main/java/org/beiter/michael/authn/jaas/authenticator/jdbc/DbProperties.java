@@ -32,8 +32,6 @@
  */
 package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * This class specifies database properties.
  */
@@ -65,7 +63,7 @@ public class DbProperties {
      *
      * @see org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder#buildDefault()
      * @see org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder#build(
-     * java.util.Map)
+     *java.util.Map)
      */
     public DbProperties() {
 
@@ -117,15 +115,10 @@ public class DbProperties {
      */
     public final void setSqlUserQuery(final String sqlUserQuery) {
 
-        if (StringUtils.isNotEmpty(sqlUserQuery)) { // SQL query cannot be blank
+        // no need for more detailed validation, as we cannot possible validate all SQL dialects
 
-            // no need for more detailed validation, as we cannot possible validate all SQL dialects
+        // no need for defensive copies of String
 
-            // no need for defensive copies of String
-
-            this.sqlUserQuery = sqlUserQuery;
-        } else {
-            throw new IllegalArgumentException("The user SQL query must not be null or empty");
-        }
+        this.sqlUserQuery = sqlUserQuery;
     }
 }

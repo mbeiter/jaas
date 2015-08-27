@@ -177,7 +177,7 @@ public class JdbcPasswordAuthenticator
         }
 
         // SQL query is required
-        if (!StringUtils.isNotEmpty(dbProps.get().getSqlUserQuery())) {
+        if (StringUtils.isBlank(dbProps.get().getSqlUserQuery())) {
             final String error = "Invalid SQL user authentication query (query is null or empty)";
             LOG.warn(error);
             throw new LoginException(error);
@@ -312,14 +312,14 @@ public class JdbcPasswordAuthenticator
                 }
 
                 // driver is required
-                if (!StringUtils.isNotEmpty(connProps.get().getDriver())) {
+                if (StringUtils.isBlank(connProps.get().getDriver())) {
                     final String error = "Invalid database driver (driver name is null or empty)";
                     LOG.warn(error);
                     throw new FactoryException(error);
                 }
 
                 // url is required
-                if (!StringUtils.isNotEmpty(connProps.get().getUrl())) {
+                if (StringUtils.isBlank(connProps.get().getUrl())) {
                     final String error = "Invalid database URL (URL is null or empty)";
                     LOG.warn(error);
                     throw new FactoryException(error);
