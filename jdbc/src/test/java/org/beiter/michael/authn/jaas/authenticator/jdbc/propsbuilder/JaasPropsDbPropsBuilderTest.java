@@ -63,7 +63,7 @@ public class JaasPropsDbPropsBuilderTest {
      * jndi name test
      */
     @Test
-    public void driverTest() {
+    public void jndiNameTest() {
 
         Map<String, String> map = new HashMap<>();
 
@@ -97,7 +97,7 @@ public class JaasPropsDbPropsBuilderTest {
      * sql user query test
      */
     @Test
-    public void urlTest() {
+    public void sqlUserQueryTest() {
 
         Map<String, String> map = new HashMap<>();
 
