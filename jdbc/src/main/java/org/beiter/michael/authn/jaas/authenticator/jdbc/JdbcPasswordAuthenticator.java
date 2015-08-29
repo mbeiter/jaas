@@ -95,35 +95,14 @@ public class JdbcPasswordAuthenticator
 
         // no need for defensive copies here, as all internal config values are calculated
 
-        // avoid if possible to parse the configuration multiple times, and store the config for later use
+        // some caching would be nice, but then we would have to allow resets in case the application wants to reload
+        // its configuration at some point - seems not worth the hassle at this point.
+        LOG.info("Parsing connection properties configuration");
+        connProps.set(JaasPropsBasedConnPropsBuilder.build(properties));
 
-        if (connProps.get() == null) {
-            synchronized (JdbcPasswordAuthenticator.class) {
-                if (connProps.get() == null) {
-
-                    // this call is thread safe even without the double if check and extra synchronization. However, it
-                    // might happen that the configuration is parsed multiple times. While additional copies would be
-                    // simply thrown away, we want to avoid the performance hit.
-                    LOG.info("Connection properties are not configured, parsing configuration");
-
-                    connProps.set(JaasPropsBasedConnPropsBuilder.build(properties));
-                }
-            }
-        }
-
-        if (dbProps.get() == null) {
-            synchronized (JdbcPasswordAuthenticator.class) {
-                if (dbProps.get() == null) {
-
-                    // this call is thread safe even without the double if check and extra synchronization. However, it
-                    // might happen that the configuration is parsed multiple times. While additional copies would be
-                    // simply thrown away, we want to avoid the performance hit.
-                    LOG.info("Database properties are not configured, parsing configuration");
-
-                    dbProps.set(JaasPropsBasedDbPropsBuilder.build(properties));
-                }
-            }
-        }
+        // same statement about caching :)
+        LOG.info("Parsing database properties configuration");
+        dbProps.set(JaasPropsBasedDbPropsBuilder.build(properties));
     }
 
     /**
