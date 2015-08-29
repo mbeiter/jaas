@@ -2,18 +2,18 @@ PWLoginJdbcAuthenticatorJaasConfig {
     org.beiter.michael.authn.jaas.common.PasswordLoginModule required
 
     // audit configuration
-    jaas.audit.class="org.beiter.michael.authn.jaas.common.audit.AuditLogger"
+    jaas.audit.class="org.beiter.michael.authn.jaas.common.audit.SampleAuditLogger"
     jaas.audit.enabled=true
 
     // message queue configuration
-    jaas.messageq.class="org.beiter.michael.authn.jaas.common.messageq.MessageLogger"
+    jaas.messageq.class="org.beiter.michael.authn.jaas.common.messageq.SampleMessageLogger"
     jaas.messageq.enabled=true
 
     // password validator configuration
-    jaas.validator.password.class="org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator"
+    jaas.password.validator.class="org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator"
 
     // password authenticator configuration
-    jaas.authenticator.password.class="org.beiter.michael.authn.jaas.authenticator.jdbc.JdbcPasswordAuthenticator"
+    jaas.password.authenticator.class="org.beiter.michael.authn.jaas.authenticator.jdbc.JdbcPasswordAuthenticator"
 
 
     // JNDI Configuration (when using JNDI)

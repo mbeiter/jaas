@@ -35,6 +35,7 @@ package org.beiter.michael.authn.jaas.common;
 import org.beiter.michael.authn.jaas.common.audit.AuditFactory;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticatorFactory;
 import org.beiter.michael.authn.jaas.common.messageq.MessageQFactory;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.beiter.michael.authn.jaas.common.validator.PasswordValidatorFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,8 +77,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -92,9 +93,9 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.AUDIT_CLASS.getName(), "InvalidClass");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_CLASS_NAME, "InvalidClass");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -109,9 +110,9 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_CLASS.getName(), "InvalidClass");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_CLASS_NAME, "InvalidClass");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -127,9 +128,9 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.VALIDATOR_PASSWORD_CLASS.getName(), "InvalidClass");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "InvalidClass");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -145,9 +146,9 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.AUTHENTICATOR_PASSWORD_CLASS.getName(), "InvalidClass");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "InvalidClass");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -162,8 +163,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -187,8 +188,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -206,8 +207,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), null, sharedState, options);
@@ -224,8 +225,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandlerWithoutDomain("username", "username"),
@@ -243,8 +244,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -276,8 +277,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -301,8 +302,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -334,8 +335,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         // first do a regular login and commit...
         PasswordLoginModule loginModule = new PasswordLoginModule();
@@ -372,8 +373,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -413,8 +414,8 @@ sharedState, options);
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -438,8 +439,8 @@ sharedState, options);
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -471,8 +472,8 @@ sharedState, options);
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -505,8 +506,8 @@ sharedState, options);
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         // first do a regular login + commit and abort...
         PasswordLoginModule loginModule = new PasswordLoginModule();
@@ -557,8 +558,8 @@ sharedState, options);
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -583,8 +584,8 @@ sharedState, options);
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -616,8 +617,8 @@ sharedState, options);
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -648,8 +649,8 @@ sharedState, options);
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -689,8 +690,8 @@ sharedState, options);
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        options.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),

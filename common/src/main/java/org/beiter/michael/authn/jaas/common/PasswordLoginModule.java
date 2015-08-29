@@ -41,6 +41,7 @@ import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticatorF
 import org.beiter.michael.authn.jaas.common.messageq.MessageQException;
 import org.beiter.michael.authn.jaas.common.messageq.MessageQFactory;
 import org.beiter.michael.authn.jaas.common.messageq.MessageQ;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.beiter.michael.authn.jaas.common.validator.PasswordValidator;
 import org.beiter.michael.authn.jaas.common.validator.PasswordValidatorFactory;
 import org.slf4j.Logger;
@@ -74,28 +75,26 @@ public class PasswordLoginModule
     private static final Logger LOG = LoggerFactory.getLogger(PasswordLoginModule.class);
 
     /**
-     * The JAAS subject, which is part of the initial state and one of the provided arguments when the module is called
+     * The JAAS pSubject, which is part of the initial state and one of the provided arguments when the module is called
      */
     private Subject pSubject;
+
     /**
      * The JAAS callback handler, which is part of the initial state and one of the provided arguments when the module
      * is called
      */
     private CallbackHandler pCallbackHandler;
-    /**
-     * The JAAS configuration options, which is part of the initial state and one of the provided arguments when the
-     * module is called
-     */
-    private Map<String, ?> pOptions;
 
     /**
      * The username is provided during the login process, and we store a copy here in case of cascaded invocation
      */
     private String username;
+
     /**
      * The password is provided during the login process, and we store a copy here in case of cascaded invocation
      */
     private char[] password;
+
     /**
      * The white label domain is provided during the login process, and we store a copy here in case of cascaded
      * invocation
@@ -115,14 +114,17 @@ public class PasswordLoginModule
      * The audit object is initialized based on the JAAS module configuration
      */
     private Audit audit;
+
     /**
      * The messageQ object is initialized based on the JAAS module configuration
      */
     private MessageQ messageQ;
+
     /**
      * The pwValidator object is initialized based on the JAAS module configuration
      */
     private PasswordValidator pwValidator;
+
     /**
      * The pwAuthenticator object is initialized based on the JAAS module configuration
      */
@@ -145,17 +147,24 @@ public class PasswordLoginModule
         // keep a reference to the originally provided arguments (no defensive copy)
         this.pSubject = subject;
         this.pCallbackHandler = callbackHandler;
-        this.pOptions = options;
+
+        // It would be nice to parse the configuration only once, and store it for later use. However, we are
+        // deliberately NOT caching the parsed configuration, as JAAS does not offer a standard way to to reset the
+        // cached variable, and allow users of the login module to reset the parsed config in case an app does need to
+        // re-read its configuration.
+        final CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(options);
 
         // initialize the audit object
         try {
-            final String auditClassName = getOption(JaasConfigOptions.AUDIT_CLASS);
+            final String auditClassName = commonProps.getAuditClassName();
             if (auditClassName == null) {
                 LOG.debug("Requesting default audit class from the audit factory");
-                this.audit = AuditFactory.getInstance(options);
+                // TODO: clone the properties before passing them out!
+                this.audit = AuditFactory.getInstance(commonProps, options);
             } else {
                 LOG.debug("Requesting audit class instance of '" + auditClassName + "' from the audit factory");
-                this.audit = AuditFactory.getInstance(auditClassName, options);
+                // TODO: clone the properties before passing them out!
+                this.audit = AuditFactory.getInstance(auditClassName, commonProps, options);
             }
         } catch (FactoryException e) {
             final String error = "The audit class cannot be instantiated. This is most likely a configuration"
@@ -166,13 +175,15 @@ public class PasswordLoginModule
 
         // initialize the message object
         try {
-            final String messageClassName = getOption(JaasConfigOptions.MESSAGEQ_CLASS);
+            final String messageClassName = commonProps.getMessageQueueClassName();
             if (messageClassName == null) {
                 LOG.debug("Requesting default message class from the message factory");
-                this.messageQ = MessageQFactory.getInstance(options);
+                // TODO: clone the properties before passing them out!
+                this.messageQ = MessageQFactory.getInstance(commonProps, options);
             } else {
                 LOG.debug("Requesting message class instance of '" + messageClassName + "' from the message factory");
-                this.messageQ = MessageQFactory.getInstance(messageClassName, options);
+                // TODO: clone the properties before passing them out!
+                this.messageQ = MessageQFactory.getInstance(messageClassName, commonProps, options);
             }
         } catch (FactoryException e) {
             final String error = "The message class cannot be instantiated. This is most likely a configuration"
@@ -183,7 +194,7 @@ public class PasswordLoginModule
 
         // initialize the validator object
         try {
-            final String validatorClass = getOption(JaasConfigOptions.VALIDATOR_PASSWORD_CLASS);
+            final String validatorClass = commonProps.getPasswordValidatorClassName();
             if (validatorClass == null) {
                 LOG.debug("Requesting default validator class from the validator factory");
                 this.pwValidator = PasswordValidatorFactory.getInstance(options);
@@ -201,7 +212,7 @@ public class PasswordLoginModule
 
         // initialize the authenticator object
         try {
-            final String authNticatorClass = getOption(JaasConfigOptions.AUTHENTICATOR_PASSWORD_CLASS);
+            final String authNticatorClass = commonProps.getPasswordAuthenticatorClassName();
             if (authNticatorClass == null) {
                 LOG.debug("Requesting default authenticator class from the authenticator factory");
                 this.pwAuthenticator = PasswordAuthenticatorFactory.getInstance(options);
@@ -540,21 +551,5 @@ public class PasswordLoginModule
         Util.zeroArray(password);
         pendingSubject = null;
         committedSubject = null;
-    }
-
-    /**
-     * Return the value of a JAAS configuration parameter.
-     *
-     * @param <T> The type of the element
-     * @param key The key to retrieve from the options
-     * @return The configuration value for the provided key
-     */
-    @SuppressWarnings("unchecked")
-    private <T> T getOption(final ConfigOptions key) {
-
-        // private method asserts
-        assert key != null : "The key cannot be null";
-
-        return (T) pOptions.get(key.getName());
     }
 }

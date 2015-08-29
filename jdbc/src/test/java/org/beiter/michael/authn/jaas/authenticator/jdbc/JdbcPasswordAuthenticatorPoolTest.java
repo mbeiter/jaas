@@ -36,6 +36,7 @@ import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBa
 import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder;
 import org.beiter.michael.authn.jaas.common.JaasConfigOptions;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.beiter.michael.authn.jaas.common.validator.PasswordValidator;
 import org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator;
 import org.beiter.michael.db.FactoryException;
@@ -111,8 +112,8 @@ public class JdbcPasswordAuthenticatorPoolTest {
             throws LoginException {
 
         Map<String, String> properties = new ConcurrentHashMap<>();
-        properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        properties.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        properties.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
 
@@ -151,8 +152,8 @@ public class JdbcPasswordAuthenticatorPoolTest {
     public void authenticationSuccessfulTest() {
 
         Map<String, String> properties = new ConcurrentHashMap<>();
-        properties.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        properties.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        properties.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        properties.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_DRIVER, DRIVER);
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);

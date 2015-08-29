@@ -32,8 +32,9 @@
  */
 package org.beiter.michael.authn.jaas.common.messageq;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.FactoryException;
-import org.beiter.michael.authn.jaas.common.JaasConfigOptions;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -53,7 +54,7 @@ public class MessageQFactoryTest {
     private Field fieldMessageLogger_enabled;
 
     /**
-     * Make some of the private fields in the MessageLogger class accessible.
+     * Make some of the private fields in the SampleMessageLogger class accessible.
      * <p/>
      * This is executed before every test to ensure consistency even if one of the tests mock with field accessibility.
      */
@@ -62,7 +63,7 @@ public class MessageQFactoryTest {
 
         // make the "enabled" field in the default implementation accessible
         try {
-            fieldMessageLogger_enabled = MessageLogger.class.getDeclaredField("enabled");
+            fieldMessageLogger_enabled = SampleMessageLogger.class.getDeclaredField("enabled");
         } catch (NoSuchFieldException e) {
             AssertionError ae = new AssertionError("An expected private field does not exist");
             ae.initCause(e);
@@ -87,9 +88,12 @@ public class MessageQFactoryTest {
     @Test
     public void getDefaultImplementationTest() {
 
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
         MessageQ messageQ;
         try {
-            messageQ = MessageQFactory.getInstance(new ConcurrentHashMap<String, Object>());
+            messageQ = MessageQFactory.getInstance(commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -97,7 +101,7 @@ public class MessageQFactoryTest {
         }
 
         String error = "The class instantiated by the factory does not match the expected class";
-        assertThat(error, MessageLogger.class.isInstance(messageQ), is(equalTo(true)));
+        assertThat(error, SampleMessageLogger.class.isInstance(messageQ), is(equalTo(true)));
     }
 
     /**
@@ -107,11 +111,14 @@ public class MessageQFactoryTest {
     @Test
     public void getSpecificImplementationTest() {
 
-        String className = "org.beiter.michael.authn.jaas.common.messageq.MessageLogger";
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
+        String className = "org.beiter.michael.authn.jaas.common.messageq.SampleMessageLogger";
 
         MessageQ messageQ;
         try {
-            messageQ = MessageQFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
+            messageQ = MessageQFactory.getInstance(className, commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -119,7 +126,7 @@ public class MessageQFactoryTest {
         }
 
         String error = "The class instantiated by the factory does not match the expected class";
-        assertThat(error, MessageLogger.class.getCanonicalName(), is(equalTo(className)));
+        assertThat(error, SampleMessageLogger.class.getCanonicalName(), is(equalTo(className)));
         assertThat(error, messageQ.getClass().getCanonicalName(), is(equalTo(className)));
     }
 
@@ -130,7 +137,10 @@ public class MessageQFactoryTest {
     public void getNonExistingImplementationTest()
             throws FactoryException {
 
-        MessageQFactory.getInstance("someGarbageName", new ConcurrentHashMap<String, Object>());
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
+        MessageQFactory.getInstance("someGarbageName", commonProps, config);
     }
 
     /**
@@ -140,7 +150,10 @@ public class MessageQFactoryTest {
     public void getInvalidImplementationTest()
             throws FactoryException {
 
-        MessageQFactory.getInstance(String.class.getCanonicalName(), new ConcurrentHashMap<String, Object>());
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
+        MessageQFactory.getInstance(String.class.getCanonicalName(), commonProps, config);
     }
 
     /**
@@ -153,10 +166,13 @@ public class MessageQFactoryTest {
     @Test
     public void factoryReturnsSingletonTest() {
 
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
         MessageQ messageQ1, messageQ2;
         try {
-            messageQ1 = MessageQFactory.getInstance(new ConcurrentHashMap<String, Object>());
-            messageQ2 = MessageQFactory.getInstance(new ConcurrentHashMap<String, Object>());
+            messageQ1 = MessageQFactory.getInstance(commonProps, config);
+            messageQ2 = MessageQFactory.getInstance(commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -172,7 +188,7 @@ public class MessageQFactoryTest {
         // now test that the factory return a new object (i.e. a new singleton)
         MessageQ messageQ3;
         try {
-            messageQ3 = MessageQFactory.getInstance(new ConcurrentHashMap<String, Object>());
+            messageQ3 = MessageQFactory.getInstance(commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -193,18 +209,19 @@ public class MessageQFactoryTest {
         // 1: Test that a value of "true" is accepted
         // -----------------------------------------------
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        config.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "true");
+        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
 
         MessageQ messageQ;
         try {
-            messageQ = MessageQFactory.getInstance(config);
+            messageQ = MessageQFactory.getInstance(commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
             throw ae;
         }
 
-        String error = "The configuration parameter " + JaasConfigOptions.MESSAGEQ_ENABLED.getName() + " is not used in the default messageQ implementation";
+        String error = "The configuration parameter " + JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED + " is not used in the default messageQ implementation";
         try {
             assertThat(error, fieldMessageLogger_enabled.getBoolean(messageQ), is(equalTo(true)));
         } catch (IllegalAccessException e) {
@@ -219,17 +236,18 @@ public class MessageQFactoryTest {
 
         // 2: Test that a value of "false" is accepted
         // -----------------------------------------------
-        config.put(JaasConfigOptions.MESSAGEQ_ENABLED.getName(), "false");
+        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
 
         try {
-            messageQ = MessageQFactory.getInstance(config);
+            messageQ = MessageQFactory.getInstance(commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
             throw ae;
         }
 
-        error = "The configuration parameter " + JaasConfigOptions.MESSAGEQ_ENABLED.getName() + " is not used in the default messageQ implementation";
+        error = "The configuration parameter " + JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED + " is not used in the default messageQ implementation";
         try {
             assertThat(error, fieldMessageLogger_enabled.getBoolean(messageQ), is(equalTo(false)));
         } catch (IllegalAccessException e) {

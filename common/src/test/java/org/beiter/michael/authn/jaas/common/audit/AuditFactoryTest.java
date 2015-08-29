@@ -32,8 +32,9 @@
  */
 package org.beiter.michael.authn.jaas.common.audit;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.FactoryException;
-import org.beiter.michael.authn.jaas.common.JaasConfigOptions;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -56,7 +57,7 @@ public class AuditFactoryTest {
     private Field fieldAuditLogger_enabled;
 
     /**
-     * Make some of the private fields in the AuditLogger class accessible.
+     * Make some of the private fields in the SampleAuditLogger class accessible.
      * <p/>
      * This is executed before every test to ensure consistency even if one of the tests mock with field accessibility.
      */
@@ -65,7 +66,7 @@ public class AuditFactoryTest {
 
         // make the "enabled" field in the default implementation accessible
         try {
-            fieldAuditLogger_enabled = AuditLogger.class.getDeclaredField("enabled");
+            fieldAuditLogger_enabled = SampleAuditLogger.class.getDeclaredField("enabled");
         } catch (NoSuchFieldException e) {
             AssertionError ae = new AssertionError("An expected private field does not exist");
             ae.initCause(e);
@@ -90,9 +91,11 @@ public class AuditFactoryTest {
     @Test
     public void getDefaultImplementationTest() {
 
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
         Audit audit;
         try {
-            audit = AuditFactory.getInstance(new ConcurrentHashMap<String, Object>());
+            audit = AuditFactory.getInstance(commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -100,7 +103,7 @@ public class AuditFactoryTest {
         }
 
         String error = "The class instantiated by the factory does not match the expected class";
-        assertThat(error, AuditLogger.class.isInstance(audit), is(equalTo(true)));
+        assertThat(error, SampleAuditLogger.class.isInstance(audit), is(equalTo(true)));
     }
 
     /**
@@ -110,11 +113,13 @@ public class AuditFactoryTest {
     @Test
     public void getSpecificImplementationTest() {
 
-        String className = "org.beiter.michael.authn.jaas.common.audit.AuditLogger";
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        String className = "org.beiter.michael.authn.jaas.common.audit.SampleAuditLogger";
 
         Audit audit;
         try {
-            audit = AuditFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
+            audit = AuditFactory.getInstance(className, commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -122,7 +127,7 @@ public class AuditFactoryTest {
         }
 
         String error = "The class instantiated by the factory does not match the expected class";
-        assertThat(error, AuditLogger.class.getCanonicalName(), is(equalTo(className)));
+        assertThat(error, SampleAuditLogger.class.getCanonicalName(), is(equalTo(className)));
         assertThat(error, audit.getClass().getCanonicalName(), is(equalTo(className)));
     }
 
@@ -133,7 +138,9 @@ public class AuditFactoryTest {
     public void getNonExistingImplementationTest()
             throws FactoryException {
 
-        AuditFactory.getInstance("someGarbageName", new ConcurrentHashMap<String, Object>());
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        AuditFactory.getInstance("someGarbageName", commonProps, config);
     }
 
     /**
@@ -143,7 +150,9 @@ public class AuditFactoryTest {
     public void getInvalidImplementationTest()
             throws FactoryException {
 
-        AuditFactory.getInstance(String.class.getCanonicalName(), new ConcurrentHashMap<String, Object>());
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        AuditFactory.getInstance(String.class.getCanonicalName(), commonProps, config);
     }
 
     /**
@@ -156,10 +165,13 @@ public class AuditFactoryTest {
     @Test
     public void factoryReturnsSingletonTest() {
 
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
         Audit audit1, audit2;
         try {
-            audit1 = AuditFactory.getInstance(new ConcurrentHashMap<String, Object>());
-            audit2 = AuditFactory.getInstance(new ConcurrentHashMap<String, Object>());
+            audit1 = AuditFactory.getInstance(commonProps, config);
+            audit2 = AuditFactory.getInstance(commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -175,7 +187,7 @@ public class AuditFactoryTest {
         // now test that the factory return a new object (i.e. a new singleton)
         Audit audit3;
         try {
-            audit3 = AuditFactory.getInstance(new ConcurrentHashMap<String, Object>());
+            audit3 = AuditFactory.getInstance(commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -196,18 +208,19 @@ public class AuditFactoryTest {
         // 1: Test that a value of "true" is accepted
         // -----------------------------------------------
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        config.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
+        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
 
         Audit audit;
         try {
-            audit = AuditFactory.getInstance(config);
+            audit = AuditFactory.getInstance(commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
             throw ae;
         }
 
-        String error = "The configuration parameter " + JaasConfigOptions.AUDIT_ENABLED.getName() + " is not used in the default audit implementation";
+        String error = "The configuration parameter " + JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED + " is not used in the default audit implementation";
         try {
             assertThat(error, fieldAuditLogger_enabled.getBoolean(audit), is(equalTo(true)));
         } catch (IllegalAccessException e) {
@@ -222,17 +235,18 @@ public class AuditFactoryTest {
 
         // 2: Test that a value of "false" is accepted
         // -----------------------------------------------
-        config.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "false");
+        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
 
         try {
-            audit = AuditFactory.getInstance(config);
+            audit = AuditFactory.getInstance(commonProps, config);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
             throw ae;
         }
 
-        error = "The configuration parameter " + JaasConfigOptions.AUDIT_ENABLED.getName() + " is not used in the default audit implementation";
+        error = "The configuration parameter " + JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED + " is not used in the default audit implementation";
         try {
             assertThat(error, fieldAuditLogger_enabled.getBoolean(audit), is(equalTo(false)));
         } catch (IllegalAccessException e) {

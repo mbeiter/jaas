@@ -30,10 +30,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package org.beiter.michael.authn.jaas.common.audit;
+package org.beiter.michael.authn.jaas.common.messageq;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.Events;
-import org.beiter.michael.authn.jaas.common.JaasConfigOptions;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -46,32 +47,32 @@ import java.util.concurrent.ConcurrentHashMap;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-public class AuditLoggerTest {
+public class SampleMessageLoggerTest {
 
     /**
      * The logger object for this class
      */
-    private static final Logger LOG = LoggerFactory.getLogger(AuditLoggerTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SampleMessageLoggerTest.class);
 
-    private Field fieldAuditLogger_enabled;
+    private Field fieldMessageLogger_enabled;
 
     /**
-     * Make some of the private fields in the AuditLogger class accessible.
+     * Make some of the private fields in the SampleMessageLogger class accessible.
      * <p/>
      * This is executed before every test to ensure consistency even if one of the tests mock with field accessibility.
      */
     @Before
-    public void makeAuditLoggerPrivateFieldsAccessible() {
+    public void makeMessageLoggerPrivateFieldsAccessible() {
 
         // make the "enabled" field in the default implementation accessible
         try {
-            fieldAuditLogger_enabled = AuditLogger.class.getDeclaredField("enabled");
+            fieldMessageLogger_enabled = SampleMessageLogger.class.getDeclaredField("enabled");
         } catch (NoSuchFieldException e) {
             AssertionError ae = new AssertionError("An expected private field does not exist");
             ae.initCause(e);
             throw ae;
         }
-        fieldAuditLogger_enabled.setAccessible(true);
+        fieldMessageLogger_enabled.setAccessible(true);
     }
 
     /**
@@ -83,16 +84,18 @@ public class AuditLoggerTest {
     public void initForEnabledParameterTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        AuditLogger audit = new AuditLogger();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        SampleMessageLogger message = new SampleMessageLogger();
 
         // 1: Test that a value of "true" is accepted
         // ------------------------------------------
-        config.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        audit.init(config);
+        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        message.init(commonProps, config);
 
-        String error = "The configuration parameter " + JaasConfigOptions.AUDIT_ENABLED.getName() + " is not used in the default audit implementation";
+        String error = "The configuration parameter " + JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED + " is not used in the default message implementation";
         try {
-            assertThat(error, fieldAuditLogger_enabled.getBoolean(audit), is(equalTo(true)));
+            assertThat(error, fieldMessageLogger_enabled.getBoolean(message), is(equalTo(true)));
         } catch (IllegalAccessException e) {
             AssertionError ae = new AssertionError("Cannot access private field");
             ae.initCause(e);
@@ -101,13 +104,14 @@ public class AuditLoggerTest {
 
         // 2: Test that a value of "TrUe" is accepted (case insensitive config)
         // ------------------------------------------
-        config.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "TrUe");
-        audit.init(config);
+        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "TrUe");
+        commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        message.init(commonProps, config);
 
 
-        error = "The configuration parameter " + JaasConfigOptions.AUDIT_ENABLED.getName() + " is not used in the default audit implementation";
+        error = "The configuration parameter " + JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED + " is not used in the default message implementation";
         try {
-            assertThat(error, fieldAuditLogger_enabled.getBoolean(audit), is(equalTo(true)));
+            assertThat(error, fieldMessageLogger_enabled.getBoolean(message), is(equalTo(true)));
         } catch (IllegalAccessException e) {
             AssertionError ae = new AssertionError("Cannot access private field");
             ae.initCause(e);
@@ -116,13 +120,14 @@ public class AuditLoggerTest {
 
         // 3: Test that a value different than any spelling of "true" is accepted and interpreted as "false"
         // ------------------------------------------
-        config.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "not_true");
-        audit.init(config);
+        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "not_true");
+        commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        message.init(commonProps, config);
 
 
-        error = "The configuration parameter " + JaasConfigOptions.AUDIT_ENABLED.getName() + " is not used in the default audit implementation";
+        error = "The configuration parameter " + JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED + " is not used in the default message implementation";
         try {
-            assertThat(error, fieldAuditLogger_enabled.getBoolean(audit), is(equalTo(false)));
+            assertThat(error, fieldMessageLogger_enabled.getBoolean(message), is(equalTo(false)));
         } catch (IllegalAccessException e) {
             AssertionError ae = new AssertionError("Cannot access private field");
             ae.initCause(e);
@@ -131,46 +136,48 @@ public class AuditLoggerTest {
     }
 
     /**
-     * Test auditing in the default domain
+     * Test messaging in the default domain
      */
     @Test
-    public void defaultDomainAuditTest() {
+    public void defaultDomainMessageTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        AuditLogger audit = new AuditLogger();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        SampleMessageLogger message = new SampleMessageLogger();
 
-        // 1: Test with auditing enabled
+        // 1: Test with messaging enabled
         // -----------------------------
-        config.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        audit.init(config);
-        audit.audit(Events.AUTHN_SUCCESS, "userId_1");
+        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        message.init(commonProps, config);
+        message.create(Events.AUTHN_SUCCESS, "userId_1");
 
-        // 2: Test with auditing disabled
-        // ------------------------------
-        config.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "false");
-        audit.init(config);
-        audit.audit(Events.AUTHN_FAILURE, "userId_2");
+        // 2: Test with messaging disabled
+        // -------------------------------
+        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        message.init(commonProps, config);
+        message.create(Events.AUTHN_FAILURE, "userId_2");
     }
 
     /**
-     * Tests auditing in a specific domain
+     * Tests messaging in a specific domain
      */
     @Test
-    public void specificDomainAuditTest() {
+    public void specificDomainMessageTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        AuditLogger audit = new AuditLogger();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        SampleMessageLogger message = new SampleMessageLogger();
 
-        // 1: Test with auditing enabled
+        // 1: Test with messaging enabled
         // -----------------------------
-        config.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "true");
-        audit.init(config);
-        audit.audit(Events.AUTHN_SUCCESS, "domain_1", "userName_1");
+        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        message.init(commonProps, config);
+        message.create(Events.AUTHN_SUCCESS, "domain_1", "userName_1");
 
-        // 2: Test with auditing disabled
+        // 2: Test with messaging disabled
         // ------------------------------
-        config.put(JaasConfigOptions.AUDIT_ENABLED.getName(), "false");
-        audit.init(config);
-        audit.audit(Events.AUTHN_FAILURE, "domain_2", "userName_2");
+        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        message.init(commonProps, config);
+        message.create(Events.AUTHN_FAILURE, "domain_2", "userName_2");
     }
 }

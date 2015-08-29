@@ -33,6 +33,7 @@
 package org.beiter.michael.authn.jaas.common.messageq;
 
 import org.apache.commons.lang3.Validate;
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.FactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +53,6 @@ public final class MessageQFactory {
     private static final Logger LOG = LoggerFactory.getLogger(MessageQFactory.class);
 
     /**
-     * The default message queue implementation
-     */
-    public static final String DEFAULT_MESSAGEQ = "org.beiter.michael.authn.jaas.common.messageq.MessageLogger";
-
-    /**
      * The singleton instance of the message queue
      */
     private static volatile MessageQ messageQInstance;
@@ -68,16 +64,18 @@ public final class MessageQFactory {
     }
 
     /**
-     * Return the default instance of a {@link MessageQ} class to use for JAAS event messageing.
+     * Return an instance of a {@link MessageQ} class to use for JAAS event messaging as configured in
+     * {@link CommonProperties#getMessageQueueClassName()}.
      *
-     * @param properties The properties to initialize the instance with
+     * @param commonProperties The common properties that have been parsed from the JAAS configuration
+     * @param properties       The properties to initialize the instance with
      * @return The default instance of a class implementing the {@link MessageQ} interface
      * @throws FactoryException When the class cannot be instantiated
      */
-    public static MessageQ getInstance(final Map<String, ?> properties)
+    public static MessageQ getInstance(final CommonProperties commonProperties, final Map<String, ?> properties)
             throws FactoryException {
 
-        return getInstance(DEFAULT_MESSAGEQ, properties);
+        return getInstance(commonProperties.getMessageQueueClassName(), commonProperties, properties);
     }
 
     /**
@@ -85,13 +83,15 @@ public final class MessageQFactory {
      * <p/>
      * Classes implementing the {@link MessageQ} interface <b>must</b> be thread safe.
      *
-     * @param className  The name of a class that implements the Message interface
-     * @param properties The properties to initialize the instance with
+     * @param className        The name of a class that implements the Message interface
+     * @param commonProperties The common properties that have been parsed from the JAAS configuration
+     * @param properties       The properties to initialize the instance with
      * @return An instance of a class implementing the {@link MessageQ} interface
      * @throws FactoryException When the class cannot be instantiated
      */
     @SuppressWarnings("PMD.NonThreadSafeSingleton")
-    public static MessageQ getInstance(final String className, final Map<String, ?> properties)
+    public static MessageQ getInstance(final String className, final CommonProperties commonProperties,
+                                       final Map<String, ?> properties)
             throws FactoryException {
 
         Validate.notBlank(className);
@@ -132,7 +132,7 @@ public final class MessageQFactory {
                         throw new FactoryException(error, e);
                     }
 
-                    messageQInstance.init(properties);
+                    messageQInstance.init(commonProperties, properties);
                 }
             }
         }

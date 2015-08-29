@@ -2,17 +2,17 @@ PWLoginDummyAuthenticatorJaasConfig {
     org.beiter.michael.authn.jaas.common.PasswordLoginModule required
 
     // audit configuration
-    jaas.audit.class="org.beiter.michael.authn.jaas.common.audit.AuditLogger"
-    jaas.audit.enabled=true
+    jaas.audit.class="org.beiter.michael.authn.jaas.common.audit.SampleAuditLogger"
+    jaas.audit.isEnabled=true
 
     // message queue configuration
-    jaas.messageq.class="org.beiter.michael.authn.jaas.common.messageq.MessageLogger"
-    jaas.messageq.enabled=true
+    jaas.messageq.class="org.beiter.michael.authn.jaas.common.messageq.SampleMessageLogger"
+    jaas.messageq.isEnabled=true
 
     // password validator configuration
-    jaas.validator.password.class="org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator"
+    jaas.password.validator.class="org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator"
 
     // password authenticator configuration
-    jaas.authenticator.password.class="org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator"
+    jaas.password.authenticator.class="org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator"
     ;
 };

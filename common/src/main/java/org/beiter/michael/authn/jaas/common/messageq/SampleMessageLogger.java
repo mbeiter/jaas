@@ -30,33 +30,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package org.beiter.michael.authn.jaas.common.audit;
+package org.beiter.michael.authn.jaas.common.messageq;
 
 import org.apache.commons.lang3.Validate;
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.Events;
-import org.beiter.michael.authn.jaas.common.JaasConfigOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 /**
- * This default audit implementation logs all audit messages to the Java logging subsystem.
+ * This default message queue implementation prints all events to the Java logging subsystem.
  * <p/>
- * This is commonly <b>not</b> recommended for production.
+ * This is actually not a real message queue, and should be replaced with a connector to a message queue solution.
  */
-public class AuditLogger
-        implements Audit {
+public class SampleMessageLogger
+        implements MessageQ {
 
     /**
      * The logger object for this class
      */
-    private static final Logger LOG = LoggerFactory.getLogger(AuditLogger.class);
-
-    /**
-     * The name of the configuration parameter to control whether this class actually does anything
-     */
-    public static final String CFGPAR_ENABLED = JaasConfigOptions.AUDIT_ENABLED.getName();
+    private static final Logger LOG = LoggerFactory.getLogger(SampleMessageLogger.class);
 
     /**
      * The configuration parameter that controls whether this class actually does anything
@@ -66,7 +61,7 @@ public class AuditLogger
     /**
      * This constructor creates an instance of the class that has an enabled logger.
      */
-    public AuditLogger() {
+    public SampleMessageLogger() {
 
         // set default configuration
         enabled = true;
@@ -74,35 +69,28 @@ public class AuditLogger
 
     /**
      * {@inheritDoc}
-     * <p/>
-     * Available properties are:
-     * <ul>
-     * <li>default.audit.enabled: whether this audit module is enabled (true/false)</li>
-     * </ul>
      */
     @Override
-    public final void init(final Map<String, ?> properties) {
+    public final void init(final CommonProperties commonProperties, final Map<String, ?> properties) {
 
         Validate.notNull(properties);
 
-        // no need for defensive copies here, as all internal config values are calculated
+        // no need for defensive copies of boolean
 
-        final Object confParamEnabled = properties.get(CFGPAR_ENABLED);
-        enabled = confParamEnabled != null && String.class.isInstance(confParamEnabled)
-                && ((String) confParamEnabled).equalsIgnoreCase("true");
+        enabled = commonProperties.isMessageQueueEnabled();
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
     // Check is broken [LOG.info()]: PMD reports issues although log stmt is guarded. @todo revisit when upgrading PMD.
     @SuppressWarnings("PMD.GuardLogStatementJavaUtil")
-    public final void audit(final Events event, final String userId) {
+    @Override
+    public final void create(final Events event, final String userId) {
 
         // PMD does not recognize the guarded log statement
         if (enabled && LOG.isInfoEnabled()) {
-            LOG.info("[AUDIT] " + event.getValue() + ". User ID '" + userId);
+            LOG.info("[MESSAGEQ] " + event.getValue() + ". User ID '" + userId);
         }
     }
 
@@ -112,11 +100,11 @@ public class AuditLogger
     @Override
     // Check is broken [LOG.info()]: PMD reports issues although log stmt is guarded. @todo revisit when upgrading PMD.
     @SuppressWarnings("PMD.GuardLogStatementJavaUtil")
-    public final void audit(final Events event, final String domain, final String username) {
+    public final void create(final Events event, final String domain, final String username) {
 
         // PMD does not recognize the guarded log statement
         if (enabled && LOG.isInfoEnabled()) {
-            LOG.info("[AUDIT] " + event.getValue() + ". User name '" + username + "', domain '" + domain + "'");
+            LOG.info("[MESSAGEQ] " + event.getValue() + ". User name '" + username + "', domain '" + domain + "'");
         }
     }
 }
