@@ -34,11 +34,9 @@ package org.beiter.michael.authn.jaas.common;
 
 import org.apache.commons.lang3.Validate;
 import org.beiter.michael.authn.jaas.common.audit.Audit;
-import org.beiter.michael.authn.jaas.common.audit.AuditException;
 import org.beiter.michael.authn.jaas.common.audit.AuditFactory;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticatorFactory;
-import org.beiter.michael.authn.jaas.common.messageq.MessageQException;
 import org.beiter.michael.authn.jaas.common.messageq.MessageQFactory;
 import org.beiter.michael.authn.jaas.common.messageq.MessageQ;
 import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
@@ -155,80 +153,16 @@ public class PasswordLoginModule
         final CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(options);
 
         // initialize the audit object
-        try {
-            final String auditClassName = commonProps.getAuditClassName();
-            if (auditClassName == null) {
-                LOG.debug("Requesting default audit class from the audit factory");
-                // TODO: clone the properties before passing them out!
-                this.audit = AuditFactory.getInstance(commonProps, options);
-            } else {
-                LOG.debug("Requesting audit class instance of '" + auditClassName + "' from the audit factory");
-                // TODO: clone the properties before passing them out!
-                this.audit = AuditFactory.getInstance(auditClassName, commonProps, options);
-            }
-        } catch (FactoryException e) {
-            final String error = "The audit class cannot be instantiated. This is most likely a configuration"
-                    + " problem. Is the configured class available in the classpath?";
-            LOG.error(error, e);
-            throw new IllegalStateException(error, e);
-        }
+        initAudit(commonProps, options);
 
         // initialize the message object
-        try {
-            final String messageClassName = commonProps.getMessageQueueClassName();
-            if (messageClassName == null) {
-                LOG.debug("Requesting default message class from the message factory");
-                // TODO: clone the properties before passing them out!
-                this.messageQ = MessageQFactory.getInstance(commonProps, options);
-            } else {
-                LOG.debug("Requesting message class instance of '" + messageClassName + "' from the message factory");
-                // TODO: clone the properties before passing them out!
-                this.messageQ = MessageQFactory.getInstance(messageClassName, commonProps, options);
-            }
-        } catch (FactoryException e) {
-            final String error = "The message class cannot be instantiated. This is most likely a configuration"
-                    + " problem. Is the configured class available in the classpath?";
-            LOG.error(error, e);
-            throw new IllegalStateException(error, e);
-        }
+        initMessageQueue(commonProps, options);
 
         // initialize the validator object
-        try {
-            final String validatorClass = commonProps.getPasswordValidatorClassName();
-            if (validatorClass == null) {
-                final String error = "No password validator class has been configured in the JAAS configuration";
-                LOG.error(error);
-                throw new IllegalStateException(error);
-            } else {
-                LOG.debug("Requesting validator class instance of '" + validatorClass
-                        + "' from the validator factory");
-                this.pwValidator = PasswordValidatorFactory.getInstance(validatorClass, options);
-            }
-        } catch (FactoryException e) {
-            final String error = "The validator class cannot be instantiated. This is most likely a configuration"
-                    + " problem. Is the configured class available in the classpath?";
-            LOG.error(error, e);
-            throw new IllegalStateException(error, e);
-        }
+        initPwValidator(commonProps, options);
 
         // initialize the authenticator object
-        try {
-            final String authNticatorClass = commonProps.getPasswordAuthenticatorClassName();
-            if (authNticatorClass == null) {
-                final String error = "No password authenticator class has been configured in the JAAS configuration";
-                LOG.error(error);
-                throw new IllegalStateException(error);
-            } else {
-                LOG.debug("Requesting authenticator class instance of '" + authNticatorClass
-                        + "' from the authenticator factory");
-                this.pwAuthenticator = PasswordAuthenticatorFactory.getInstance(authNticatorClass, options);
-            }
-        } catch (FactoryException e) {
-            final String error = "The validator class cannot be instantiated. This is most likely a configuration"
-                    + " problem. Is the configured class available in the classpath?";
-            LOG.error(error, e);
-            throw new IllegalStateException(error, e);
-        }
+        initPwAuthenticator(commonProps, options);
 
         LOG.info("Initialization complete");
     }
@@ -298,15 +232,16 @@ public class PasswordLoginModule
             // then clear the password
             Util.zeroArray(password);
 
-            try {
-                audit.audit(Events.AUTHN_ATTEMPT, domain, username);
-                messageQ.create(Events.AUTHN_ATTEMPT, domain, username);
-            } catch (AuditException | MessageQException e) {
-                final String error = "Login successful for '" + username + "@" + domain
-                        + "', but cannot audit login attempt or create message event, and hence fail the operation";
-                LOG.warn(error, e);
-                throw Util.newLoginException(error, e);
-            }
+            final String baseError = new StringBuilder().
+                    append("Login successful for '").
+                    append(username).
+                    append("@").
+                    append(domain).
+                    toString();
+            Util.auditEvent(audit, domain, username, Events.AUTHN_ATTEMPT,
+                    baseError + "', but cannot audit login attempt, and hence fail the operation");
+            Util.postMessage(messageQ, domain, username, Events.AUTHN_ATTEMPT,
+                    baseError + "', but cannot post MQ login attempt event, and hence fail the operation");
 
             // string concatenation is only executed if log level is actually enabled
             if (LOG.isInfoEnabled()) {
@@ -322,14 +257,17 @@ public class PasswordLoginModule
 
             cleanState();
 
-            try {
-                audit.audit(Events.AUTHN_FAILURE, tempDomain, tempUsername);
-                messageQ.create(Events.AUTHN_FAILURE, tempDomain, tempUsername);
-            } catch (AuditException | MessageQException e2) {
-                final String error = "Login failed for '" + tempUsername + "@" + tempDomain
-                        + "', but cannot audit login attempt or create message event";
-                LOG.warn(error, e2);
-            }
+            final String baseError = new StringBuilder().
+                    append("Login failed for '").
+                    append(tempUsername).
+                    append("@").
+                    append(tempDomain).
+                    toString();
+            Util.auditEvent(audit, tempDomain, tempUsername, Events.AUTHN_FAILURE,
+                    baseError + "', but cannot audit login attempt");
+            Util.postMessage(messageQ, tempDomain, tempUsername, Events.AUTHN_FAILURE,
+                    baseError + "', but cannot post MQ login attempt event");
+
             final String error = "Login failed for '" + tempUsername + "@" + tempDomain + "'";
             LOG.info(error, e);
 
@@ -375,14 +313,16 @@ public class PasswordLoginModule
 
                 cleanState();
 
-                try {
-                    audit.audit(Events.AUTHN_ERROR, tempDomain, tempUsername);
-                    messageQ.create(Events.AUTHN_ERROR, tempDomain, tempUsername);
-                } catch (AuditException | MessageQException e) {
-                    final String error = "Login post-processing failed for '" + tempUsername + "@" + tempDomain
-                            + "', but cannot audit login attempt or create message event";
-                    LOG.warn(error, e);
-                }
+                final String baseError = new StringBuilder().
+                        append("Login post-processing failed for '").
+                        append(tempUsername).
+                        append("@").
+                        append(tempDomain).
+                        toString();
+                Util.auditEvent(audit, tempDomain, tempUsername, Events.AUTHN_ERROR,
+                        baseError + "', but cannot audit login attempt");
+                Util.postMessage(messageQ, tempDomain, tempUsername, Events.AUTHN_ERROR,
+                        baseError + "', but cannot post MQ login attempt event");
 
                 final String error = "Expected the committed subject to be 'null' (yes, really <null>), but this was "
                         + "not the case! Has the commit method been called multiple times on the same object instance?";
@@ -405,15 +345,16 @@ public class PasswordLoginModule
                 }
             }
 
-            try {
-                audit.audit(Events.AUTHN_SUCCESS, domain, username);
-                messageQ.create(Events.AUTHN_SUCCESS, domain, username);
-            } catch (AuditException | MessageQException e) {
-                final String error = "Login succeeded for '" + username + "@" + domain
-                        + "', but cannot audit login success or create message event, and hence fail the operation";
-                LOG.warn(error, e);
-                throw Util.newLoginException(error, e);
-            }
+            final String baseError = new StringBuilder().
+                    append("Login succeeded for '").
+                    append(username).
+                    append("@").
+                    append(domain).
+                    toString();
+            Util.auditEvent(audit, domain, username, Events.AUTHN_SUCCESS,
+                    baseError + "', but cannot audit login success, and hence fail the operation");
+            Util.postMessage(messageQ, domain, username, Events.AUTHN_SUCCESS,
+                    baseError + "', but cannot post MQ login success event, and hence fail the operation");
 
             // string concatenation is only executed if log level is actually enabled
             if (LOG.isInfoEnabled()) {
@@ -457,14 +398,16 @@ public class PasswordLoginModule
 
             cleanState();
 
-            try {
-                audit.audit(Events.AUTHN_ABORT_COMMIT, tempDomain, tempUsername);
-                messageQ.create(Events.AUTHN_ABORT_COMMIT, tempDomain, tempUsername);
-            } catch (AuditException | MessageQException e) {
-                final String error = "Login post-processing failed after abort for '" + tempUsername + "@" + tempDomain
-                        + "', but cannot audit login attempt or create message event";
-                LOG.warn(error, e);
-            }
+            final String baseError = new StringBuilder().
+                    append("Login post-processing failed after abort for '").
+                    append(tempUsername).
+                    append("@").
+                    append(tempDomain).
+                    toString();
+            Util.auditEvent(audit, tempDomain, tempUsername, Events.AUTHN_ABORT_COMMIT,
+                    baseError + "', but cannot audit login attempt");
+            Util.postMessage(messageQ, tempDomain, tempUsername, Events.AUTHN_ABORT_COMMIT,
+                    baseError + "', but cannot post MQ login attempt event");
 
             // string concatenation is only executed if log level is actually enabled
             if (LOG.isInfoEnabled()) {
@@ -473,14 +416,17 @@ public class PasswordLoginModule
             return true;
         } else {
             // overall authentication succeeded and commit succeeded, but someone else's commit failed
-            try {
-                audit.audit(Events.AUTHN_ABORT_CHAIN, domain, username);
-                messageQ.create(Events.AUTHN_ABORT_CHAIN, domain, username);
-            } catch (AuditException | MessageQException e) {
-                final String error = "Login post-processing failed after abort for '" + username + "@" + domain
-                        + "', but cannot audit login attempt or create message event";
-                LOG.warn(error, e);
-            }
+
+            final String baseError = new StringBuilder().
+                    append("Login post-processing failed after abort for '").
+                    append(username).
+                    append("@").
+                    append(domain).
+                    toString();
+            Util.auditEvent(audit, domain, username, Events.AUTHN_ABORT_CHAIN,
+                    baseError + "', but cannot audit login attempt");
+            Util.postMessage(messageQ, domain, username, Events.AUTHN_ABORT_CHAIN,
+                    baseError + "', but cannot post MQ login attempt event");
 
             // cache the username and domain, for they will be purged by "logout()"
             final String tempUsername = username;
@@ -510,6 +456,7 @@ public class PasswordLoginModule
         // remove all the principals that we added in the commit() method from the 'subject' object
         // (that's why we stored our principals in the 'committedSubject' object...)
         if (committedSubject != null && committedSubject.getPrincipals() != null) {
+            final StringBuilder stringBuilder = new StringBuilder();
             for (final Principal p : committedSubject.getPrincipals()) {
                 pSubject.getPrincipals().remove(p);
 
@@ -520,14 +467,17 @@ public class PasswordLoginModule
 
                 principals.append(p.getName()).append(':');
 
-                try {
-                    audit.audit(Events.AUTHN_LOGOUT, p.getName());
-                    messageQ.create(Events.AUTHN_LOGOUT, p.getName());
-                } catch (AuditException | MessageQException e) {
-                    final String error = "Logout successful for '" + p.getName()
-                            + "', but cannot audit logout attempt or create message event";
-                    LOG.warn(error, e);
-                }
+                stringBuilder.delete(0, stringBuilder.length());
+                final String baseError = stringBuilder.
+                        append("Logout successful for '").
+                        append(username).
+                        append("@").
+                        append(domain).
+                        toString();
+                Util.auditEvent(audit, domain, username, Events.AUTHN_LOGOUT,
+                        baseError + "', but cannot audit logout attempt");
+                Util.postMessage(messageQ, domain, username, Events.AUTHN_LOGOUT,
+                        baseError + "', but cannot post MQ logout attempt event");
             }
         }
 
@@ -554,4 +504,121 @@ public class PasswordLoginModule
         pendingSubject = null;
         committedSubject = null;
     }
+
+    /**
+     * Initialize the instance-global audit object
+     *
+     * @param commonProps The parsed JAAS configuration, with relevant extracted values
+     * @param options     The raw JAAS configuration, with all values (will be passed to instantiated object)
+     */
+    @SuppressWarnings("PMD.ConfusingTernary")
+    private void initAudit(final CommonProperties commonProps, final Map<String, ?> options) {
+        try {
+            final String auditClassName = commonProps.getAuditClassName();
+
+            // this would be harder to read when following PMD's advice - ignoring the PMD warning
+            if (!commonProps.isAuditEnabled()) {
+                final String error = "Auditing has been disabled in the JAAS configuration";
+                LOG.info(error);
+            } else if (auditClassName == null) {
+                final String error =
+                        "Auditing has been enabled in the JAAS configuration, but no audit class has been configured";
+                LOG.error(error);
+                throw new IllegalStateException(error);
+            } else {
+                LOG.debug("Requesting audit class instance of '" + auditClassName + "' from the audit factory");
+                this.audit = AuditFactory.getInstance(auditClassName, options);
+            }
+        } catch (FactoryException e) {
+            final String error = "The audit class cannot be instantiated. This is most likely a configuration"
+                    + " problem. Is the configured class available in the classpath?";
+            LOG.error(error, e);
+            throw new IllegalStateException(error, e);
+        }
+    }
+
+    /**
+     * Initialize the instance-global message queue object
+     *
+     * @param commonProps The parsed JAAS configuration, with relevant extracted values
+     * @param options     The raw JAAS configuration, with all values (will be passed to instantiated object)
+     */
+    @SuppressWarnings("PMD.ConfusingTernary")
+    private void initMessageQueue(final CommonProperties commonProps, final Map<String, ?> options) {
+        try {
+            final String messageClassName = commonProps.getMessageQueueClassName();
+
+            // this would be harder to read when following PMD's advice - ignoring the PMD warning
+            if (!commonProps.isMessageQueueEnabled()) {
+                final String error = "Message queue has been disabled in the JAAS configuration";
+                LOG.info(error);
+            } else if (messageClassName == null) {
+                final String error = "Message queue has been enabled in the JAAS configuration, "
+                        + "but no message queue class has been configured";
+                LOG.error(error);
+                throw new IllegalStateException(error);
+            } else {
+                LOG.debug("Requesting message class instance of '" + messageClassName + "' from the message factory");
+                this.messageQ = MessageQFactory.getInstance(messageClassName, options);
+            }
+        } catch (FactoryException e) {
+            final String error = "The message class cannot be instantiated. This is most likely a configuration"
+                    + " problem. Is the configured class available in the classpath?";
+            LOG.error(error, e);
+            throw new IllegalStateException(error, e);
+        }
+    }
+
+    /**
+     * Initialize the instance-global password validator object
+     *
+     * @param commonProps The parsed JAAS configuration, with relevant extracted values
+     * @param options     The raw JAAS configuration, with all values (will be passed to instantiated object)
+     */
+    private void initPwValidator(final CommonProperties commonProps, final Map<String, ?> options) {
+        try {
+            final String validatorClass = commonProps.getPasswordValidatorClassName();
+            if (validatorClass == null) {
+                final String error = "No password validator class has been configured in the JAAS configuration";
+                LOG.error(error);
+                throw new IllegalStateException(error);
+            } else {
+                LOG.debug("Requesting validator class instance of '" + validatorClass
+                        + "' from the validator factory");
+                this.pwValidator = PasswordValidatorFactory.getInstance(validatorClass, options);
+            }
+        } catch (FactoryException e) {
+            final String error = "The validator class cannot be instantiated. This is most likely a configuration"
+                    + " problem. Is the configured class available in the classpath?";
+            LOG.error(error, e);
+            throw new IllegalStateException(error, e);
+        }
+    }
+
+    /**
+     * Initialize the instance-global password authenticator object
+     *
+     * @param commonProps The parsed JAAS configuration, with relevant extracted values
+     * @param options     The raw JAAS configuration, with all values (will be passed to instantiated object)
+     */
+    private void initPwAuthenticator(final CommonProperties commonProps, final Map<String, ?> options) {
+        try {
+            final String authNticatorClass = commonProps.getPasswordAuthenticatorClassName();
+            if (authNticatorClass == null) {
+                final String error = "No password authenticator class has been configured in the JAAS configuration";
+                LOG.error(error);
+                throw new IllegalStateException(error);
+            } else {
+                LOG.debug("Requesting authenticator class instance of '" + authNticatorClass
+                        + "' from the authenticator factory");
+                this.pwAuthenticator = PasswordAuthenticatorFactory.getInstance(authNticatorClass, options);
+            }
+        } catch (FactoryException e) {
+            final String error = "The validator class cannot be instantiated. This is most likely a configuration"
+                    + " problem. Is the configured class available in the classpath?";
+            LOG.error(error, e);
+            throw new IllegalStateException(error, e);
+        }
+    }
+
 }

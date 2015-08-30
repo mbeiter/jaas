@@ -33,7 +33,6 @@
 package org.beiter.michael.authn.jaas.common.audit;
 
 import org.apache.commons.lang3.Validate;
-import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.Events;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,31 +52,14 @@ public class SampleAuditLogger
      */
     private static final Logger LOG = LoggerFactory.getLogger(SampleAuditLogger.class);
 
-    /**
-     * The configuration parameter that controls whether this class actually does anything
-     */
-    private boolean enabled;
-
-    /**
-     * This constructor creates an instance of the class that has an enabled logger.
-     */
-    public SampleAuditLogger() {
-
-        // set default configuration
-        enabled = true;
-    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final void init(final CommonProperties commonProperties, final Map<String, ?> properties) {
+    public final void init(final Map<String, ?> properties) {
 
         Validate.notNull(properties);
-
-        // no need for defensive copies of boolean
-
-        enabled = commonProperties.isAuditEnabled();
     }
 
     /**
@@ -89,7 +71,7 @@ public class SampleAuditLogger
     public final void audit(final Events event, final String userId) {
 
         // PMD does not recognize the guarded log statement
-        if (enabled && LOG.isInfoEnabled()) {
+        if (LOG.isInfoEnabled()) {
             LOG.info("[AUDIT] " + event.getValue() + ". User ID '" + userId);
         }
     }
@@ -103,7 +85,7 @@ public class SampleAuditLogger
     public final void audit(final Events event, final String domain, final String username) {
 
         // PMD does not recognize the guarded log statement
-        if (enabled && LOG.isInfoEnabled()) {
+        if (LOG.isInfoEnabled()) {
             LOG.info("[AUDIT] " + event.getValue() + ". User name '" + username + "', domain '" + domain + "'");
         }
     }

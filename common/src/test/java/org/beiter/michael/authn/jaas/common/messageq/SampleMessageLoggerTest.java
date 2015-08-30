@@ -57,104 +57,16 @@ public class SampleMessageLoggerTest {
     private Field fieldMessageLogger_enabled;
 
     /**
-     * Make some of the private fields in the SampleMessageLogger class accessible.
-     * <p/>
-     * This is executed before every test to ensure consistency even if one of the tests mock with field accessibility.
-     */
-    @Before
-    public void makeMessageLoggerPrivateFieldsAccessible() {
-
-        // make the "enabled" field in the default implementation accessible
-        try {
-            fieldMessageLogger_enabled = SampleMessageLogger.class.getDeclaredField("enabled");
-        } catch (NoSuchFieldException e) {
-            AssertionError ae = new AssertionError("An expected private field does not exist");
-            ae.initCause(e);
-            throw ae;
-        }
-        fieldMessageLogger_enabled.setAccessible(true);
-    }
-
-    /**
-     * Initialize the class with some configuration settings, and makes sure that they are accepted
-     * <p/>
-     * This method tests the "enabled" parameter in the configuration
-     */
-    @Test
-    public void initForEnabledParameterTest() {
-
-        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
-        SampleMessageLogger message = new SampleMessageLogger();
-
-        // 1: Test that a value of "true" is accepted
-        // ------------------------------------------
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
-        commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
-        message.init(commonProps, config);
-
-        String error = "The configuration parameter " + JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED + " is not used in the default message implementation";
-        try {
-            assertThat(error, fieldMessageLogger_enabled.getBoolean(message), is(equalTo(true)));
-        } catch (IllegalAccessException e) {
-            AssertionError ae = new AssertionError("Cannot access private field");
-            ae.initCause(e);
-            throw ae;
-        }
-
-        // 2: Test that a value of "TrUe" is accepted (case insensitive config)
-        // ------------------------------------------
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "TrUe");
-        commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
-        message.init(commonProps, config);
-
-
-        error = "The configuration parameter " + JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED + " is not used in the default message implementation";
-        try {
-            assertThat(error, fieldMessageLogger_enabled.getBoolean(message), is(equalTo(true)));
-        } catch (IllegalAccessException e) {
-            AssertionError ae = new AssertionError("Cannot access private field");
-            ae.initCause(e);
-            throw ae;
-        }
-
-        // 3: Test that a value different than any spelling of "true" is accepted and interpreted as "false"
-        // ------------------------------------------
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "not_true");
-        commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
-        message.init(commonProps, config);
-
-
-        error = "The configuration parameter " + JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED + " is not used in the default message implementation";
-        try {
-            assertThat(error, fieldMessageLogger_enabled.getBoolean(message), is(equalTo(false)));
-        } catch (IllegalAccessException e) {
-            AssertionError ae = new AssertionError("Cannot access private field");
-            ae.initCause(e);
-            throw ae;
-        }
-    }
-
-    /**
      * Test messaging in the default domain
      */
     @Test
     public void defaultDomainMessageTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
         SampleMessageLogger message = new SampleMessageLogger();
 
-        // 1: Test with messaging enabled
-        // -----------------------------
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
-        message.init(commonProps, config);
+        message.init(config);
         message.create(Events.AUTHN_SUCCESS, "userId_1");
-
-        // 2: Test with messaging disabled
-        // -------------------------------
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
-        message.init(commonProps, config);
         message.create(Events.AUTHN_FAILURE, "userId_2");
     }
 
@@ -168,16 +80,8 @@ public class SampleMessageLoggerTest {
         CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
         SampleMessageLogger message = new SampleMessageLogger();
 
-        // 1: Test with messaging enabled
-        // -----------------------------
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
-        message.init(commonProps, config);
+        message.init(config);
         message.create(Events.AUTHN_SUCCESS, "domain_1", "userName_1");
-
-        // 2: Test with messaging disabled
-        // ------------------------------
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
-        message.init(commonProps, config);
         message.create(Events.AUTHN_FAILURE, "domain_2", "userName_2");
     }
 }

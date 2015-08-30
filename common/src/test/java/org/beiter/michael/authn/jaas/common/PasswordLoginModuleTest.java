@@ -77,8 +77,6 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
@@ -96,7 +94,6 @@ public class PasswordLoginModuleTest {
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_CLASS_NAME, "InvalidClass");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
@@ -112,7 +109,6 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_CLASS_NAME, "InvalidClass");
 
@@ -126,12 +122,12 @@ public class PasswordLoginModuleTest {
      * configuration
      */
     @Test(expected = IllegalStateException.class)
-    public void initializeBogusValdiator() {
+    public void initializeBogusValidator() {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "InvalidClass");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
@@ -148,8 +144,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "InvalidClass");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
@@ -162,6 +158,33 @@ public class PasswordLoginModuleTest {
      */
     @Test
     public void loginSuccess() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
+                sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Login error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that a login with valid credentials (username == password for the helper JAAS module used in this test)
+     * works with audit and message queue being turned on (default audit and message queue implementations are being used)
+     */
+    @Test
+    public void loginSuccessWithAuditAndMessageQ() {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
@@ -183,12 +206,34 @@ public class PasswordLoginModuleTest {
         }
     }
 
+
     /**
      * Test that a login with invalid credentials (username != password for the helper JAAS module used in this test)
      * fails
      */
     @Test(expected = LoginException.class)
     public void loginFailInvalidPassword() throws LoginException {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
+                sharedState, options);
+
+        loginModule.login();
+    }
+
+    /**
+     * Test that a login with invalid credentials (username != password for the helper JAAS module used in this test)
+     * fails with audit and message queue being turned on (default audit and message queue implementations are being used)
+     */
+    @Test(expected = LoginException.class)
+    public void loginFailInvalidPasswordWithAuditAndMessageQ() throws LoginException {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
@@ -204,6 +249,7 @@ public class PasswordLoginModuleTest {
         loginModule.login();
     }
 
+
     /**
      * Test that a login with a null callback handler fails
      */
@@ -213,8 +259,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), null, sharedState, options);
@@ -231,8 +277,8 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
@@ -249,6 +295,42 @@ public class PasswordLoginModuleTest {
      */
     @Test
     public void commitSuccess() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
+                sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Login error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        String error = "Commit after successful login failed";
+        try {
+            assertThat(error, loginModule.commit(), is(equalTo(true)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Commit error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that a commit with valid credentials (username == password for the helper JAAS module used in this test)
+     * works with audit and message queue being turned on (default audit and message queue implementations are being used)
+     */
+    @Test
+    public void commitSuccessWithAuditAndMessageQ() {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
@@ -287,6 +369,34 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
+                sharedState, options);
+
+        String error = "Commit before successful login must fail";
+        try {
+            assertThat(error, loginModule.commit(), is(equalTo(false)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Commit error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+    
+    /**
+     * Test that a commit that is executed before a login fails with audit and message queue being turned on (default 
+     * audit and message queue implementations are being used)
+     */
+    @Test
+    public void commitFailBeforeLoginWithAuditAndMessageQ() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
@@ -311,6 +421,42 @@ public class PasswordLoginModuleTest {
      */
     @Test
     public void commitFailAfterFailedLogin() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
+                sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            // ignore this exception so that the process can continue
+            // this should obviously never not happen in real life applications
+        }
+
+        String error = "Commit after failed login must fail";
+        try {
+            assertThat(error, loginModule.commit(), is(equalTo(false)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Commit error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+
+    /**
+     * Test that a commit that is executed after a failed login fails with audit and message queue being turned on 
+     * (default audit and message queue implementations are being used)
+     */
+    @Test
+    public void commitFailAfterFailedLoginWithAuditAndMessageQ() {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
@@ -345,6 +491,47 @@ public class PasswordLoginModuleTest {
      */
     @Test(expected = LoginException.class)
     public void commitFailAfterCompletedPreviousCommit()
+            throws LoginException {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        // first do a regular login and commit...
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
+                sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Login error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        String error = "Commit after successful login failed";
+        try {
+            assertThat(error, loginModule.commit(), is(equalTo(true)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Commit error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        // ...then try to commit again, which should throw an exception
+        loginModule.commit();
+    }
+
+    /**
+     * Test that a commit that is executed after a previous commit fails with audit and message queue being turned on
+     * (default audit and message queue implementations are being used) -> this happens if a module instance is recycled
+     */
+    @Test(expected = LoginException.class)
+    public void commitFailAfterCompletedPreviousCommitWithAuditAndMessageQ()
             throws LoginException {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
@@ -386,6 +573,50 @@ public class PasswordLoginModuleTest {
      */
     @Test
     public void abortSuccess() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"), sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Login error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        try {
+            loginModule.commit();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Commit error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        String error = "Abort after successful login failed";
+        try {
+            assertThat(error, loginModule.abort(), is(equalTo(true)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Commit error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that an abort after a commit with valid credentials (username == password for the helper JAAS module used
+     * in this test) works with audit and message queue being turned on (default audit and message queue implementations
+     * are being used)
+     */
+    @Test
+    public void abortSuccessWithAuditAndMessageQ() {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
@@ -431,6 +662,34 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
+                sharedState, options);
+
+        String error = "Abort before successful login must fail";
+        try {
+            assertThat(error, loginModule.abort(), is(equalTo(false)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Abort error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that an abort that is executed before a login works with audit and message queue being turned on (default
+     * audit and message queue implementations are being used)
+     */
+    @Test
+    public void abortFailBeforeLoginWithAuditAndMessageQ() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
@@ -455,6 +714,41 @@ public class PasswordLoginModuleTest {
      */
     @Test
     public void abortFailAfterFailedLogin() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
+                sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            // ignore this exception so that the process can continue
+            // this should obviously never not happen in real life applications
+        }
+
+        String error = "Abort after failed login must fail";
+        try {
+            assertThat(error, loginModule.commit(), is(equalTo(false)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Abort error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that an abort that is executed after a failed login fails with audit and message queue being turned on
+     * (default audit and message queue implementations are being used)
+     */
+    @Test
+    public void abortFailAfterFailedLoginWithAuditAndMessageQ() {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
@@ -493,6 +787,43 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
+                sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Login error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        String error = "Abort after successful login, but before commit, failed";
+        try {
+            assertThat(error, loginModule.abort(), is(equalTo(true)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Commit error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that an abort after a login with valid credentials (username == password for the helper JAAS module used
+     * in this test), but before a commit, works as expected with audit and message queue being turned on (default
+     * audit and message queue implementations are being used)
+     */
+    @Test
+    public void abortAfterLoginBeforeCommitWithAuditAndMessageQ() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
@@ -525,6 +856,62 @@ public class PasswordLoginModuleTest {
      */
     @Test
     public void abortFailAfterCompletedPreviousAbort()
+            throws LoginException {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        // first do a regular login + commit and abort...
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
+                sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Login error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        try {
+            loginModule.commit();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Commit error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        String error = "Abort after successful login failed";
+        try {
+            assertThat(error, loginModule.abort(), is(equalTo(true)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Commit error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        // ...then try to abort again, which should not throw any exceptions
+        error = "Abort after previous abort login must fail";
+        try {
+            assertThat(error, loginModule.commit(), is(equalTo(false)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Abort error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that an abort that is executed after a previous abort fails with audit and message queue being turned on
+     * (default audit and message queue implementations are being used)
+     */
+    @Test
+    public void abortFailAfterCompletedPreviousAbortWithAuditAndMessageQ()
             throws LoginException {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
@@ -583,6 +970,34 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
+                sharedState, options);
+
+        String error = "Logout before login must work";
+        try {
+            assertThat(error, loginModule.logout(), is(equalTo(true)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Logout error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that a logout before a login works with audit and message queue being turned on (default audit and message
+     * queue implementations are being used)
+     */
+    @Test
+    public void logoutSuccessBeforeLoginWithAuditAndMessageQ() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
@@ -602,12 +1017,47 @@ public class PasswordLoginModuleTest {
         }
     }
 
-
     /**
      * Test that a logout after a successful login before commit works
      */
     @Test
     public void logoutSuccessAfterLoginBeforeCommit() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
+                sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Login error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        String error = "Logout after login before commit must work";
+        try {
+            assertThat(error, loginModule.logout(), is(equalTo(true)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Logout error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that a logout after a successful login before commit works with audit and message queue being turned on
+     * (default audit and message queue implementations are being used)
+     */
+    @Test
+    public void logoutSuccessAfterLoginBeforeCommitWithAuditAndMessageQ() {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
@@ -646,6 +1096,41 @@ public class PasswordLoginModuleTest {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
+                sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            // ignore this exception so that the process can continue
+            // this should obviously never not happen in real life applications
+        }
+
+        String error = "Logout after login before commit must work";
+        try {
+            assertThat(error, loginModule.logout(), is(equalTo(true)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Logout error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that a logout after a failed login works with audit and message queue being turned on (default audit and
+     * message queue implementations are being used)
+     */
+    @Test
+    public void logoutSuccessAfterFailedLoginWithAuditAndMessageQ() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
@@ -677,6 +1162,50 @@ public class PasswordLoginModuleTest {
      */
     @Test
     public void logoutSuccessAfterLoginAfterCommit() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
+                sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Login error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        try {
+            loginModule.commit();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Commit error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        String error = "Logout after login before commit must work";
+        try {
+            assertThat(error, loginModule.logout(), is(equalTo(true)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Logout error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that a logout after a commit works with audit and message queue being turned on (default audit and message
+     * queue implementations are being used)
+     */
+    @Test
+    public void logoutSuccessAfterLoginAfterCommitWithAuditAndMessageQ() {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
@@ -720,6 +1249,50 @@ public class PasswordLoginModuleTest {
      */
     @Test
     public void commitFailAfterLogout() {
+
+        Map<String, String> sharedState = new ConcurrentHashMap<>();
+        Map<String, String> options = new ConcurrentHashMap<>();
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
+
+        PasswordLoginModule loginModule = new PasswordLoginModule();
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
+                sharedState, options);
+
+        try {
+            loginModule.login();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Login error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        try {
+            loginModule.logout();
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Logout error");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        String error = "Commit after logout must fail";
+        try {
+            assertThat(error, loginModule.commit(), is(equalTo(false)));
+        } catch (LoginException e) {
+            AssertionError ae = new AssertionError("Commit error");
+            ae.initCause(e);
+            throw ae;
+        }
+    }
+
+    /**
+     * Test that a commit after a logout fails with audit and message queue being turned on (default audit and message
+     * queue implementations are being used)
+     */
+    @Test
+    public void commitFailAfterLogoutWithAuditAndMessageQ() {
 
         Map<String, String> sharedState = new ConcurrentHashMap<>();
         Map<String, String> options = new ConcurrentHashMap<>();
