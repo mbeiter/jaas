@@ -79,6 +79,8 @@ public class PasswordLoginModuleTest {
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -165,6 +167,8 @@ public class PasswordLoginModuleTest {
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -190,6 +194,8 @@ public class PasswordLoginModuleTest {
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -227,6 +233,8 @@ public class PasswordLoginModuleTest {
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandlerWithoutDomain("username", "username"),
@@ -246,6 +254,8 @@ public class PasswordLoginModuleTest {
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -279,6 +289,8 @@ public class PasswordLoginModuleTest {
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -304,6 +316,8 @@ public class PasswordLoginModuleTest {
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -337,6 +351,8 @@ public class PasswordLoginModuleTest {
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         // first do a regular login and commit...
         PasswordLoginModule loginModule = new PasswordLoginModule();
@@ -375,10 +391,11 @@ public class PasswordLoginModuleTest {
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
-        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
-sharedState, options);
+        loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"), sharedState, options);
 
         try {
             loginModule.login();
@@ -416,6 +433,8 @@ sharedState, options);
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -441,6 +460,8 @@ sharedState, options);
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -474,6 +495,8 @@ sharedState, options);
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -508,6 +531,8 @@ sharedState, options);
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         // first do a regular login + commit and abort...
         PasswordLoginModule loginModule = new PasswordLoginModule();
@@ -560,6 +585,8 @@ sharedState, options);
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -586,6 +613,8 @@ sharedState, options);
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -619,6 +648,8 @@ sharedState, options);
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "password"),
@@ -651,6 +682,8 @@ sharedState, options);
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),
@@ -692,6 +725,8 @@ sharedState, options);
         Map<String, String> options = new ConcurrentHashMap<>();
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
         options.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator");
+        options.put(JaasPropsBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_CLASS_NAME, "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator");
 
         PasswordLoginModule loginModule = new PasswordLoginModule();
         loginModule.initialize(new Subject(), createCallbackHandler("domain", "username", "username"),

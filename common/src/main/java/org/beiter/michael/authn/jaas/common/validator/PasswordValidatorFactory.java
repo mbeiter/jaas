@@ -52,12 +52,6 @@ public final class PasswordValidatorFactory {
     private static final Logger LOG = LoggerFactory.getLogger(PasswordValidatorFactory.class);
 
     /**
-     * The default password validator implementation
-     */
-    public static final String DEFAULT_VALIDATOR
-            = "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator";
-
-    /**
      * The singleton instance of the password validator
      */
     @SuppressWarnings("PMD.LongVariable")
@@ -67,19 +61,6 @@ public final class PasswordValidatorFactory {
      * A private constructor to prevent instantiation of this class
      */
     private PasswordValidatorFactory() {
-    }
-
-    /**
-     * Return the default instance of a {@link PasswordValidator} class to use for JAAS authentication.
-     *
-     * @param properties The properties to initialize the instance with
-     * @return The default instance of a class implementing the {@link PasswordValidator} interface
-     * @throws FactoryException When the class cannot be instantiated
-     */
-    public static PasswordValidator getInstance(final Map<String, ?> properties)
-            throws FactoryException {
-
-        return getInstance(DEFAULT_VALIDATOR, properties);
     }
 
     /**

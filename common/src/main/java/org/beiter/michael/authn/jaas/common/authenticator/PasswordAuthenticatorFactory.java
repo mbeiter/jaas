@@ -54,13 +54,6 @@ public final class PasswordAuthenticatorFactory {
     private static final Logger LOG = LoggerFactory.getLogger(PasswordAuthenticatorFactory.class);
 
     /**
-     * The default message queue implementation
-     */
-    @SuppressWarnings("PMD.LongVariable")
-    public static final String DEFAULT_AUTHENTICATOR =
-            "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator";
-
-    /**
      * The singleton instance of the password authenticator
      */
     @SuppressWarnings("PMD.LongVariable")
@@ -70,19 +63,6 @@ public final class PasswordAuthenticatorFactory {
      * A private constructor to prevent instantiation of this class
      */
     private PasswordAuthenticatorFactory() {
-    }
-
-    /**
-     * Return the default instance of a {@link PasswordAuthenticator} class to use for JAAS authentication.
-     *
-     * @param properties The properties to initialize the instance with
-     * @return The default instance of a class implementing the {@link PasswordAuthenticator} interface
-     * @throws FactoryException When the class cannot be instantiated
-     */
-    public static PasswordAuthenticator getInstance(final Map<String, ?> properties)
-            throws FactoryException {
-
-        return getInstance(DEFAULT_AUTHENTICATOR, properties);
     }
 
     /**

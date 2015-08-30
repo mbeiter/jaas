@@ -196,8 +196,9 @@ public class PasswordLoginModule
         try {
             final String validatorClass = commonProps.getPasswordValidatorClassName();
             if (validatorClass == null) {
-                LOG.debug("Requesting default validator class from the validator factory");
-                this.pwValidator = PasswordValidatorFactory.getInstance(options);
+                final String error = "No password validator class has been configured in the JAAS configuration";
+                LOG.error(error);
+                throw new IllegalStateException(error);
             } else {
                 LOG.debug("Requesting validator class instance of '" + validatorClass
                         + "' from the validator factory");
@@ -214,8 +215,9 @@ public class PasswordLoginModule
         try {
             final String authNticatorClass = commonProps.getPasswordAuthenticatorClassName();
             if (authNticatorClass == null) {
-                LOG.debug("Requesting default authenticator class from the authenticator factory");
-                this.pwAuthenticator = PasswordAuthenticatorFactory.getInstance(options);
+                final String error = "No password authenticator class has been configured in the JAAS configuration";
+                LOG.error(error);
+                throw new IllegalStateException(error);
             } else {
                 LOG.debug("Requesting authenticator class instance of '" + authNticatorClass
                         + "' from the authenticator factory");

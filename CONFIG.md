@@ -46,7 +46,8 @@ Default: `org.beiter.michael.authn.jaas.common.messageq.SampleMessageLogger`
 The password validator class to instantiate. Must implement the 
 `org.beiter.michael.authn.jaas.common.validator.PasswordValidator` interface.
 
-Default: `org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator`
+For security reasons, this setting has no default, and is **required**. Logins attempts
+**will fail** while this setting is not configured.
 
 ## Password Based Authentication
  
@@ -55,7 +56,8 @@ Default: `org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValida
 The username / password based authenticator class to instantiate. Must implement the 
 `org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator` interface.
 
-Default: `org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator`
+For security reasons, this setting has no default, and is **required**. Logins attempts
+**will fail** while this setting is not configured.
 
 ## JDBC Password Login Module Database Connection
 

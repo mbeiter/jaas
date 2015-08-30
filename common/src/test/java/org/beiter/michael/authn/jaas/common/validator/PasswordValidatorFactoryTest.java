@@ -58,27 +58,27 @@ public class PasswordValidatorFactoryTest {
     }
 
     /**
-     * Retrieve the default implementation of the PasswordValidator interface, and asserts that this default
-     * implementation equals the implementation shipped with this library.
+     * A non-existing class name (i.e. a class not in the class path) should throw an exception
      */
-    @Test
-    public void getDefaultImplementationTest() {
+    @Test(expected = FactoryException.class)
+    public void getNonExistingImplementationTest()
+            throws FactoryException {
 
-        PasswordValidator passwordValidator;
-        try {
-            passwordValidator = PasswordValidatorFactory.getInstance(new ConcurrentHashMap<String, Object>());
-        } catch (FactoryException e) {
-            AssertionError ae = new AssertionError("Instantiation error");
-            ae.initCause(e);
-            throw ae;
-        }
-
-        String error = "The class instantiated by the factory does not match the expected class";
-        assertThat(error, PlainTextPasswordValidator.class.isInstance(passwordValidator), is(equalTo(true)));
+        PasswordValidatorFactory.getInstance("someGarbageName", new ConcurrentHashMap<String, Object>());
     }
 
     /**
-     * Retrieve a specific implementation of the PasswordValidator interface, and asserts that the returned
+     * An invalid class name (i.e. a class of the wrong type) should throw an exception
+     */
+    @Test(expected = FactoryException.class)
+    public void getInvalidImplementationTest()
+            throws FactoryException {
+
+        PasswordValidatorFactory.getInstance(String.class.getCanonicalName(), new ConcurrentHashMap<String, Object>());
+    }
+
+    /**
+     * Retrieve a specific implementation of the PasswordValidator interface, and assert that the returned
      * implementation equals the requested implementation.
      */
     @Test
@@ -100,27 +100,7 @@ public class PasswordValidatorFactoryTest {
     }
 
     /**
-     * A non-existing class name (i.e. a class not in the class path) should throw an exception
-     */
-    @Test(expected = FactoryException.class)
-    public void getNonExistingImplementationTest()
-            throws FactoryException {
-
-        PasswordValidatorFactory.getInstance("someGarbageName", new ConcurrentHashMap<String, Object>());
-    }
-
-    /**
-     * An invalid class name (i.e. a class of the wrong type) should throw an exception
-     */
-    @Test(expected = FactoryException.class)
-    public void getInvalidImplementationTest()
-            throws FactoryException {
-
-        PasswordValidatorFactory.getInstance(String.class.getCanonicalName(), new ConcurrentHashMap<String, Object>());
-    }
-
-    /**
-     * Retrieve two instances of the default implementation of the PasswordValidator interface, and asserts that the
+     * Retrieve two instances of a specific implementation of the PasswordValidator interface, and assert that the
      * two returned objects are identical (i.e. the factory returns a singleton).
      * <p/>
      * Then the factory is reset, and another instance is retrieved. If the factory resets properly, the third instance
@@ -129,10 +109,12 @@ public class PasswordValidatorFactoryTest {
     @Test
     public void factoryReturnsSingletonTest() {
 
+        String className = "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator";
+
         PasswordValidator passwordValidator1, passwordValidator2;
         try {
-            passwordValidator1 = PasswordValidatorFactory.getInstance(new ConcurrentHashMap<String, Object>());
-            passwordValidator2 = PasswordValidatorFactory.getInstance(new ConcurrentHashMap<String, Object>());
+            passwordValidator1 = PasswordValidatorFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
+            passwordValidator2 = PasswordValidatorFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -148,7 +130,7 @@ public class PasswordValidatorFactoryTest {
         // now test that the factory return a new object (i.e. a new singleton)
         PasswordValidator passwordValidator3;
         try {
-            passwordValidator3 = PasswordValidatorFactory.getInstance(new ConcurrentHashMap<String, Object>());
+            passwordValidator3 = PasswordValidatorFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
