@@ -69,15 +69,19 @@ public class PasswordCallbackHandler
 
     /**
      * Create an instance of the PasswordCallbackHandler.
-     * <p/>
+     * <p>
      * Note that {@code domain}, {@code username}, and {@code password} may be {@code null}.
      *
      * @param domain   The white label domain
      * @param username The username
      * @param password The password
      */
+    // CHECKSTYLE:OFF
+    // this is flagged in checkstyle with a missing whitespace before '}', which is a bug in checkstyle
     // The null assignment allows to make password final
-    @SuppressWarnings("PMD.NullAssignment")
+    // It would be pretty dumb to use varargs for the password...
+    @SuppressWarnings({"PMD.NullAssignment", "PMD.UseVarargs"})
+    // CHECKSTYLE:ON
     public PasswordCallbackHandler(final String domain, final String username, final char[] password) {
 
         // no need for defensive copies of Strings, but create a defensive copy of the password
@@ -93,7 +97,7 @@ public class PasswordCallbackHandler
 
     /**
      * Retrieve or display the information requested in the provided Callbacks.
-     * <p/>
+     * <p>
      * The {@code handle} method implementation checks the
      * instance(s) of the {@code Callback} object(s) passed in
      * to retrieve or display the requested information.
@@ -105,6 +109,8 @@ public class PasswordCallbackHandler
      *                                      Callbacks specified in the {@code callbacks} parameter.
      */
     @Override
+    // Cannot change the interface to use varags, this interface is owned by javax.security
+    @SuppressWarnings("PMD.UseVarargs")
     public final void handle(final Callback[] callbacks)
             throws IOException, UnsupportedCallbackException {
 
