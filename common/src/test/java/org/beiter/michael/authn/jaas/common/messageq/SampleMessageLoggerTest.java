@@ -35,17 +35,12 @@ package org.beiter.michael.authn.jaas.common.messageq;
 import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.Events;
 import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 
 public class SampleMessageLoggerTest {
 
@@ -53,8 +48,6 @@ public class SampleMessageLoggerTest {
      * The logger object for this class
      */
     private static final Logger LOG = LoggerFactory.getLogger(SampleMessageLoggerTest.class);
-
-    private Field fieldMessageLogger_enabled;
 
     /**
      * Test messaging in the default domain
