@@ -36,18 +36,18 @@ import java.util.Map;
 
 /**
  * An interface to represent a password validation mechanism.
- * <p/>
+ * <p>
  * Classes implementing this interface <b>must</b> be thread safe.
  */
 public interface PasswordValidator {
 
     /**
      * Initializes the password validator configuration.
-     *
+     * <p>
      * A class implementing this interface must provide a reasonable default configuration and handle situations where
      * the {@code validate()} method is called without a previous call of {@code init()} (i.e. do not throw a runtime
      * exception).
-     *
+     * <p>
      * A class implementing this interface must ensure that subsequent calls to this method update the class'
      * configuration in a thread-safe way.
      *
@@ -58,7 +58,7 @@ public interface PasswordValidator {
 
     /**
      * Validate a user's password against a credential record.
-     *
+     * <p>
      * A credential record may trivially be a plain text password (insecure, of course), but could also be a password
      * hash or a (serialized) data structure representing a data set for sophisticated validation algorithms.
      *
@@ -66,5 +66,7 @@ public interface PasswordValidator {
      * @param storedCredential The record to validate against (commonly a credential record retrieved from a data store)
      * @return {@code true} if the credential could be validated, {@code false} otherwise (includes config issues)
      */
+    // It would be pretty dumb to use varargs for the credential...
+    @SuppressWarnings("PMD.UseVarargs")
     boolean validate(final char[] providedPassword, final char[] storedCredential);
 }

@@ -65,6 +65,8 @@ public final class Util {
      *
      * @param src the array to zeroArray
      */
+    // Cannot use varargs here, this would be against the point!
+    @SuppressWarnings("PMD.UseVarargs")
     public static void zeroArray(final char[] src) {
 
         if (src != null) {
@@ -77,6 +79,8 @@ public final class Util {
      *
      * @param src the array to zeroArray
      */
+    // Cannot use varargs here, this would be against the point!
+    @SuppressWarnings("PMD.UseVarargs")
     public static void zeroArray(final byte[] src) {
 
         if (src != null) {

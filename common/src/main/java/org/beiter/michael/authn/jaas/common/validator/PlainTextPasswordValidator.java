@@ -37,7 +37,7 @@ import java.util.Map;
 
 /**
  * This implementation of a password validator can validate a password against a plain-text password string.
- * <p/>
+ * <p>
  * Obviously, this is <b>insecure</b> and should <b>not be used in production</b>. Instead use an implementation that
  * is based, for instance, on an iterated password hash function instead!
  */
@@ -57,6 +57,8 @@ public class PlainTextPasswordValidator
      * {@inheritDoc}
      */
     @Override
+    // It would be pretty dumb to use varargs for the credential...
+    @SuppressWarnings("PMD.UseVarargs")
     public final boolean validate(final char[] providedPassword, final char[] storedCredential) {
 
         if (providedPassword == null || storedCredential == null) {
