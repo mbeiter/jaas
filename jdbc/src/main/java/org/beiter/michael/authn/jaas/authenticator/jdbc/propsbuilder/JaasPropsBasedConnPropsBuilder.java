@@ -32,6 +32,7 @@
  */
 package org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder;
 
+import org.apache.commons.lang3.Validate;
 import org.beiter.michael.db.ConnectionProperties;
 import org.beiter.michael.db.propsbuilder.MapBasedConnPropsBuilder;
 
@@ -209,6 +210,8 @@ public final class JaasPropsBasedConnPropsBuilder {
      * @return A <code>ConnectionProperties</code> object with default values, plus the provided parameters
      */
     public static ConnectionProperties build(final Map<String, ?> properties) {
+
+        Validate.notNull(properties);
 
         final HashMap<String, String> tmpConfig = new HashMap<>();
         tmpConfig.put(MapBasedConnPropsBuilder.KEY_DRIVER, (String) getOption(KEY_DRIVER, properties));

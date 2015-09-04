@@ -33,6 +33,7 @@
 package org.beiter.michael.authn.jaas.common.propsbuilder;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,6 +160,8 @@ public final class JaasPropsBasedCommonPropsBuilder {
      * @return A <code>DbProperties</code> object with default values, plus the provided parameters
      */
     public static CommonProperties build(final Map<String, ?> properties) {
+
+        Validate.notNull(properties);
 
         final CommonProperties commonProps = new CommonProperties();
         String tmp = getOption(KEY_AUDIT_CLASS_NAME, properties);
