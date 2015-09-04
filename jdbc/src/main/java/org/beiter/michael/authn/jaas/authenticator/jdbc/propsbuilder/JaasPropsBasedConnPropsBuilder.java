@@ -36,15 +36,14 @@ import org.apache.commons.lang3.Validate;
 import org.beiter.michael.db.ConnectionProperties;
 import org.beiter.michael.db.propsbuilder.MapBasedConnPropsBuilder;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class builds a set of {@link ConnectionProperties} using the settings obtained from a
  * JAAS Properties Map.
- *
- * <p/>
+ * <p>
+ * <p>
  * Use the keys from the various KEY_* fields to properly populate the JAAS Properties Map before calling this class'
  * methods. Otherwise, the defaults from {@link org.beiter.michael.db.propsbuilder.MapBasedConnPropsBuilder} will be
  * used.
@@ -213,44 +212,85 @@ public final class JaasPropsBasedConnPropsBuilder {
 
         Validate.notNull(properties);
 
-        final HashMap<String, String> tmpConfig = new HashMap<>();
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_DRIVER, (String) getOption(KEY_DRIVER, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_URL, (String) getOption(KEY_URL, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_USERNAME, (String) getOption(KEY_USERNAME, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_PASSWORD, (String) getOption(KEY_PASSWORD, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_MAX_TOTAL, (String) getOption(KEY_MAX_TOTAL, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_MAX_IDLE, (String) getOption(KEY_MAX_IDLE, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_MIN_IDLE, (String) getOption(KEY_MIN_IDLE, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_MAX_WAIT_MILLIS,
-                (String) getOption(KEY_MAX_WAIT_MILLIS, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_TEST_ON_CREATE, (String) getOption(KEY_TEST_ON_CREATE, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_TEST_ON_BORROW, (String) getOption(KEY_TEST_ON_BORROW, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_TEST_ON_RETURN, (String) getOption(KEY_TEST_ON_RETURN, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_TEST_WHILE_IDLE,
-                (String) getOption(KEY_TEST_WHILE_IDLE, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_TIME_BETWEEN_EVICTION_RUNS_MILLIS,
-                (String) getOption(KEY_TIME_BETWEEN_EVICTION_RUNS_MILLIS, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_NUM_TESTS_PER_EVICITON_RUN,
-                (String) getOption(KEY_NUM_TESTS_PER_EVICITON_RUN, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_MIN_EVICTABLE_IDLE_TIME_MILLIS, (
-                String) getOption(KEY_MIN_EVICTABLE_IDLE_TIME_MILLIS, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS,
-                (String) getOption(KEY_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_LIFO, (String) getOption(KEY_LIFO, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_AUTO_COMMIT, (String) getOption(KEY_AUTO_COMMIT, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_READ_ONLY, (String) getOption(KEY_READ_ONLY, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_TRANSACTION_ISOLATION,
-                (String) getOption(KEY_TRANSACTION_ISOLATION, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_CACHE_STATE, (String) getOption(KEY_CACHE_STATE, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_VALIDATION_QUERY,
-                (String) getOption(KEY_VALIDATION_QUERY, properties));
-        tmpConfig.put(MapBasedConnPropsBuilder.KEY_MAX_CONN_LIFETIME_MILLIS,
-                (String) getOption(KEY_MAX_CONN_LIFETIME_MILLIS, properties));
-
         // tmpConfig now holds all the configuration values with the keys expected by the Util libs connection
         // properties builder. We will let that library do all the hard work of setting reasonable defaults and
-        // dealing with null values...
+        // dealing with null values.
+        // For this, we first try to copy the entire map to a Map<String, String> map (because this is what the builder
+        // we will be using requires), and then ALSO copy the values that are in the Map and that we care about to the
+        // same map, potentially overwriting values that may already be there (e.g. if the user has configured them
+        // under a key that coincidentally collides with a key that we care about).
+
+        final Map<String, String> tmpConfig = new ConcurrentHashMap<>();
+
+        // first try to copy all the values in the map. We know that they are all of the same type, but we do not know
+        // what that type is. Let's reasonably assume that they are Strings (not sure if the JAAS configuration
+        // mechanism allows anything else), and just cast them. If the cast fails, we will fail the entire operation:
+        try {
+            for (final Map.Entry<String, ?> entry : properties.entrySet()) {
+                final String key = entry.getKey();
+                final String value = (String) entry.getValue();
+
+                if (value != null) {
+                    tmpConfig.put(key, value);
+                }
+            }
+        } catch (ClassCastException e) {
+            final String error = "The values of the configured JAAS properties must be Strings. "
+                    + "Sorry, but we do not support anything else here!";
+            throw new IllegalArgumentException(error, e);
+        }
+
+        // second, we copy the values that we care about from the "JAAS config namespace" to the "Connection namespace":
+        copyValue(properties, KEY_DRIVER, tmpConfig, MapBasedConnPropsBuilder.KEY_DRIVER);
+        copyValue(properties, KEY_URL, tmpConfig, MapBasedConnPropsBuilder.KEY_URL);
+        copyValue(properties, KEY_USERNAME, tmpConfig, MapBasedConnPropsBuilder.KEY_USERNAME);
+        copyValue(properties, KEY_PASSWORD, tmpConfig, MapBasedConnPropsBuilder.KEY_PASSWORD);
+        copyValue(properties, KEY_MAX_TOTAL, tmpConfig, MapBasedConnPropsBuilder.KEY_MAX_TOTAL);
+        copyValue(properties, KEY_MAX_IDLE, tmpConfig, MapBasedConnPropsBuilder.KEY_MAX_IDLE);
+        copyValue(properties, KEY_MIN_IDLE, tmpConfig, MapBasedConnPropsBuilder.KEY_MIN_IDLE);
+        copyValue(properties, KEY_MAX_WAIT_MILLIS, tmpConfig, MapBasedConnPropsBuilder.KEY_MAX_WAIT_MILLIS);
+        copyValue(properties, KEY_TEST_ON_CREATE, tmpConfig, MapBasedConnPropsBuilder.KEY_TEST_ON_CREATE);
+        copyValue(properties, KEY_TEST_ON_BORROW, tmpConfig, MapBasedConnPropsBuilder.KEY_TEST_ON_BORROW);
+        copyValue(properties, KEY_TEST_ON_RETURN, tmpConfig, MapBasedConnPropsBuilder.KEY_TEST_ON_RETURN);
+        copyValue(properties, KEY_TEST_WHILE_IDLE, tmpConfig, MapBasedConnPropsBuilder.KEY_TEST_WHILE_IDLE);
+        copyValue(properties, KEY_TIME_BETWEEN_EVICTION_RUNS_MILLIS,
+                tmpConfig, MapBasedConnPropsBuilder.KEY_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
+        copyValue(properties, KEY_NUM_TESTS_PER_EVICITON_RUN,
+                tmpConfig, MapBasedConnPropsBuilder.KEY_NUM_TESTS_PER_EVICITON_RUN);
+        copyValue(properties, KEY_MIN_EVICTABLE_IDLE_TIME_MILLIS,
+                tmpConfig, MapBasedConnPropsBuilder.KEY_MIN_EVICTABLE_IDLE_TIME_MILLIS);
+        copyValue(properties, KEY_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS,
+                tmpConfig, MapBasedConnPropsBuilder.KEY_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
+        copyValue(properties, KEY_LIFO, tmpConfig, MapBasedConnPropsBuilder.KEY_LIFO);
+        copyValue(properties, KEY_AUTO_COMMIT, tmpConfig, MapBasedConnPropsBuilder.KEY_AUTO_COMMIT);
+        copyValue(properties, KEY_READ_ONLY, tmpConfig, MapBasedConnPropsBuilder.KEY_READ_ONLY);
+        copyValue(properties, KEY_TRANSACTION_ISOLATION, tmpConfig, MapBasedConnPropsBuilder.KEY_TRANSACTION_ISOLATION);
+        copyValue(properties, KEY_CACHE_STATE, tmpConfig, MapBasedConnPropsBuilder.KEY_CACHE_STATE);
+        copyValue(properties, KEY_VALIDATION_QUERY, tmpConfig, MapBasedConnPropsBuilder.KEY_VALIDATION_QUERY);
+        copyValue(properties, KEY_MAX_CONN_LIFETIME_MILLIS,
+                tmpConfig, MapBasedConnPropsBuilder.KEY_MAX_CONN_LIFETIME_MILLIS);
+
+
         return MapBasedConnPropsBuilder.build(tmpConfig);
+    }
+
+    /**
+     * Copy the value of a specific key in a source map to a specific key in a target map.
+     * <p>
+     * The method checks if the value assigned to the source key is <code>null</code>, and does not copy it if it is
+     * <code>null</code>.
+     *
+     * @param sourceMap The source map to copy from
+     * @param sourceKey The source key to copy from
+     * @param targetMap The target map to copy to
+     * @param targetKey The target key to copy to
+     */
+    private static void copyValue(final Map<String, ?> sourceMap, final String sourceKey,
+                                  final Map<String, String> targetMap, final String targetKey) {
+
+        if (getOption(sourceKey, sourceMap) != null && String.class.isInstance(getOption(sourceKey, sourceMap))) {
+            targetMap.put(targetKey, (String) getOption(sourceKey, sourceMap));
+        }
     }
 
     /**

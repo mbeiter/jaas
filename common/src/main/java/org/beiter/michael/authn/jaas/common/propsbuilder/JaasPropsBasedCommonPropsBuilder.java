@@ -44,8 +44,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * This class builds a set of {@link CommonProperties} using the settings obtained from a
  * JAAS Properties Map.
- *
- * <p/>
+ * <p>
+ * <p>
  * Use the keys from the various KEY_* fields to properly populate the JAAS Properties Map before calling this class'
  * methods.
  */
@@ -159,6 +159,11 @@ public final class JaasPropsBasedCommonPropsBuilder {
      *                   using the keys as specified in this class
      * @return A <code>DbProperties</code> object with default values, plus the provided parameters
      */
+    // CHECKSTYLE:OFF
+    // this is flagged in checkstyle with a missing whitespace before '}', which is a bug in checkstyle
+    // suppress warnings about this method being too complex (can't extract a generic subroutine to reduce exec paths)
+    @SuppressWarnings({"PMD.NPathComplexity", "PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
+    // CHECKSTYLE:ON
     public static CommonProperties build(final Map<String, ?> properties) {
 
         Validate.notNull(properties);
@@ -217,6 +222,27 @@ public final class JaasPropsBasedCommonPropsBuilder {
             commonProps.setPasswordValidatorClassName(DEFAULT_PASSWORD_VALIDATOR_CLASS_NAME);
             logDefault(KEY_PASSWORD_VALIDATOR_CLASS_NAME, DEFAULT_PASSWORD_VALIDATOR_CLASS_NAME);
         }
+
+        // set the additional properties, preserving the originally provided properties
+        // create a defensive copy of the map and all its properties
+        // the code looks a little complicated that "putAll()", but it catches situations where a Map is provided that
+        // supports null values (e.g. a HashMap) vs Map implementations that do not (e.g. ConcurrentHashMap).
+        final Map<String, String> tempMap = new ConcurrentHashMap<>();
+        try {
+            for (final Map.Entry<String, ?> entry : properties.entrySet()) {
+                final String key = entry.getKey();
+                final String value = (String) entry.getValue();
+
+                if (value != null) {
+                    tempMap.put(key, value);
+                }
+            }
+        } catch (ClassCastException e) {
+            final String error = "The values of the configured JAAS properties must be Strings. "
+                    + "Sorry, but we do not support anything else here!";
+            throw new IllegalArgumentException(error, e);
+        }
+        commonProps.setAdditionalProperties(tempMap);
 
         return commonProps;
     }

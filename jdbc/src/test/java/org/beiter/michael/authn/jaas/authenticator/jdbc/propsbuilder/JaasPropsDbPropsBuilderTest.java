@@ -35,7 +35,6 @@ package org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder;
 import org.beiter.michael.authn.jaas.authenticator.jdbc.DbProperties;
 import org.junit.Test;
 
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,6 +75,10 @@ public class JaasPropsDbPropsBuilderTest {
         dbProps = JaasPropsBasedDbPropsBuilder.build(map);
         error = "jndi name does not match expected value";
         assertThat(error, dbProps.getJndiConnectionName(), is(equalTo("42")));
+
+        DbProperties dbProps2 = new DbProperties(dbProps);
+        error = "copy constructor does not copy field";
+        assertThat(error, dbProps2.getJndiConnectionName(), is(equalTo("42")));
     }
 
     /**
@@ -110,5 +113,28 @@ public class JaasPropsDbPropsBuilderTest {
         dbProps = JaasPropsBasedDbPropsBuilder.build(map);
         error = "sql user query does not match expected value";
         assertThat(error, dbProps.getSqlUserQuery(), is(equalTo("42")));
+
+        DbProperties dbProps2 = new DbProperties(dbProps);
+        error = "copy constructor does not copy field";
+        assertThat(error, dbProps2.getSqlUserQuery(), is(equalTo("42")));
+    }
+
+    /**
+     * additionalProperties test: make sure that the additional properties are being set to a new object (i.e. a
+     * defensive copy is being made)
+     */
+    @Test
+    public void additionalPropertiesNoSingletonTest() {
+
+        String key = "some property";
+        String value = "some value";
+
+        Map<String, String> map = new HashMap<>();
+
+        map.put(key, value);
+        DbProperties dbProps = JaasPropsBasedDbPropsBuilder.build(map);
+
+        String error = "The properties builder returns a singleton";
+        assertThat(error, map, is(not(sameInstance(dbProps.getAdditionalProperties()))));
     }
 }

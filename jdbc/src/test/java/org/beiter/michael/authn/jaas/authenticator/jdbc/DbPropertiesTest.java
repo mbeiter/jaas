@@ -1,6 +1,6 @@
 /*
  * #%L
- * This file is part of a common library for a set of universal JAAS modules.
+ * This file is part of a universal JDBC JAAS module.
  * %%
  * Copyright (C) 2014 - 2015 Michael Beiter <michael@beiter.org>
  * %%
@@ -30,9 +30,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package org.beiter.michael.authn.jaas.common;
+package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
-import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
+import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,12 +43,12 @@ import java.util.Map;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-public class CommonPropertiesTest {
+public class DbPropertiesTest {
 
     private Field field_additionalProperties;
 
     /**
-     * Make some of the private fields in the CommonProperties class accessible.
+     * Make some of the private fields in the DbProperties class accessible.
      * <p>
      * This is executed before every test to ensure consistency even if one of the tests mock with field accessibility.
      */
@@ -57,7 +57,7 @@ public class CommonPropertiesTest {
 
         // make the "enabled" field in the default implementation accessible
         try {
-            field_additionalProperties = CommonProperties.class.getDeclaredField("additionalProperties");
+            field_additionalProperties = DbProperties.class.getDeclaredField("additionalProperties");
         } catch (NoSuchFieldException e) {
             AssertionError ae = new AssertionError("An expected private field does not exist");
             ae.initCause(e);
@@ -78,12 +78,12 @@ public class CommonPropertiesTest {
         Map<String, String> originalMap = new HashMap<>();
 
         originalMap.put(key, value);
-        CommonProperties commonProps = new CommonProperties();
-        commonProps.setAdditionalProperties(originalMap);
+        DbProperties dbProps = new DbProperties();
+        dbProps.setAdditionalProperties(originalMap);
 
         String error = "The properties POJO does not create an inbound defensive copy";
         try {
-            Map<String, String> mapInObject = (Map<String, String>) field_additionalProperties.get(commonProps);
+            Map<String, String> mapInObject = (Map<String, String>) field_additionalProperties.get(dbProps);
             assertThat(error, mapInObject, is(not(sameInstance(originalMap))));
         } catch (IllegalAccessException e) {
             AssertionError ae = new AssertionError("Cannot access private field");
@@ -98,12 +98,12 @@ public class CommonPropertiesTest {
     @Test
     public void additionalPropertiesOutboundDefensiveCopyTest() {
 
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+        DbProperties dbProps = JaasPropsBasedDbPropsBuilder.buildDefault();
 
         String error = "The properties POJO does not create an outbound defensive copy";
         try {
-            Map<String, String> mapInObject = (Map<String, String>) field_additionalProperties.get(commonProps);
-            assertThat(error, mapInObject, is(not(sameInstance(commonProps.getAdditionalProperties()))));
+            Map<String, String> mapInObject = (Map<String, String>) field_additionalProperties.get(dbProps);
+            assertThat(error, mapInObject, is(not(sameInstance(dbProps.getAdditionalProperties()))));
         } catch (IllegalAccessException e) {
             AssertionError ae = new AssertionError("Cannot access private field");
             ae.initCause(e);
@@ -117,10 +117,10 @@ public class CommonPropertiesTest {
     @Test
     public void copyConstructorTest() {
 
-        CommonProperties commonProps1 = JaasPropsBasedCommonPropsBuilder.buildDefault();
-        CommonProperties commonProps2 = new CommonProperties(commonProps1);
+        DbProperties dbProps1 = JaasPropsBasedDbPropsBuilder.buildDefault();
+        DbProperties dbProps2 = new DbProperties(dbProps1);
 
         String error = "The copy constructor does not create a new object instance";
-        assertThat(error, commonProps1, is(not(sameInstance(commonProps2))));
+        assertThat(error, dbProps1, is(not(sameInstance(dbProps2))));
     }
 }

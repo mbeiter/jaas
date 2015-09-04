@@ -963,4 +963,24 @@ public class JaasPropsConnPropsBuilderTest {
         error = "maxConnLifetimeMillis does not match expected value";
         assertThat(error, connProps.getMaxConnLifetimeMillis(), is(equalTo(42l)));
     }
+
+
+    /**
+     * additionalProperties test: make sure that the additional properties are being set to a new object (i.e. a
+     * defensive copy is being made)
+     */
+    @Test
+    public void additionalPropertiesNoSingletonTest() {
+
+        String key = "some property";
+        String value = "some value";
+
+        Map<String, String> map = new HashMap<>();
+
+        map.put(key, value);
+        ConnectionProperties connProps = JaasPropsBasedConnPropsBuilder.build(map);
+
+        String error = "The properties builder returns a singleton";
+        assertThat(error, map, is(not(sameInstance(connProps.getAdditionalProperties()))));
+    }
 }

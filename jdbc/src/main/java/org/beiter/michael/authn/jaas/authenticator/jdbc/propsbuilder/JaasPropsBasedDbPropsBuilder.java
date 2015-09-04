@@ -118,26 +118,48 @@ public final class JaasPropsBasedDbPropsBuilder {
 
         Validate.notNull(properties);
 
-        final DbProperties dbSpec = new DbProperties();
+        final DbProperties dbProps = new DbProperties();
         String tmp = getOption(KEY_JNDI_CONNECTION_NAME, properties);
         if (StringUtils.isNotEmpty(tmp)) { // JNDI connection name can be null or empty
-            dbSpec.setJndiConnectionName(tmp);
+            dbProps.setJndiConnectionName(tmp);
             logValue(KEY_JNDI_CONNECTION_NAME, tmp);
         } else {
-            dbSpec.setJndiConnectionName(DEFAULT_JNDI_NAME);
+            dbProps.setJndiConnectionName(DEFAULT_JNDI_NAME);
             logDefault(KEY_JNDI_CONNECTION_NAME, DEFAULT_JNDI_NAME);
         }
 
         tmp = getOption(KEY_SQL_USER_QUERY, properties);
         if (StringUtils.isNotEmpty(tmp)) { // sql query cannot be null or empty, defaulting to null to catch it
-            dbSpec.setSqlUserQuery(tmp);
+            dbProps.setSqlUserQuery(tmp);
             logValue(KEY_SQL_USER_QUERY, tmp);
         } else {
-            dbSpec.setSqlUserQuery(DEFAULT_SQL_USER_QUERY);
+            dbProps.setSqlUserQuery(DEFAULT_SQL_USER_QUERY);
             logDefault(KEY_SQL_USER_QUERY, DEFAULT_SQL_USER_QUERY);
         }
 
-        return dbSpec;
+        // set the additional properties, preserving the originally provided properties
+        // create a defensive copy of the map and all its properties
+        // the code looks a little complicated that "putAll()", but it catches situations where a Map is provided that
+        // supports null values (e.g. a HashMap) vs Map implementations that do not (e.g. ConcurrentHashMap).
+        final Map<String, String> tempMap = new ConcurrentHashMap<>();
+        try {
+            for (final Map.Entry<String, ?> entry : properties.entrySet()) {
+                final String key = entry.getKey();
+                final String value = (String) entry.getValue();
+
+                if (value != null) {
+                    tempMap.put(key, value);
+                }
+            }
+        } catch (ClassCastException e) {
+            final String error = "The values of the configured JAAS properties must be Strings. "
+                    + "Sorry, but we do not support anything else here!";
+            throw new IllegalArgumentException(error, e);
+        }
+        dbProps.setAdditionalProperties(tempMap);
+
+
+        return dbProps;
     }
 
     /**

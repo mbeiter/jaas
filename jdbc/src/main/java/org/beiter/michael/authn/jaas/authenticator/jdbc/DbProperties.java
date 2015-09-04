@@ -32,6 +32,9 @@
  */
 package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * This class specifies database properties.
  */
@@ -54,6 +57,11 @@ public class DbProperties {
     private String sqlUserQuery;
 
     /**
+     * @see DbProperties#setAdditionalProperties(Map <String, String>)
+     */
+    private Map<String, String> additionalProperties;
+
+    /**
      * Constructs an empty set of database properties, with most values being set to <code>null</code>, 0, or empty
      * (depending on the type of the property). Usually this constructor is used if this configuration POJO is populated
      * in an automated fashion (e.g. injection). If you need to build them manually (possibly with defaults), use or
@@ -68,6 +76,21 @@ public class DbProperties {
     public DbProperties() {
 
         // no code here, constructor just for java docs
+    }
+
+    /**
+     * Creates a set of database properties from an existing set of database properties, making a defensive copy.
+     *
+     * @see DbProperties()
+     * @param properties The set of properties to copy
+     */
+    public DbProperties(final DbProperties properties) {
+
+        this();
+
+        setJndiConnectionName(properties.getJndiConnectionName());
+        setSqlUserQuery(properties.getSqlUserQuery());
+        setAdditionalProperties(properties.getAdditionalProperties());
     }
 
     /**
@@ -120,5 +143,51 @@ public class DbProperties {
         // no need for defensive copies of String
 
         this.sqlUserQuery = sqlUserQuery;
+    }
+
+    /**
+     * @return Any additional properties stored in this object that have not explicitly been parsed
+     * @see DbProperties#setAdditionalProperties(Map <String, String>)
+     */
+    public final Map<String, String> getAdditionalProperties() {
+
+        // create a defensive copy of the map and all its properties
+        if (this.additionalProperties == null) {
+            return null;
+        } else {
+            final Map<String, String> tempMap = new ConcurrentHashMap<>();
+            tempMap.putAll(additionalProperties);
+
+            return tempMap;
+        }
+    }
+
+    /**
+     * Any additional properties which have not been parsed, and for which no getter/setter exists, but are to be
+     * stored in this object nevertheless.
+     * <p>
+     * This property is commonly used to preserve original properties from upstream components that are to be passed
+     * on to downstream components unchanged. This properties set may or may not include properties that have been
+     * extracted from the map, and been made available through this POJO.
+     * <p>
+     * Note that these additional properties may be <code>null</code> or empty, even in a fully populated POJO where
+     * other properties commonly have values assigned to.
+     *
+     * @param additionalProperties The additional properties to store
+     */
+    // CHECKSTYLE:OFF
+    // this is flagged in checkstyle with a missing whitespace before '}', which is a bug in checkstyle
+    // suppress warnings about the null assignment. This is to allow the caller to dereference the object.
+    @SuppressWarnings({"PMD.NullAssignment"})
+    // CHECKSTYLE:ON
+    public final void setAdditionalProperties(final Map<String, String> additionalProperties) {
+
+        // create a defensive copy of the map and all its properties
+        if (additionalProperties == null) {
+            this.additionalProperties = null;
+        } else {
+            this.additionalProperties = new ConcurrentHashMap<>();
+            this.additionalProperties.putAll(additionalProperties);
+        }
     }
 }
