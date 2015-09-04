@@ -35,8 +35,10 @@ package org.beiter.michael.authn.jaas.common;
 import org.apache.commons.lang3.Validate;
 import org.beiter.michael.authn.jaas.common.audit.Audit;
 import org.beiter.michael.authn.jaas.common.audit.AuditFactory;
+import org.beiter.michael.authn.jaas.common.audit.AuditHelper;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticatorFactory;
+import org.beiter.michael.authn.jaas.common.messageq.MessageHelper;
 import org.beiter.michael.authn.jaas.common.messageq.MessageQFactory;
 import org.beiter.michael.authn.jaas.common.messageq.MessageQ;
 import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
@@ -238,9 +240,9 @@ public class PasswordLoginModule
                     append("@").
                     append(domain).
                     toString();
-            Util.auditEvent(audit, domain, username, Events.AUTHN_ATTEMPT,
+            AuditHelper.auditEvent(audit, domain, username, Events.AUTHN_ATTEMPT,
                     baseError + "', but cannot audit login attempt, and hence fail the operation");
-            Util.postMessage(messageQ, domain, username, Events.AUTHN_ATTEMPT,
+            MessageHelper.postMessage(messageQ, domain, username, Events.AUTHN_ATTEMPT,
                     baseError + "', but cannot post MQ login attempt event, and hence fail the operation");
 
             // string concatenation is only executed if log level is actually enabled
@@ -263,9 +265,9 @@ public class PasswordLoginModule
                     append("@").
                     append(tempDomain).
                     toString();
-            Util.auditEvent(audit, tempDomain, tempUsername, Events.AUTHN_FAILURE,
+            AuditHelper.auditEvent(audit, tempDomain, tempUsername, Events.AUTHN_FAILURE,
                     baseError + "', but cannot audit login attempt");
-            Util.postMessage(messageQ, tempDomain, tempUsername, Events.AUTHN_FAILURE,
+            MessageHelper.postMessage(messageQ, tempDomain, tempUsername, Events.AUTHN_FAILURE,
                     baseError + "', but cannot post MQ login attempt event");
 
             final String error = "Login failed for '" + tempUsername + "@" + tempDomain + "'";
@@ -319,9 +321,9 @@ public class PasswordLoginModule
                         append("@").
                         append(tempDomain).
                         toString();
-                Util.auditEvent(audit, tempDomain, tempUsername, Events.AUTHN_ERROR,
+                AuditHelper.auditEvent(audit, tempDomain, tempUsername, Events.AUTHN_ERROR,
                         baseError + "', but cannot audit login attempt");
-                Util.postMessage(messageQ, tempDomain, tempUsername, Events.AUTHN_ERROR,
+                MessageHelper.postMessage(messageQ, tempDomain, tempUsername, Events.AUTHN_ERROR,
                         baseError + "', but cannot post MQ login attempt event");
 
                 final String error = "Expected the committed subject to be 'null' (yes, really <null>), but this was "
@@ -351,9 +353,9 @@ public class PasswordLoginModule
                     append("@").
                     append(domain).
                     toString();
-            Util.auditEvent(audit, domain, username, Events.AUTHN_SUCCESS,
+            AuditHelper.auditEvent(audit, domain, username, Events.AUTHN_SUCCESS,
                     baseError + "', but cannot audit login success, and hence fail the operation");
-            Util.postMessage(messageQ, domain, username, Events.AUTHN_SUCCESS,
+            MessageHelper.postMessage(messageQ, domain, username, Events.AUTHN_SUCCESS,
                     baseError + "', but cannot post MQ login success event, and hence fail the operation");
 
             // string concatenation is only executed if log level is actually enabled
@@ -404,9 +406,9 @@ public class PasswordLoginModule
                     append("@").
                     append(tempDomain).
                     toString();
-            Util.auditEvent(audit, tempDomain, tempUsername, Events.AUTHN_ABORT_COMMIT,
+            AuditHelper.auditEvent(audit, tempDomain, tempUsername, Events.AUTHN_ABORT_COMMIT,
                     baseError + "', but cannot audit login attempt");
-            Util.postMessage(messageQ, tempDomain, tempUsername, Events.AUTHN_ABORT_COMMIT,
+            MessageHelper.postMessage(messageQ, tempDomain, tempUsername, Events.AUTHN_ABORT_COMMIT,
                     baseError + "', but cannot post MQ login attempt event");
 
             // string concatenation is only executed if log level is actually enabled
@@ -423,9 +425,9 @@ public class PasswordLoginModule
                     append("@").
                     append(domain).
                     toString();
-            Util.auditEvent(audit, domain, username, Events.AUTHN_ABORT_CHAIN,
+            AuditHelper.auditEvent(audit, domain, username, Events.AUTHN_ABORT_CHAIN,
                     baseError + "', but cannot audit login attempt");
-            Util.postMessage(messageQ, domain, username, Events.AUTHN_ABORT_CHAIN,
+            MessageHelper.postMessage(messageQ, domain, username, Events.AUTHN_ABORT_CHAIN,
                     baseError + "', but cannot post MQ login attempt event");
 
             // cache the username and domain, for they will be purged by "logout()"
@@ -474,9 +476,9 @@ public class PasswordLoginModule
                         append("@").
                         append(domain).
                         toString();
-                Util.auditEvent(audit, domain, username, Events.AUTHN_LOGOUT,
+                AuditHelper.auditEvent(audit, domain, username, Events.AUTHN_LOGOUT,
                         baseError + "', but cannot audit logout attempt");
-                Util.postMessage(messageQ, domain, username, Events.AUTHN_LOGOUT,
+                MessageHelper.postMessage(messageQ, domain, username, Events.AUTHN_LOGOUT,
                         baseError + "', but cannot post MQ logout attempt event");
             }
         }

@@ -33,12 +33,6 @@
 package org.beiter.michael.authn.jaas.common;
 
 import org.apache.commons.lang3.Validate;
-import org.beiter.michael.authn.jaas.common.audit.Audit;
-import org.beiter.michael.authn.jaas.common.audit.AuditException;
-import org.beiter.michael.authn.jaas.common.messageq.MessageQ;
-import org.beiter.michael.authn.jaas.common.messageq.MessageQException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.util.Arrays;
@@ -48,11 +42,6 @@ import java.util.Arrays;
  */
 @SuppressWarnings("PMD.ShortClassName")
 public final class Util {
-
-    /**
-     * The logger object for this class
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(Util.class);
 
     /**
      * A private constructor to prevent instantiation of this class
@@ -107,84 +96,5 @@ public final class Util {
         final LoginException loginException = new LoginException(message);
         loginException.initCause(cause);
         return loginException;
-    }
-
-
-    /**
-     * Audit an event.
-     * <p/>
-     * If {@code audit} is {@code null}, then auditing is considered disabled
-     *
-     * @param audit    The audit object to use for auditing the event
-     * @param domain   The user's domain
-     * @param username The user's username
-     *                 * @param event     The event to audit
-     * @param error    The error message to be logged in the application log if auditing fails (i.e. no audit message
-     *                 can be created)
-     * @throws LoginException If auditing fails (i.e. no audit message can be created)
-     */
-    public static void auditEvent(final Audit audit, final String domain, final String username,
-                                  final Events event, final String error)
-            throws LoginException {
-
-        Validate.notBlank(domain);
-        Validate.notBlank(username);
-        Validate.notNull(event);
-        Validate.notBlank(error);
-
-        // if auditing is disabled, the audit object will not have been initialized
-        if (audit == null) {
-            // string concatenation is only executed if log level is actually enabled
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Auditing has been disabled, not creating event '" + event.getValue()
-                        + "' for '" + username + "@" + domain + "'");
-            }
-        } else {
-            try {
-                audit.audit(event, domain, username);
-            } catch (AuditException e) {
-                LOG.warn(error, e);
-                throw Util.newLoginException(error, e);
-            }
-        }
-    }
-
-    /**
-     * Post a message queue event.
-     * <p/>
-     * If {@code messageQ} is {@code null}, then messaging is considered disabled.
-     *
-     * @param messageQ The message queue object to use for posting the message
-     * @param domain   The user's domain
-     * @param username The user's username
-     * @param event    The event to post
-     * @param error    The error message to be logged in the application log if the message queue post fails (i.e. no
-     *                 message queue event can be created)
-     * @throws LoginException If posting to the message queue fails (i.e. no message can be created)
-     */
-    public static void postMessage(final MessageQ messageQ, final String domain, final String username,
-                                   final Events event, final String error)
-            throws LoginException {
-
-        Validate.notBlank(domain);
-        Validate.notBlank(username);
-        Validate.notNull(event);
-        Validate.notBlank(error);
-
-        // if message queues are disabled, the messageQ object will not have been initialized
-        if (messageQ == null) {
-            // string concatenation is only executed if log level is actually enabled
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Messages queues have been disabled, not creating event '"
-                        + event.getValue() + "' for '" + username + "@" + domain + "'");
-            }
-        } else {
-            try {
-                messageQ.create(event, domain, username);
-            } catch (MessageQException e) {
-                LOG.warn(error, e);
-                throw Util.newLoginException(error, e);
-            }
-        }
     }
 }
