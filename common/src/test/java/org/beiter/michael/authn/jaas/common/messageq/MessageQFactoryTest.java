@@ -188,7 +188,7 @@ public class MessageQFactoryTest {
         }
 
         String error = "The factory does not return a singleton";
-        assertThat(error, messageQ1, is(equalTo(messageQ2)));
+        assertThat(error, messageQ1, is(sameInstance(messageQ2)));
 
         // reset the factory
         MessageQFactory.reset();
@@ -204,6 +204,6 @@ public class MessageQFactoryTest {
         }
 
         error = "The factory does not return a singleton, or does not reset properly";
-        assertThat(error, messageQ1, is(not(equalTo(messageQ3))));
+        assertThat(error, messageQ1, is(not(sameInstance(messageQ3))));
     }
 }

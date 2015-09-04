@@ -183,7 +183,7 @@ public class AuditFactoryTest {
         }
 
         String error = "The factory does not return a singleton";
-        assertThat(error, audit1, is(equalTo(audit2)));
+        assertThat(error, audit1, is(sameInstance(audit2)));
 
         // reset the factory
         AuditFactory.reset();
@@ -199,6 +199,6 @@ public class AuditFactoryTest {
         }
 
         error = "The factory does not return a singleton, or does not reset properly";
-        assertThat(error, audit1, is(not(equalTo(audit3))));
+        assertThat(error, audit1, is(not(sameInstance(audit3))));
     }
 }

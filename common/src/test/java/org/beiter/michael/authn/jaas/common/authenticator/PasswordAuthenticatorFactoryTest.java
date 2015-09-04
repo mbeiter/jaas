@@ -128,7 +128,7 @@ public class PasswordAuthenticatorFactoryTest {
         }
 
         String error = "The factory does not return a singleton";
-        assertThat(error, passwordAuthenticator1, is(equalTo(passwordAuthenticator2)));
+        assertThat(error, passwordAuthenticator1, is(sameInstance(passwordAuthenticator2)));
 
         // reset the factory
         PasswordAuthenticatorFactory.reset();
@@ -144,6 +144,6 @@ public class PasswordAuthenticatorFactoryTest {
         }
 
         error = "The factory does not return a singleton, or does not reset properly";
-        assertThat(error, passwordAuthenticator1, is(not(equalTo(passwordAuthenticator3))));
+        assertThat(error, passwordAuthenticator1, is(not(sameInstance(passwordAuthenticator3))));
     }
 }
