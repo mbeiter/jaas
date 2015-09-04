@@ -34,7 +34,6 @@ package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
 import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedConnPropsBuilder;
 import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder;
-import org.beiter.michael.authn.jaas.common.JaasConfigOptions;
 import org.beiter.michael.authn.jaas.common.UserPrincipal;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator;
 import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;

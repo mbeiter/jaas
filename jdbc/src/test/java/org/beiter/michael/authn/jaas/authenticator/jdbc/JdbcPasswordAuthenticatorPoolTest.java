@@ -34,13 +34,11 @@ package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
 import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedConnPropsBuilder;
 import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder;
-import org.beiter.michael.authn.jaas.common.JaasConfigOptions;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator;
 import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.beiter.michael.authn.jaas.common.validator.PasswordValidator;
 import org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator;
 import org.beiter.michael.db.FactoryException;
-import org.h2.jdbcx.JdbcConnectionPool;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -48,9 +46,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import java.sql.SQLException;
