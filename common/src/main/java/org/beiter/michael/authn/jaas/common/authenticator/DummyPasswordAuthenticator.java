@@ -32,6 +32,7 @@
  */
 package org.beiter.michael.authn.jaas.common.authenticator;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.UserPrincipal;
 import org.beiter.michael.authn.jaas.common.Util;
 import org.beiter.michael.authn.jaas.common.validator.PasswordValidator;
@@ -41,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.Subject;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
-import java.util.Map;
 
 /**
  * This authenticator performs validation of username / password type credentials by checking whether the provided
@@ -61,7 +61,8 @@ public class DummyPasswordAuthenticator
      * {@inheritDoc}
      */
     @Override
-    public final void init(final Map<String, ?> properties) {
+    public final void init(final CommonProperties properties) {
+
         // nothing to do here - this implementation does not take any properties
     }
 

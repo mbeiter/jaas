@@ -32,11 +32,11 @@
  */
 package org.beiter.michael.authn.jaas.common.authenticator;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.validator.PasswordValidator;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
-import java.util.Map;
 
 /**
  * An interface representing a username / password based authentication mechanism.
@@ -55,10 +55,10 @@ public interface PasswordAuthenticator {
      * A class implementing this interface must ensure that subsequent calls to this method update the class'
      * configuration in a thread-safe way.
      *
-     * @param properties The properties to initialize the message queue with. Supported parameters may vary with the
-     *                   implementing classes.
+     * @param properties The properties to initialize the message queue with. Supported "additionalParameters" may
+     *                   vary with the implementing classes.
      */
-    void init(Map<String, ?> properties);
+    void init(CommonProperties properties);
 
     /**
      * Authenticate a user by validating the user's password, returning a Subject with one or more {@code Principal}s

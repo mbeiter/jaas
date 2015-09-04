@@ -32,7 +32,9 @@
  */
 package org.beiter.michael.authn.jaas.common.authenticator;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.FactoryException;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -67,7 +69,9 @@ public class PasswordAuthenticatorFactoryTest {
     public void getNonExistingImplementationTest()
             throws FactoryException {
 
-        PasswordAuthenticatorFactory.getInstance("someGarbageName", new ConcurrentHashMap<String, Object>());
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+
+        PasswordAuthenticatorFactory.getInstance("someGarbageName", commonProps);
     }
 
     /**
@@ -77,8 +81,9 @@ public class PasswordAuthenticatorFactoryTest {
     public void getInvalidImplementationTest()
             throws FactoryException {
 
-        PasswordAuthenticatorFactory.getInstance(String.class.getCanonicalName(),
-                new ConcurrentHashMap<String, Object>());
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+
+        PasswordAuthenticatorFactory.getInstance(String.class.getCanonicalName(), commonProps);
     }
 
     /**
@@ -89,11 +94,11 @@ public class PasswordAuthenticatorFactoryTest {
     public void getSpecificImplementationTest() {
 
         String className = "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator";
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
 
         PasswordAuthenticator passwordAuthenticator;
         try {
-            passwordAuthenticator = PasswordAuthenticatorFactory.getInstance(className,
-                    new ConcurrentHashMap<String, Object>());
+            passwordAuthenticator = PasswordAuthenticatorFactory.getInstance(className, commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -108,7 +113,7 @@ public class PasswordAuthenticatorFactoryTest {
     /**
      * Retrieve two instances of a specific implementation of the PasswordAuthenticator interface, and assert that
      * the two returned objects are identical (i.e. the factory returns a singleton).
-     * <p/>
+     * <p>
      * Then the factory is reset, and another instance is retrieved. If the factory resets properly, the third instance
      * must be unequal to the first two instances.
      */
@@ -116,11 +121,12 @@ public class PasswordAuthenticatorFactoryTest {
     public void factoryReturnsSingletonTest() {
 
         String className = "org.beiter.michael.authn.jaas.common.authenticator.DummyPasswordAuthenticator";
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
 
         PasswordAuthenticator passwordAuthenticator1, passwordAuthenticator2;
         try {
-            passwordAuthenticator1 = PasswordAuthenticatorFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
-            passwordAuthenticator2 = PasswordAuthenticatorFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
+            passwordAuthenticator1 = PasswordAuthenticatorFactory.getInstance(className, commonProps);
+            passwordAuthenticator2 = PasswordAuthenticatorFactory.getInstance(className, commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -136,7 +142,7 @@ public class PasswordAuthenticatorFactoryTest {
         // now test that the factory return a new object (i.e. a new singleton)
         PasswordAuthenticator passwordAuthenticator3;
         try {
-            passwordAuthenticator3 = PasswordAuthenticatorFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
+            passwordAuthenticator3 = PasswordAuthenticatorFactory.getInstance(className, commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);

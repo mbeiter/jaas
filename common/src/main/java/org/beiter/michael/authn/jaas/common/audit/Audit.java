@@ -32,9 +32,8 @@
  */
 package org.beiter.michael.authn.jaas.common.audit;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.Events;
-
-import java.util.Map;
 
 /**
  * An interface to connect a per-JAAS module auditing subsystem.
@@ -53,10 +52,10 @@ public interface Audit {
      * A class implementing this interface must ensure that subsequent calls to this method update the class'
      * configuration in a thread-safe way.
      *
-     * @param properties The properties to initialize the audit subsystem with. Supported parameters may vary with the
-     *                   implementing classes.
+     * @param properties The properties to initialize the audit subsystem with. Supported "additionalParameters" may
+     *                   vary with the implementing classes.
      */
-    void init(Map<String, ?> properties);
+    void init(CommonProperties properties);
 
     /**
      * Audit an event for the provided user ID (i.e. for the principal)

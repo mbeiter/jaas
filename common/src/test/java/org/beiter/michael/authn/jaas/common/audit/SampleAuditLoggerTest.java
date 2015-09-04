@@ -56,9 +56,11 @@ public class SampleAuditLoggerTest {
     public void defaultDomainAuditTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
         SampleAuditLogger audit = new SampleAuditLogger();
 
-        audit.init(config);
+        audit.init(commonProps);
         audit.audit(Events.AUTHN_SUCCESS, "userId_1");
         audit.audit(Events.AUTHN_FAILURE, "userId_2");
     }
@@ -70,9 +72,11 @@ public class SampleAuditLoggerTest {
     public void specificDomainAuditTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
         SampleAuditLogger audit = new SampleAuditLogger();
 
-        audit.init(config);
+        audit.init(commonProps);
         audit.audit(Events.AUTHN_SUCCESS, "domain_1", "userName_1");
         audit.audit(Events.AUTHN_FAILURE, "domain_2", "userName_2");
     }

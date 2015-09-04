@@ -33,13 +33,13 @@
 package org.beiter.michael.authn.jaas.common.audit;
 
 import org.apache.commons.lang3.Validate;
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.FactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 
 /**
  * A factory to create instances of objects that implement the {@link Audit} interface.
@@ -73,7 +73,7 @@ public final class AuditFactory {
      * @throws FactoryException When the class cannot be instantiated
      */
     @SuppressWarnings("PMD.NonThreadSafeSingleton")
-    public static Audit getInstance(final String className, final Map<String, ?> properties)
+    public static Audit getInstance(final String className, final CommonProperties properties)
             throws FactoryException {
 
         Validate.notBlank(className);

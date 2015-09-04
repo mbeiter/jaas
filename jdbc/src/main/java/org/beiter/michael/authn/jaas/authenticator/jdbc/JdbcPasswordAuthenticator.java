@@ -36,6 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedConnPropsBuilder;
 import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder;
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.UserPrincipal;
 import org.beiter.michael.authn.jaas.common.Util;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator;
@@ -53,7 +54,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -89,7 +89,7 @@ public class JdbcPasswordAuthenticator
      * See module documentation for a list of available options.
      */
     @Override
-    public final void init(final Map<String, ?> properties) {
+    public final void init(final CommonProperties properties) {
 
         Validate.notNull(properties);
 
@@ -98,11 +98,11 @@ public class JdbcPasswordAuthenticator
         // some caching would be nice, but then we would have to allow resets in case the application wants to reload
         // its configuration at some point - seems not worth the hassle at this point.
         LOG.info("Parsing connection properties configuration");
-        connProps.set(JaasPropsBasedConnPropsBuilder.build(properties));
+        connProps.set(JaasPropsBasedConnPropsBuilder.build(properties.getAdditionalProperties()));
 
         // same statement about caching :)
         LOG.info("Parsing database properties configuration");
-        dbProps.set(JaasPropsBasedDbPropsBuilder.build(properties));
+        dbProps.set(JaasPropsBasedDbPropsBuilder.build(properties.getAdditionalProperties()));
     }
 
     /**

@@ -56,9 +56,10 @@ public class SampleMessageLoggerTest {
     public void defaultDomainMessageTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
         SampleMessageLogger message = new SampleMessageLogger();
 
-        message.init(config);
+        message.init(commonProps);
         message.create(Events.AUTHN_SUCCESS, "userId_1");
         message.create(Events.AUTHN_FAILURE, "userId_2");
     }
@@ -73,7 +74,7 @@ public class SampleMessageLoggerTest {
         CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
         SampleMessageLogger message = new SampleMessageLogger();
 
-        message.init(config);
+        message.init(commonProps);
         message.create(Events.AUTHN_SUCCESS, "domain_1", "userName_1");
         message.create(Events.AUTHN_FAILURE, "domain_2", "userName_2");
     }

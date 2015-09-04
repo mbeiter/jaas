@@ -32,12 +32,10 @@
  */
 package org.beiter.michael.authn.jaas.common.messageq;
 
-import org.apache.commons.lang3.Validate;
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.Events;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * This default message queue implementation prints all events to the Java logging subsystem.
@@ -56,9 +54,9 @@ public class SampleMessageLogger
      * {@inheritDoc}
      */
     @Override
-    public final void init(final Map<String, ?> properties) {
+    public final void init(final CommonProperties properties) {
 
-        Validate.notNull(properties);
+        // nothing to do here - this implementation does not take any properties;
     }
 
     /**

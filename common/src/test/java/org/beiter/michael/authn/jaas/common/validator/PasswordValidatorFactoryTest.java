@@ -32,7 +32,9 @@
  */
 package org.beiter.michael.authn.jaas.common.validator;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.FactoryException;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -64,7 +66,9 @@ public class PasswordValidatorFactoryTest {
     public void getNonExistingImplementationTest()
             throws FactoryException {
 
-        PasswordValidatorFactory.getInstance("someGarbageName", new ConcurrentHashMap<String, Object>());
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+
+        PasswordValidatorFactory.getInstance("someGarbageName", commonProps);
     }
 
     /**
@@ -74,7 +78,9 @@ public class PasswordValidatorFactoryTest {
     public void getInvalidImplementationTest()
             throws FactoryException {
 
-        PasswordValidatorFactory.getInstance(String.class.getCanonicalName(), new ConcurrentHashMap<String, Object>());
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+
+        PasswordValidatorFactory.getInstance(String.class.getCanonicalName(), commonProps);
     }
 
     /**
@@ -85,10 +91,11 @@ public class PasswordValidatorFactoryTest {
     public void getSpecificImplementationTest() {
 
         String className = "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator";
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
 
         PasswordValidator passwordValidator;
         try {
-            passwordValidator = PasswordValidatorFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
+            passwordValidator = PasswordValidatorFactory.getInstance(className, commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -102,7 +109,7 @@ public class PasswordValidatorFactoryTest {
     /**
      * Retrieve two instances of a specific implementation of the PasswordValidator interface, and assert that the
      * two returned objects are identical (i.e. the factory returns a singleton).
-     * <p/>
+     * <p>
      * Then the factory is reset, and another instance is retrieved. If the factory resets properly, the third instance
      * must be unequal to the first two instances.
      */
@@ -110,11 +117,12 @@ public class PasswordValidatorFactoryTest {
     public void factoryReturnsSingletonTest() {
 
         String className = "org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator";
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
 
         PasswordValidator passwordValidator1, passwordValidator2;
         try {
-            passwordValidator1 = PasswordValidatorFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
-            passwordValidator2 = PasswordValidatorFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
+            passwordValidator1 = PasswordValidatorFactory.getInstance(className, commonProps);
+            passwordValidator2 = PasswordValidatorFactory.getInstance(className, commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -130,7 +138,7 @@ public class PasswordValidatorFactoryTest {
         // now test that the factory return a new object (i.e. a new singleton)
         PasswordValidator passwordValidator3;
         try {
-            passwordValidator3 = PasswordValidatorFactory.getInstance(className, new ConcurrentHashMap<String, Object>());
+            passwordValidator3 = PasswordValidatorFactory.getInstance(className, commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);

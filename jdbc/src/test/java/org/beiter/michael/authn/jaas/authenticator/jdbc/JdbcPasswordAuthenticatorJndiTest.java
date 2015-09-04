@@ -33,6 +33,7 @@
 package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
 import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder;
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator;
 import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.beiter.michael.authn.jaas.common.validator.PasswordValidator;
@@ -141,14 +142,15 @@ public class JdbcPasswordAuthenticatorJndiTest {
         properties.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
 
         String domain = "invalidDomain";
@@ -182,14 +184,15 @@ public class JdbcPasswordAuthenticatorJndiTest {
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_JNDI_CONNECTION_NAME, JNDI_NAME);
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
         String domain = "domain1";
         String username = "user1";

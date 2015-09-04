@@ -32,7 +32,9 @@
  */
 package org.beiter.michael.authn.jaas.common.authenticator;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.UserPrincipal;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.beiter.michael.authn.jaas.common.validator.PasswordValidator;
 import org.beiter.michael.authn.jaas.common.validator.PlainTextPasswordValidator;
 import org.junit.Test;
@@ -63,11 +65,13 @@ public class DummyPasswordAuthenticatorTest {
     public void authenticationFailTest()
             throws FailedLoginException {
 
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         PasswordAuthenticator pwAuthenticator = new DummyPasswordAuthenticator();
-        pwAuthenticator.init(new ConcurrentHashMap<String, Object>());
+        pwAuthenticator.init(commonProps);
 
         String domain = "domain";
         String username = "username";
@@ -94,11 +98,13 @@ public class DummyPasswordAuthenticatorTest {
     @Test
     public void authenticationSuccessfulTest() {
 
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         PasswordAuthenticator pwAuthenticator = new DummyPasswordAuthenticator();
-        pwAuthenticator.init(new ConcurrentHashMap<String, Object>());
+        pwAuthenticator.init(commonProps);
 
         String domain = "domain";
         String username = "username";
@@ -120,11 +126,13 @@ public class DummyPasswordAuthenticatorTest {
     @Test
     public void authenticationSuccessfulWithSubjectTest() {
 
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         PasswordAuthenticator pwAuthenticator = new DummyPasswordAuthenticator();
-        pwAuthenticator.init(new ConcurrentHashMap<String, Object>());
+        pwAuthenticator.init(commonProps);
 
         String domain = "domain";
         String username = "username";

@@ -71,7 +71,9 @@ public class AuditFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        AuditFactory.getInstance(null, config);
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
+        AuditFactory.getInstance(null, commonProps);
     }
 
     /**
@@ -82,7 +84,9 @@ public class AuditFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
-        AuditFactory.getInstance(null, config);
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
+        AuditFactory.getInstance(null, commonProps);
     }
 
     /**
@@ -94,7 +98,9 @@ public class AuditFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        AuditFactory.getInstance("someGarbageName", config);
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
+        AuditFactory.getInstance("someGarbageName", commonProps);
     }
 
     /**
@@ -105,7 +111,9 @@ public class AuditFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
-        AuditFactory.getInstance("someGarbageName", config);
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
+        AuditFactory.getInstance("someGarbageName", commonProps);
     }
 
     /**
@@ -117,7 +125,9 @@ public class AuditFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        AuditFactory.getInstance(String.class.getCanonicalName(), config);
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
+        AuditFactory.getInstance(String.class.getCanonicalName(), commonProps);
     }
 
     /**
@@ -128,7 +138,9 @@ public class AuditFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
-        AuditFactory.getInstance(String.class.getCanonicalName(), config);
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+
+        AuditFactory.getInstance(String.class.getCanonicalName(), commonProps);
     }
 
     /**
@@ -145,7 +157,7 @@ public class AuditFactoryTest {
 
         Audit audit;
         try {
-            audit = AuditFactory.getInstance(commonProps.getAuditClassName(), config);
+            audit = AuditFactory.getInstance(commonProps.getAuditClassName(), commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -174,8 +186,8 @@ public class AuditFactoryTest {
 
         Audit audit1, audit2;
         try {
-            audit1 = AuditFactory.getInstance(commonProps.getAuditClassName(), config);
-            audit2 = AuditFactory.getInstance(commonProps.getAuditClassName(), config);
+            audit1 = AuditFactory.getInstance(commonProps.getAuditClassName(), commonProps);
+            audit2 = AuditFactory.getInstance(commonProps.getAuditClassName(), commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -191,7 +203,7 @@ public class AuditFactoryTest {
         // now test that the factory return a new object (i.e. a new singleton)
         Audit audit3;
         try {
-            audit3 = AuditFactory.getInstance(commonProps.getAuditClassName(), config);
+            audit3 = AuditFactory.getInstance(commonProps.getAuditClassName(), commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);

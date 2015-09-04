@@ -32,6 +32,8 @@
  */
 package org.beiter.michael.authn.jaas.common.validator;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
 import org.junit.Test;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,8 +50,10 @@ public class PlainTextPasswordValidatorTest {
     @Test
     public void validateNullPasswordsTest() {
 
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+
         PlainTextPasswordValidator validator = new PlainTextPasswordValidator();
-        validator.init(new ConcurrentHashMap<String, Object>());
+        validator.init(commonProps);
 
         String error = "Validating a provided password with null value should be 'false'";
         assertThat(error, validator.validate(null, "SomePassword".toCharArray()), is(equalTo(false)));
@@ -64,8 +68,10 @@ public class PlainTextPasswordValidatorTest {
     @Test
     public void validateMismatchingPasswordsTest() {
 
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+
         PlainTextPasswordValidator validator = new PlainTextPasswordValidator();
-        validator.init(new ConcurrentHashMap<String, Object>());
+        validator.init(commonProps);
 
         String error = "Validating two mismatched passwords should be 'false'";
         assertThat(error, validator.validate("SomePassword".toCharArray(), "SomeOtherPassword".toCharArray()),
@@ -78,8 +84,10 @@ public class PlainTextPasswordValidatorTest {
     @Test
     public void validateMatchingPasswordsTest() {
 
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+
         PlainTextPasswordValidator validator = new PlainTextPasswordValidator();
-        validator.init(new ConcurrentHashMap<String, Object>());
+        validator.init(commonProps);
 
         String error = "Validating two matching passwords should be 'true'";
         assertThat(error, validator.validate("Password".toCharArray(), "Password".toCharArray()), is(equalTo(true)));

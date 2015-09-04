@@ -153,16 +153,16 @@ public class PasswordLoginModule
         final CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(options);
 
         // initialize the audit object
-        initAudit(commonProps, options);
+        initAudit(commonProps);
 
         // initialize the message object
-        initMessageQueue(commonProps, options);
+        initMessageQueue(commonProps);
 
         // initialize the validator object
-        initPwValidator(commonProps, options);
+        initPwValidator(commonProps);
 
         // initialize the authenticator object
-        initPwAuthenticator(commonProps, options);
+        initPwAuthenticator(commonProps);
 
         LOG.info("Initialization complete");
     }
@@ -508,11 +508,10 @@ public class PasswordLoginModule
     /**
      * Initialize the instance-global audit object
      *
-     * @param commonProps The parsed JAAS configuration, with relevant extracted values
-     * @param options     The raw JAAS configuration, with all values (will be passed to instantiated object)
+     * @param commonProps The parsed JAAS configuration, plus additional raw values
      */
     @SuppressWarnings("PMD.ConfusingTernary")
-    private void initAudit(final CommonProperties commonProps, final Map<String, ?> options) {
+    private void initAudit(final CommonProperties commonProps) {
         try {
             final String auditClassName = commonProps.getAuditClassName();
 
@@ -527,7 +526,7 @@ public class PasswordLoginModule
                 throw new IllegalStateException(error);
             } else {
                 LOG.debug("Requesting audit class instance of '" + auditClassName + "' from the audit factory");
-                this.audit = AuditFactory.getInstance(auditClassName, options);
+                this.audit = AuditFactory.getInstance(auditClassName, commonProps);
             }
         } catch (FactoryException e) {
             final String error = "The audit class cannot be instantiated. This is most likely a configuration"
@@ -540,11 +539,10 @@ public class PasswordLoginModule
     /**
      * Initialize the instance-global message queue object
      *
-     * @param commonProps The parsed JAAS configuration, with relevant extracted values
-     * @param options     The raw JAAS configuration, with all values (will be passed to instantiated object)
+     * @param commonProps The parsed JAAS configuration, plus additional raw values
      */
     @SuppressWarnings("PMD.ConfusingTernary")
-    private void initMessageQueue(final CommonProperties commonProps, final Map<String, ?> options) {
+    private void initMessageQueue(final CommonProperties commonProps) {
         try {
             final String messageClassName = commonProps.getMessageQueueClassName();
 
@@ -559,7 +557,7 @@ public class PasswordLoginModule
                 throw new IllegalStateException(error);
             } else {
                 LOG.debug("Requesting message class instance of '" + messageClassName + "' from the message factory");
-                this.messageQ = MessageQFactory.getInstance(messageClassName, options);
+                this.messageQ = MessageQFactory.getInstance(messageClassName, commonProps);
             }
         } catch (FactoryException e) {
             final String error = "The message class cannot be instantiated. This is most likely a configuration"
@@ -572,10 +570,9 @@ public class PasswordLoginModule
     /**
      * Initialize the instance-global password validator object
      *
-     * @param commonProps The parsed JAAS configuration, with relevant extracted values
-     * @param options     The raw JAAS configuration, with all values (will be passed to instantiated object)
+     * @param commonProps The parsed JAAS configuration, plus additional raw values
      */
-    private void initPwValidator(final CommonProperties commonProps, final Map<String, ?> options) {
+    private void initPwValidator(final CommonProperties commonProps) {
         try {
             final String validatorClass = commonProps.getPasswordValidatorClassName();
             if (validatorClass == null) {
@@ -585,7 +582,7 @@ public class PasswordLoginModule
             } else {
                 LOG.debug("Requesting validator class instance of '" + validatorClass
                         + "' from the validator factory");
-                this.pwValidator = PasswordValidatorFactory.getInstance(validatorClass, options);
+                this.pwValidator = PasswordValidatorFactory.getInstance(validatorClass, commonProps);
             }
         } catch (FactoryException e) {
             final String error = "The validator class cannot be instantiated. This is most likely a configuration"
@@ -598,10 +595,9 @@ public class PasswordLoginModule
     /**
      * Initialize the instance-global password authenticator object
      *
-     * @param commonProps The parsed JAAS configuration, with relevant extracted values
-     * @param options     The raw JAAS configuration, with all values (will be passed to instantiated object)
+     * @param commonProps The parsed JAAS configuration, plus additional raw values
      */
-    private void initPwAuthenticator(final CommonProperties commonProps, final Map<String, ?> options) {
+    private void initPwAuthenticator(final CommonProperties commonProps) {
         try {
             final String authNticatorClass = commonProps.getPasswordAuthenticatorClassName();
             if (authNticatorClass == null) {
@@ -611,7 +607,7 @@ public class PasswordLoginModule
             } else {
                 LOG.debug("Requesting authenticator class instance of '" + authNticatorClass
                         + "' from the authenticator factory");
-                this.pwAuthenticator = PasswordAuthenticatorFactory.getInstance(authNticatorClass, options);
+                this.pwAuthenticator = PasswordAuthenticatorFactory.getInstance(authNticatorClass, commonProps);
             }
         } catch (FactoryException e) {
             final String error = "The validator class cannot be instantiated. This is most likely a configuration"

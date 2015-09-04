@@ -34,6 +34,7 @@ package org.beiter.michael.authn.jaas.authenticator.jdbc;
 
 import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedConnPropsBuilder;
 import org.beiter.michael.authn.jaas.authenticator.jdbc.propsbuilder.JaasPropsBasedDbPropsBuilder;
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.UserPrincipal;
 import org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator;
 import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
@@ -119,14 +120,15 @@ public class JdbcPasswordAuthenticatorTest {
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_URL, URL);
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_USERNAME, USER);
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
 
         String domain = "invalidDomain";
@@ -163,14 +165,15 @@ public class JdbcPasswordAuthenticatorTest {
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "id, password FROM user_plaintext WHERE domain = ? AND username = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
 
         String domain = "invalidDomain";
@@ -207,14 +210,15 @@ public class JdbcPasswordAuthenticatorTest {
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM invalid_table WHERE domain = ? AND username = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
 
         String domain = "invalidDomain";
@@ -252,14 +256,15 @@ public class JdbcPasswordAuthenticatorTest {
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE username = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
 
         String domain = "invalidDomain";
@@ -297,14 +302,15 @@ public class JdbcPasswordAuthenticatorTest {
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ? AND password = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
 
         String domain = "invalidDomain";
@@ -341,14 +347,15 @@ public class JdbcPasswordAuthenticatorTest {
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT password FROM user_plaintext WHERE domain = ? AND username = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
 
         String domain = "domain1";
@@ -385,14 +392,15 @@ public class JdbcPasswordAuthenticatorTest {
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
 
         String domain = "domain1";
@@ -418,14 +426,15 @@ public class JdbcPasswordAuthenticatorTest {
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
 
         String domain = "domain1";
@@ -452,14 +461,15 @@ public class JdbcPasswordAuthenticatorTest {
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
 
         String domain = "domain1";
@@ -496,14 +506,15 @@ public class JdbcPasswordAuthenticatorTest {
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
         String domain = "domain1";
         String username = "user1";
@@ -534,14 +545,15 @@ public class JdbcPasswordAuthenticatorTest {
         properties.put(JaasPropsBasedConnPropsBuilder.KEY_PASSWORD, PASSWORD);
         properties.put(JaasPropsBasedDbPropsBuilder.KEY_SQL_USER_QUERY,
                 "SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(properties);
 
         // create plain text password validator
         PasswordValidator pwValidator = new PlainTextPasswordValidator();
-        pwValidator.init(new ConcurrentHashMap<String, Object>());
+        pwValidator.init(commonProps);
 
         // create JDBC authenticator
         PasswordAuthenticator pwAuthenticator = new JdbcPasswordAuthenticator();
-        pwAuthenticator.init(properties);
+        pwAuthenticator.init(commonProps);
 
         String domain = "domain1";
         String username = "user1";

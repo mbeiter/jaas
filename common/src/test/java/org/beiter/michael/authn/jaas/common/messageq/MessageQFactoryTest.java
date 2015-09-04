@@ -68,8 +68,9 @@ public class MessageQFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
 
-        MessageQFactory.getInstance(null, config);
+        MessageQFactory.getInstance(null, commonProps);
     }
 
     /**
@@ -80,8 +81,9 @@ public class MessageQFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
 
-        MessageQFactory.getInstance(null, config);
+        MessageQFactory.getInstance(null, commonProps);
     }
 
     /**
@@ -93,8 +95,9 @@ public class MessageQFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
 
-        MessageQFactory.getInstance("someGarbageName", config);
+        MessageQFactory.getInstance("someGarbageName", commonProps);
     }
 
     /**
@@ -105,8 +108,9 @@ public class MessageQFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
 
-        MessageQFactory.getInstance("someGarbageName", config);
+        MessageQFactory.getInstance("someGarbageName", commonProps);
     }
 
     /**
@@ -118,8 +122,9 @@ public class MessageQFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
 
-        MessageQFactory.getInstance(String.class.getCanonicalName(), config);
+        MessageQFactory.getInstance(String.class.getCanonicalName(), commonProps);
     }
 
     /**
@@ -131,8 +136,9 @@ public class MessageQFactoryTest {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasPropsBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "false");
+        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
 
-        MessageQFactory.getInstance(String.class.getCanonicalName(), config);
+        MessageQFactory.getInstance(String.class.getCanonicalName(), commonProps);
     }
 
     /**
@@ -149,7 +155,7 @@ public class MessageQFactoryTest {
 
         MessageQ messageQ;
         try {
-            messageQ = MessageQFactory.getInstance(commonProps.getMessageQueueClassName(), config);
+            messageQ = MessageQFactory.getInstance(commonProps.getMessageQueueClassName(), commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -178,8 +184,8 @@ public class MessageQFactoryTest {
 
         MessageQ messageQ1, messageQ2;
         try {
-            messageQ1 = MessageQFactory.getInstance(commonProps.getMessageQueueClassName(), config);
-            messageQ2 = MessageQFactory.getInstance(commonProps.getMessageQueueClassName(), config);
+            messageQ1 = MessageQFactory.getInstance(commonProps.getMessageQueueClassName(), commonProps);
+            messageQ2 = MessageQFactory.getInstance(commonProps.getMessageQueueClassName(), commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);
@@ -195,7 +201,7 @@ public class MessageQFactoryTest {
         // now test that the factory return a new object (i.e. a new singleton)
         MessageQ messageQ3;
         try {
-            messageQ3 = MessageQFactory.getInstance(commonProps.getMessageQueueClassName(), config);
+            messageQ3 = MessageQFactory.getInstance(commonProps.getMessageQueueClassName(), commonProps);
         } catch (FactoryException e) {
             AssertionError ae = new AssertionError("Instantiation error");
             ae.initCause(e);

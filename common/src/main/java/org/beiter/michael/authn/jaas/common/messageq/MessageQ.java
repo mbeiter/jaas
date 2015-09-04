@@ -32,9 +32,8 @@
  */
 package org.beiter.michael.authn.jaas.common.messageq;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.Events;
-
-import java.util.Map;
 
 /**
  * An interface to connect a per-JAAS module message queue subsystem.
@@ -53,10 +52,10 @@ public interface MessageQ {
      * A class implementing this interface must ensure that subsequent calls to this method update the class'
      * configuration in a thread-safe way.
      *
-     * @param properties       The properties to initialize the message queue with. Supported parameters may vary
-     *                         with the implementing classes.
+     * @param properties       The properties to initialize the message queue with. Supported "additionalParameters" may
+     *                   vary with the implementing classes.
      */
-    void init(Map<String, ?> properties);
+    void init(CommonProperties properties);
 
     /**
      * Create a message for the provided user ID (i.e. for the principal)

@@ -32,8 +32,9 @@
  */
 package org.beiter.michael.authn.jaas.common.validator;
 
+import org.beiter.michael.authn.jaas.common.CommonProperties;
+
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  * This implementation of a password validator can validate a password against a plain-text password string.
@@ -49,7 +50,8 @@ public class PlainTextPasswordValidator
      * {@inheritDoc}
      */
     @Override
-    public void init(final Map<String, ?> properties) {
+    public void init(final CommonProperties  properties) {
+
         // nothing to do here - this implementation does not take any properties
     }
 

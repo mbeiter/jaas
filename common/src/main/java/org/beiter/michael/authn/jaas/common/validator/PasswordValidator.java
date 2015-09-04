@@ -32,7 +32,7 @@
  */
 package org.beiter.michael.authn.jaas.common.validator;
 
-import java.util.Map;
+import org.beiter.michael.authn.jaas.common.CommonProperties;
 
 /**
  * An interface to represent a password validation mechanism.
@@ -51,10 +51,10 @@ public interface PasswordValidator {
      * A class implementing this interface must ensure that subsequent calls to this method update the class'
      * configuration in a thread-safe way.
      *
-     * @param properties The properties to initialize the password validator with. Supported parameters may vary with
-     *                   the implementing classes.
+     * @param properties The properties to initialize the password validator with. Supported "additionalParameters" may
+     *                   vary with the implementing classes.
      */
-    void init(Map<String, ?> properties);
+    void init(final CommonProperties properties);
 
     /**
      * Validate a user's password against a credential record.
