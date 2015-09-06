@@ -1,0 +1,2 @@
+org.beiter.michael.authn.jaas.loginmodules.password.authenticators.jdbc
+org.beiter.michael.authn.jaas.loginmodules.password.authenticators.jdbc.propsbuilder
