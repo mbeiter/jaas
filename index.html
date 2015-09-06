@@ -6,7 +6,7 @@
     <title>JAAS by mbeiter</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,14 +33,6 @@
 
 <p>This JAAS library provides an extendable framework to easily create JAAS modules with auditing and message queue support.</p>
 
-<h2>
-<a id="components-and-usage" class="anchor" href="#components-and-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Components and Usage</h2>
-
-<h3>
-<a id="common" class="anchor" href="#common" aria-hidden="true"><span class="octicon octicon-link"></span></a>Common</h3>
-
-<p>The actual JAAS modules, plus interfaces and reference implementations for extension points such as audit and message queue integration. </p>
-
 <p>The following extension points are supported:</p>
 
 <ul>
@@ -50,49 +42,23 @@
 <li>Authenticators (i.e. the component that performs the actual authentication, for instance, against a data store like a JDBC database)</li>
 </ul>
 
+<h2>
+<a id="components-and-usage" class="anchor" href="#components-and-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Components and Usage</h2>
+
+<h3>
+<a id="common" class="anchor" href="#common" aria-hidden="true"><span class="octicon octicon-link"></span></a>Common</h3>
+
+<p>Common configuration, plus interfaces and reference implementations for extension points such as audit and message queue integration. </p>
+
 <p>Contents:</p>
 
 <ul>
-<li>JAAS modules:
-
-<ul>
-<li>JAAS module for <strong>username / password based authentication</strong>, with support for white label domains</li>
+<li>Configuration management (reading common configuration properties from JAAS config files)</li>
+<li>Auditing interface and Factory</li>
+<li>Sample audit logger (this implementation of the audit interface logs audit events to the console log, and is not intended for production)</li>
+<li>Message queues interface and Factory</li>
+<li>Sample message queue logger (his implementation of the message queue interface logs messages to the console log, and is not intended for any real world use)</li>
 </ul>
-</li>
-<li>Authenticators:
-
-<ul>
-<li>
-<strong>Dummy authenticator</strong> for username / password based authentication: This is meant as an example on how to implement an authenticator, and for testing. Validation in this module passes if the provided password matches the provided username.</li>
-</ul>
-</li>
-<li>Validators:
-
-<ul>
-<li>
-<strong>Plain text password validator</strong>: This is meant as an example on how to implement a password validator and for testing - <strong>not for production</strong>.</li>
-</ul>
-</li>
-<li>Auditing:
-
-<ul>
-<li>
-<strong>Audit logger</strong>: This implementation of the audit interface logs audit events to the console log, and is usually not intended for production.</li>
-</ul>
-</li>
-<li>Message Queues:
-
-<ul>
-<li>
-<strong>Message logger</strong>: This implementation of the message queue interface logs messages to the console log, and is certainly not intended for production.</li>
-</ul>
-</li>
-</ul>
-
-<h4>
-<a id="maven-dependency" class="anchor" href="#maven-dependency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maven Dependency</h4>
-
-<p>See project documentation.</p>
 
 <h4>
 <a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h4>
@@ -106,6 +72,106 @@
 <a href="http://mbeiter.github.io/jaas/docs/1.0/common/apidocs/index.html">Java Docs</a> </li>
 </ul>
 </li>
+<li>2.0: 
+
+<ul>
+<li><a href="http://mbeiter.github.io/jaas/docs/2.0/common/">Maven Project Docs</a></li>
+<li>
+<a href="http://mbeiter.github.io/jaas/docs/2.0/common/apidocs/index.html">Java Docs</a> </li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="loginmodules" class="anchor" href="#loginmodules" aria-hidden="true"><span class="octicon octicon-link"></span></a>Loginmodules</h3>
+
+<p>An aggregator project for the actual JAAS modules.</p>
+
+<p>Currently, only one sub-project for username / password style credentials is included.</p>
+
+<h4>
+<a id="documentation-1" class="anchor" href="#documentation-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h4>
+
+<ul>
+<li>2.0: 
+
+<ul>
+<li><a href="http://mbeiter.github.io/jaas/docs/2.0/loginmodules/">Maven Project Docs</a></li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="password" class="anchor" href="#password" aria-hidden="true"><span class="octicon octicon-link"></span></a>Password</h3>
+
+<p>An aggregator project for the username / password style credentials JAAS modules.</p>
+
+<p>This module contains submodules with various authenticators (i.e. modules that retrieve credential information from a data source) and validators (modules that can validate user provided credentials against credentials retrieved from a data source).</p>
+
+<h4>
+<a id="documentation-2" class="anchor" href="#documentation-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h4>
+
+<ul>
+<li>2.0: 
+
+<ul>
+<li><a href="http://mbeiter.github.io/jaas/docs/2.0/password/">Maven Project Docs</a></li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="pwcommon" class="anchor" href="#pwcommon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pwcommon</h3>
+
+<p>The actual JAAS modules for <strong>username / password based authentication</strong>, with support for white label domains, plus the necessary interface definitions to add custom validators (for additional password encodings) and authenticators (for additional data source).</p>
+
+<ul>
+<li>2.0: 
+
+<ul>
+<li><a href="http://mbeiter.github.io/jaas/docs/2.0/pwcommon/">Maven Project Docs</a></li>
+<li>
+<a href="http://mbeiter.github.io/jaas/docs/2.0/pwcommon/apidocs/index.html">Java Docs</a> </li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="authenticators" class="anchor" href="#authenticators" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authenticators</h3>
+
+<p>An aggregator project for the username / password style credentials authenticators.</p>
+
+<p>This module contains submodules with various authenticators (i.e. modules that retrieve credential information from a data source).</p>
+
+<h4>
+<a id="documentation-3" class="anchor" href="#documentation-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h4>
+
+<ul>
+<li>2.0: 
+
+<ul>
+<li><a href="http://mbeiter.github.io/jaas/docs/2.0/authenticators/">Maven Project Docs</a></li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="dummy-password-authenticator" class="anchor" href="#dummy-password-authenticator" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dummy Password Authenticator</h3>
+
+<p>This module contains a Dummy authenticator for username / password based authentication: This is meant as an example on how to implement an authenticator, and for testing. Validation in this module passes if the provided password matches the provided username. <strong>Not for use in production environments</strong>.</p>
+
+<h4>
+<a id="documentation-4" class="anchor" href="#documentation-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h4>
+
+<ul>
+<li>2.0: 
+
+<ul>
+<li><a href="http://mbeiter.github.io/jaas/docs/2.0/dummy/">Maven Project Docs</a></li>
+<li>
+<a href="http://mbeiter.github.io/jaas/docs/2.0/dummy/apidocs/index.html">Java Docs</a> </li>
+</ul>
+</li>
 </ul>
 
 <h3>
@@ -114,12 +180,7 @@
 <p>This authenticator allows to perform username / password based authentication against databases, with support for white label domains. The database connection is made either through a configurable JDBC connection pool, or through a JNDI (pooled) connection.</p>
 
 <h4>
-<a id="maven-dependency-1" class="anchor" href="#maven-dependency-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maven Dependency</h4>
-
-<p>See project documentation.</p>
-
-<h4>
-<a id="documentation-1" class="anchor" href="#documentation-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h4>
+<a id="documentation-5" class="anchor" href="#documentation-5" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h4>
 
 <ul>
 <li>1.0: 
@@ -128,6 +189,51 @@
 <li><a href="http://mbeiter.github.io/jaas/docs/1.0/jdbc/">Maven Project Docs</a></li>
 <li>
 <a href="http://mbeiter.github.io/jaas/docs/1.0/jdbc/apidocs/index.html">Java Docs</a> </li>
+</ul>
+</li>
+<li>2.0: 
+
+<ul>
+<li><a href="http://mbeiter.github.io/jaas/docs/2.0/jdbc/">Maven Project Docs</a></li>
+<li><a href="http://mbeiter.github.io/jaas/docs/2.0/jdbc/apidocs/index.html">Java Docs</a></li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="validators" class="anchor" href="#validators" aria-hidden="true"><span class="octicon octicon-link"></span></a>Validators</h3>
+
+<p>An aggregator project for the username / password style credentials validators.</p>
+
+<p>This module contains submodules with various validators (i.e. modules that can validate user provided credentials against credentials retrieved from a data source).</p>
+
+<h4>
+<a id="documentation-6" class="anchor" href="#documentation-6" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h4>
+
+<ul>
+<li>2.0: 
+
+<ul>
+<li><a href="http://mbeiter.github.io/jaas/docs/2.0/validators/">Maven Project Docs</a></li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="plaintext-password-validator" class="anchor" href="#plaintext-password-validator" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plaintext Password Validator</h3>
+
+<p>This module contains a validator for username / password based credentials: This is meant as an example on how to implement a validator and for testing. Passwords are validated with a simple match against a plain text password received from an authenticator. <strong>Not for use in production environments</strong>.</p>
+
+<h4>
+<a id="documentation-7" class="anchor" href="#documentation-7" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h4>
+
+<ul>
+<li>2.0: 
+
+<ul>
+<li><a href="http://mbeiter.github.io/jaas/docs/2.0/plaintext/">Maven Project Docs</a></li>
+<li>
+<a href="http://mbeiter.github.io/jaas/docs/2.0/plaintext/apidocs/index.html">Java Docs</a> </li>
 </ul>
 </li>
 </ul>
