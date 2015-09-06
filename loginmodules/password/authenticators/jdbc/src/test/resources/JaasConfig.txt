@@ -1,0 +1,55 @@
+PWLoginJdbcAuthenticatorJaasConfig {
+    org.beiter.michael.authn.jaas.loginmodules.password.common.PasswordLoginModule required
+
+    // audit configuration
+    jaas.audit.class="org.beiter.michael.authn.jaas.common.audit.SampleAuditLogger"
+    jaas.audit.enabled=true
+
+    // message queue configuration
+    jaas.messageq.class="org.beiter.michael.authn.jaas.common.messageq.SampleMessageLogger"
+    jaas.messageq.enabled=true
+
+    // password validator configuration
+    jaas.password.validator.class="org.beiter.michael.authn.jaas.loginmodules.password.validators.plaintext.PlainTextPasswordValidator"
+
+    // password authenticator configuration
+    jaas.password.authenticator.class="org.beiter.michael.authn.jaas.loginmodules.password.authenticators.jdbc.JdbcPasswordAuthenticator"
+
+
+    // JNDI Configuration (when using JNDI)
+    // ------------------
+    // jaas.jdbc.jndi.name = JNDINAME
+
+    // JDBC Pool Configuration (when using the connection pool)
+    // -----------------------
+    jaas.jdbc.jdbcPool.driver="org.h2.Driver"
+    jaas.jdbc.jdbcPool.url="jdbc:h2:mem:h2test_db
+    jaas.jdbc.jdbcPool.username="someUser"
+    jaas.jdbc.jdbcPool.password="noPassword"
+
+    // jaas.jdbc.jdbcPool.maxTotal=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.maxIdle=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.minIdle=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.maxWaitMillis=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.testOnCreate=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.testOnBorrow=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.testOnReturn=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.testWhileIdle=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.timeBetweenEvictionRuns=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.numTestsPerEvictionRun=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.minEvictableTimeMillis=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.softMinEvictableIdleTimeMillis=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.lifo=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.autoCommit=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.readOnly=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.transactionIsolation=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.cacheState=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.validationQuery=CONFIGURE_AS_NEEDED
+    // jaas.jdbc.jdbcPool.maxConnLifetimeMillis=CONFIGURE_AS_NEEDED
+
+    // SQL Query to find the user, always required
+    // ---------
+    jaas.jdbc.sql.userQuery="SELECT id, password FROM user_plaintext WHERE domain = ? AND username = ?"
+
+    ;
+};

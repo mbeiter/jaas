@@ -258,6 +258,16 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.beiter.michael.authn.jaas.loginmodules.password</groupId>
+                <artifactId>common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.beiter.michael.authn.jaas.loginmodules.password.validators</groupId>
+                <artifactId>plaintext</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.beiter.michael.util</groupId>
                 <artifactId>db</artifactId>
                 <version>1.2</version>

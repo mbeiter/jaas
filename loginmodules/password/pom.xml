@@ -25,9 +25,38 @@
     <url>http://mbeiter.github.io/jaas/docs/${project.version}/${project.artifactId}/</url>
 
     <modules>
+	    <module>common</module>
         <module>authenticators</module>
         <module>validators</module>
     </modules>
+
+    <dependencies>
+        <!-- Included dependencies -->
+        <dependency>
+            <groupId>org.beiter.michael.authn.jaas</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <scm>
         <url>https://github.com/mbeiter/jaas</url>

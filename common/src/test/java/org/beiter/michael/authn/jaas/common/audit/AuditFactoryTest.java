@@ -34,7 +34,7 @@ package org.beiter.michael.authn.jaas.common.audit;
 
 import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.FactoryException;
-import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasBasedCommonPropsBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -70,8 +70,8 @@ public class AuditFactoryTest {
             throws FactoryException {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
 
         AuditFactory.getInstance(null, commonProps);
     }
@@ -83,8 +83,8 @@ public class AuditFactoryTest {
             throws FactoryException {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
 
         AuditFactory.getInstance(null, commonProps);
     }
@@ -97,8 +97,8 @@ public class AuditFactoryTest {
             throws FactoryException {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
 
         AuditFactory.getInstance("someGarbageName", commonProps);
     }
@@ -110,8 +110,8 @@ public class AuditFactoryTest {
             throws FactoryException {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
 
         AuditFactory.getInstance("someGarbageName", commonProps);
     }
@@ -124,8 +124,8 @@ public class AuditFactoryTest {
             throws FactoryException {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
 
         AuditFactory.getInstance(String.class.getCanonicalName(), commonProps);
     }
@@ -137,8 +137,8 @@ public class AuditFactoryTest {
             throws FactoryException {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "false");
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
 
         AuditFactory.getInstance(String.class.getCanonicalName(), commonProps);
     }
@@ -151,9 +151,9 @@ public class AuditFactoryTest {
     public void getSpecificImplementationTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_CLASS_NAME, "org.beiter.michael.authn.jaas.common.audit.SampleAuditLogger");
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_CLASS_NAME, "org.beiter.michael.authn.jaas.common.audit.SampleAuditLogger");
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
 
         Audit audit;
         try {
@@ -180,9 +180,9 @@ public class AuditFactoryTest {
     public void factoryReturnsSingletonTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
-        config.put(JaasPropsBasedCommonPropsBuilder.KEY_AUDIT_CLASS_NAME, "org.beiter.michael.authn.jaas.common.audit.SampleAuditLogger");
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_CLASS_NAME, "org.beiter.michael.authn.jaas.common.audit.SampleAuditLogger");
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
 
         Audit audit1, audit2;
         try {

@@ -27,12 +27,35 @@
     <dependencies>
         <!-- Included dependencies -->
         <dependency>
+            <groupId>org.beiter.michael.authn.jaas</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.beiter.michael.authn.jaas.loginmodules.password</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.beiter.michael.util</groupId>
+            <artifactId>db</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+        </dependency>
+
+        <!-- Provided dependencies -->
+        <dependency>
+            <groupId>net.sourceforge.findbugs</groupId>
+            <artifactId>annotations</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Test dependencies -->
@@ -44,6 +67,21 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.beiter.michael.authn.jaas.loginmodules.password.validators</groupId>
+            <artifactId>plaintext</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

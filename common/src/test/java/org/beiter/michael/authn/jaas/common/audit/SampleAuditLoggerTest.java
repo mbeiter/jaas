@@ -34,7 +34,7 @@ package org.beiter.michael.authn.jaas.common.audit;
 
 import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.Events;
-import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasBasedCommonPropsBuilder;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class SampleAuditLoggerTest {
     public void defaultDomainAuditTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
 
         SampleAuditLogger audit = new SampleAuditLogger();
 
@@ -72,7 +72,7 @@ public class SampleAuditLoggerTest {
     public void specificDomainAuditTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.build(config);
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
 
         SampleAuditLogger audit = new SampleAuditLogger();
 

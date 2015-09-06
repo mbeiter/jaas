@@ -19,8 +19,8 @@
         It provides common artifacts such as interfaces for auditing, message queue, and credential
         validation, as well as default implementations of these interfaces.
 
-        The provided default implementations are not intended for production, and will have to be
-        adjusted to meet deployment specific requirements.
+        The provided default implementations e.g. for auditing and message queues are not intended
+        for production, and will have to be adjusted to meet deployment specific requirements.
     </description>
     <url>http://mbeiter.github.io/jaas/docs/${project.version}/${project.artifactId}/</url>
 

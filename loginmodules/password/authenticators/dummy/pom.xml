@@ -16,7 +16,7 @@
 
     <name>dummy</name>
     <description>
-        This module is part of a JAAS library, provoding password based credential authenticators. 
+        This module is part of a JAAS library, providing password based credential authenticators.
 		This particular Maven module provides a dummy authenticator that assumes password = username.
 
         This implementation is for testing only, and NOT intended for production.
@@ -25,6 +25,14 @@
 
     <dependencies>
         <!-- Included dependencies -->
+        <dependency>
+            <groupId>org.beiter.michael.authn.jaas</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.beiter.michael.authn.jaas.loginmodules.password</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -43,6 +51,11 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.beiter.michael.authn.jaas.loginmodules.password.validators</groupId>
+            <artifactId>plaintext</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

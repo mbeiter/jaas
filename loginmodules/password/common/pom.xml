@@ -1,0 +1,70 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.beiter.michael.authn.jaas.loginmodules</groupId>
+        <artifactId>password</artifactId>
+        <version>1.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+	<groupId>org.beiter.michael.authn.jaas.loginmodules.password</groupId>
+    <artifactId>common</artifactId>
+    <packaging>jar</packaging>
+    <version>1.1-SNAPSHOT</version>
+
+    <name>dummy</name>
+    <description>
+        This module is part of a JAAS library, provoding common classes for password based 
+		credential handling. 
+
+        This implementation is production ready.
+    </description>
+    <url>http://mbeiter.github.io/jaas/docs/${project.version}/${project.artifactId}/</url>
+
+    <dependencies>
+        <!-- Included dependencies -->
+        <dependency>
+            <groupId>org.beiter.michael.authn.jaas</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <scm>
+        <url>https://github.com/mbeiter/jaas</url>
+        <connection>scm:git:git://github.com/mbeiter/jaas.git</connection>
+        <developerConnection>scm:git:git@github.com:mbeiter/jaas.git</developerConnection>
+    </scm>
+
+    <!--
+      Required for 'mvn site/ to build the links correctly. Requires the URL of this module to be set to:
+      <url>http://mbeiter.github.io/jaas/docs/${project.version}/${project.artifactId}/</url>
+    -->
+    <distributionManagement>
+        <site>
+            <id>github.gh-pages</id>
+            <url>${project.url}</url>
+        </site>
+    </distributionManagement>
+</project>

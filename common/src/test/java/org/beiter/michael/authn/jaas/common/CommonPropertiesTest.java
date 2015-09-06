@@ -32,7 +32,7 @@
  */
 package org.beiter.michael.authn.jaas.common;
 
-import org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder;
+import org.beiter.michael.authn.jaas.common.propsbuilder.JaasBasedCommonPropsBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -98,7 +98,7 @@ public class CommonPropertiesTest {
     @Test
     public void additionalPropertiesOutboundDefensiveCopyTest() {
 
-        CommonProperties commonProps = JaasPropsBasedCommonPropsBuilder.buildDefault();
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.buildDefault();
 
         String error = "The properties POJO does not create an outbound defensive copy";
         try {
@@ -117,7 +117,7 @@ public class CommonPropertiesTest {
     @Test
     public void copyConstructorTest() {
 
-        CommonProperties commonProps1 = JaasPropsBasedCommonPropsBuilder.buildDefault();
+        CommonProperties commonProps1 = JaasBasedCommonPropsBuilder.buildDefault();
         CommonProperties commonProps2 = new CommonProperties(commonProps1);
 
         String error = "The copy constructor does not create a new object instance";

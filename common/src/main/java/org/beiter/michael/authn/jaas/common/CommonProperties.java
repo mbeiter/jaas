@@ -89,8 +89,8 @@ public class CommonProperties {
      * <p/>
      * You can change the defaults with the setters.
      *
-     * @see org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder#buildDefault()
-     * @see org.beiter.michael.authn.jaas.common.propsbuilder.JaasPropsBasedCommonPropsBuilder#build(java.util.Map)
+     * @see org.beiter.michael.authn.jaas.common.propsbuilder.JaasBasedCommonPropsBuilder#buildDefault()
+     * @see org.beiter.michael.authn.jaas.common.propsbuilder.JaasBasedCommonPropsBuilder#build(java.util.Map)
      */
     public CommonProperties() {
 
@@ -239,12 +239,10 @@ public class CommonProperties {
      * Set the password authenticator class name. This class is instantiated for authenticating username / password
      * style credentials.
      * <p/>
-     * The class must implement the {@link org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator}
-     * interface.
+     * The class must implement the <code>PasswordAuthenticator</code> interface.
      * <p/>
      *
-     * @param passwordAuthenticatorClassName A class implementing the {@link org.beiter.michael.authn.jaas.common.authenticator.PasswordAuthenticator}
-     *                                       interface
+     * @param passwordAuthenticatorClassName A class implementing the <code>PasswordAuthenticator</code> interface
      */
     // CHECKSTYLE:ON
     public final void setPasswordAuthenticatorClassName(final String passwordAuthenticatorClassName) {
@@ -275,12 +273,10 @@ public class CommonProperties {
      * Set the password validator class name. This class is instantiated for validating username / password
      * style credentials.
      * <p/>
-     * The class must implement the {@link org.beiter.michael.authn.jaas.common.validator.PasswordValidator}
-     * interface.
+     * The class must implement the <code>PasswordValidator</code> interface.
      * <p/>
      *
-     * @param passwordValidatorClassName A class implementing the {@link org.beiter.michael.authn.jaas.common.validator.PasswordValidator}
-     *                                   interface
+     * @param passwordValidatorClassName A class implementing the <code>PasswordValidator</code> interface
      */
     // CHECKSTYLE:ON
     public final void setPasswordValidatorClassName(final String passwordValidatorClassName) {
