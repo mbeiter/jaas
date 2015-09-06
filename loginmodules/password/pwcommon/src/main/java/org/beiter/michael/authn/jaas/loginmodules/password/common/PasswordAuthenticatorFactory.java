@@ -86,6 +86,8 @@ public final class PasswordAuthenticatorFactory {
         try {
             authNticatorClazz = Class.forName(className).asSubclass(PasswordAuthenticator.class);
         } catch (ClassNotFoundException e) {
+            // Fortify will report a violation here because of disclosure of potentially confidential information.
+            // However, the class name is not confidential, which makes this a non-issue / false positive.
             final String error = "Class not found: " + className;
             LOG.warn(error);
             throw new FactoryException(error, e);

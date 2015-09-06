@@ -598,10 +598,14 @@ public class PasswordLoginModule
                 throw new IllegalStateException(error);
             } else {
                 if (commonProps.isPasswordValidatorSingleton()) {
+                    // Fortify will report a violation here because of disclosure of potentially confidential information.
+                    // However, the class name is not confidential, which makes this a non-issue / false positive.
                     LOG.debug("Requesting singleton validator class instance of '" + validatorClass
                             + "' from the validator factory");
                     this.pwValidator = PasswordValidatorFactory.getSingleton(validatorClass, commonProps);
                 } else {
+                    // Fortify will report a violation here because of disclosure of potentially confidential information.
+                    // However, the class name is not confidential, which makes this a non-issue / false positive.
                     LOG.debug("Requesting non-singleton validator class instance of '" + validatorClass
                             + "' from the validator factory");
                     this.pwValidator = PasswordValidatorFactory.getInstance(validatorClass, commonProps);
@@ -629,10 +633,14 @@ public class PasswordLoginModule
                 throw new IllegalStateException(error);
             } else {
                 if (commonProps.isPasswordAuthenticatorSingleton()) {
+                    // Fortify will report a violation here because of disclosure of potentially confidential information.
+                    // However, the class name is not confidential, which makes this a non-issue / false positive.
                     LOG.debug("Requesting singleton authenticator class instance of '" + authNticatorClass
                             + "' from the authenticator factory");
                     this.pwAuthenticator = PasswordAuthenticatorFactory.getSingleton(authNticatorClass, commonProps);
                 } else {
+                    // Fortify will report a violation here because of disclosure of potentially confidential information.
+                    // However, the class name is not confidential, which makes this a non-issue / false positive.
                     LOG.debug("Requesting non-singleton authenticator class instance of '" + authNticatorClass
                             + "' from the authenticator factory");
                     this.pwAuthenticator = PasswordAuthenticatorFactory.getInstance(authNticatorClass, commonProps);
