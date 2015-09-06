@@ -63,17 +63,69 @@ public final class MessageQFactory {
     }
 
     /**
-     * Return an instance of a {@link MessageQ} class to use for JAAS event messageing.
-     * <p/>
+     * Return a new, fully initialized instance of a {@link MessageQ} class to use for JAAS event messageing.
+     * <p>
      * Classes implementing the {@link MessageQ} interface <b>must</b> be thread safe.
      *
-     * @param className        The name of a class that implements the Message interface
-     * @param properties       The properties to initialize the instance with
+     * @param className  The name of a class that implements the Message interface
+     * @param properties The properties to initialize the instance with
+     * @return An instance of a class implementing the {@link MessageQ} interface
+     * @throws FactoryException When the class cannot be instantiated
+     */
+    public static MessageQ getInstance(final String className, final CommonProperties properties)
+            throws FactoryException {
+
+        Validate.notBlank(className);
+        Validate.notNull(properties);
+
+        final Class<? extends MessageQ> messageClazz;
+        try {
+            messageClazz = Class.forName(className).asSubclass(MessageQ.class);
+        } catch (ClassNotFoundException e) {
+            final String error = "Class not found: " + className;
+            LOG.warn(error);
+            throw new FactoryException(error, e);
+        } catch (ClassCastException e) {
+            final String error = "The provided registry factory class name ('" + className
+                    + "') is not a subclass of '" + MessageQ.class.getCanonicalName() + "'";
+            LOG.warn(error);
+            throw new FactoryException(error, e);
+        }
+
+        final MessageQ messageQ;
+        try {
+            final Constructor<? extends MessageQ> constructor = messageClazz.getDeclaredConstructor();
+            if (!constructor.isAccessible()) {
+                final String error = "Constructor of class '" + messageClazz.getCanonicalName()
+                        + "' is not accessible, changing the accessible flag to instantiate the class";
+                LOG.info(error);
+                constructor.setAccessible(true);
+            }
+            messageQ = constructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException
+                | NoSuchMethodException | IllegalArgumentException e) {
+            final String error = "Cannot instantiate class '" + messageClazz.getCanonicalName() + "'";
+            LOG.warn(error, e);
+            throw new FactoryException(error, e);
+        }
+
+        messageQ.init(properties);
+
+        return messageQ;
+    }
+
+    /**
+     * Return a singleton, fully initialized instance of a {@link MessageQ} class to use for JAAS event messageing.
+     * <p>
+     * Classes implementing the {@link MessageQ} interface <b>must</b> be thread safe.
+     *
+     * @param className  The name of a class that implements the Message interface
+     * @param properties The properties to initialize the instance with
      * @return An instance of a class implementing the {@link MessageQ} interface
      * @throws FactoryException When the class cannot be instantiated
      */
     @SuppressWarnings("PMD.NonThreadSafeSingleton")
-    public static MessageQ getInstance(final String className, final CommonProperties properties)
+    public static MessageQ getSingleton(final String className, final CommonProperties properties)
             throws FactoryException {
 
         Validate.notBlank(className);
@@ -84,37 +136,7 @@ public final class MessageQFactory {
             synchronized (MessageQFactory.class) {
                 if (messageQInstance == null) {
 
-                    final Class<? extends MessageQ> messageClazz;
-                    try {
-                        messageClazz = Class.forName(className).asSubclass(MessageQ.class);
-                    } catch (ClassNotFoundException e) {
-                        final String error = "Class not found: " + className;
-                        LOG.warn(error);
-                        throw new FactoryException(error, e);
-                    } catch (ClassCastException e) {
-                        final String error = "The provided registry factory class name ('" + className
-                                + "') is not a subclass of '" + MessageQ.class.getCanonicalName() + "'";
-                        LOG.warn(error);
-                        throw new FactoryException(error, e);
-                    }
-
-                    try {
-                        final Constructor<? extends MessageQ> constructor = messageClazz.getDeclaredConstructor();
-                        if (!constructor.isAccessible()) {
-                            final String error = "Constructor of class '" + messageClazz.getCanonicalName()
-                                    + "' is not accessible, changing the accessible flag to instantiate the class";
-                            LOG.info(error);
-                            constructor.setAccessible(true);
-                        }
-                        messageQInstance = constructor.newInstance();
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                            | NoSuchMethodException | IllegalArgumentException e) {
-                        final String error = "Cannot instantiate class '" + messageClazz.getCanonicalName() + "'";
-                        LOG.warn(error, e);
-                        throw new FactoryException(error, e);
-                    }
-
-                    messageQInstance.init(properties);
+                        messageQInstance = getInstance(className, properties);
                 }
             }
         }
@@ -123,7 +145,9 @@ public final class MessageQFactory {
     }
 
     /**
-     * Resets the internal state of the factory.
+     * Resets the internal state of the factory, which causes the
+     * {@link MessageQFactory#getSingleton(String, CommonProperties)} method to return a new {@link MessageQ} instance
+     * the next time it is called.
      */
     // CHECKSTYLE:OFF
     // this is flagged in checkstyle with a missing whitespace before '}', which is a bug in checkstyle

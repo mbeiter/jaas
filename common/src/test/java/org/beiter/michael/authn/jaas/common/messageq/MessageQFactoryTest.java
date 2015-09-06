@@ -168,14 +168,11 @@ public class MessageQFactoryTest {
     }
 
     /**
-     * Retrieve two instances of the default implementation of the MessageQ interface, and asserts that the two returned
-     * objects are identical (i.e. the factory returns a singleton).
-     * <p/>
-     * Then the factory is reset, and another instance is retrieved. If the factory resets properly, the third instance
-     * must be unequal to the first two instances.
+     * Retrieve two instances of a specific implementation of the MessageQ interface, and asserts that the returned
+     * objects are two separate instances.
      */
     @Test
-    public void factoryReturnsSingletonTest() {
+    public void twoInstancesAreDifferentTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
@@ -192,13 +189,43 @@ public class MessageQFactoryTest {
             throw ae;
         }
 
+        String error = "The factory returns a singleton instead of a new object";
+        assertThat(error, messageQ1, is(not(sameInstance(messageQ2))));
+    }
+
+    /**
+     * Retrieve two singleton instances of a specific implementation of the MessageQ interface, and asserts that the two
+     * returned objects are identical (i.e. the factory returns a singleton).
+     * <p>
+     * Then, a regular (non-singleton) instance is retrieved, which are asserted to be different than the previously
+     * retrieved objects.
+     * <p>
+     * Finally, the factory is reset, and another instance is retrieved. If the factory resets properly, the third
+     * instance must be unequal to the first three instances.
+     */
+    @Test
+    public void factoryReturnsSingletonTest() {
+
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        config.put(JaasBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_ENABLED, "true");
+        config.put(JaasBasedCommonPropsBuilder.KEY_MESSAGEQ_CLASS_NAME, "org.beiter.michael.authn.jaas.common.messageq.SampleMessageLogger");
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
+
+        // test that two singletons retrieved from the factory are identical
+        MessageQ messageQ1, messageQ2;
+        try {
+            messageQ1 = MessageQFactory.getSingleton(commonProps.getMessageQueueClassName(), commonProps);
+            messageQ2 = MessageQFactory.getSingleton(commonProps.getMessageQueueClassName(), commonProps);
+        } catch (FactoryException e) {
+            AssertionError ae = new AssertionError("Instantiation error");
+            ae.initCause(e);
+            throw ae;
+        }
+
         String error = "The factory does not return a singleton";
         assertThat(error, messageQ1, is(sameInstance(messageQ2)));
 
-        // reset the factory
-        MessageQFactory.reset();
-
-        // now test that the factory return a new object (i.e. a new singleton)
+        // then test that a regular (non-singleton) instance is different
         MessageQ messageQ3;
         try {
             messageQ3 = MessageQFactory.getInstance(commonProps.getMessageQueueClassName(), commonProps);
@@ -207,8 +234,26 @@ public class MessageQFactoryTest {
             ae.initCause(e);
             throw ae;
         }
+        error = "The factory returns a singleton instead of a new object";
+        assertThat(error, messageQ1, is(not(sameInstance(messageQ3))));
+        assertThat(error, messageQ2, is(not(sameInstance(messageQ3))));
+
+        // reset the factory
+        MessageQFactory.reset();
+
+        // now test that the factory return a new object (i.e. a new singleton)
+        MessageQ messageQ4;
+        try {
+            messageQ4 = MessageQFactory.getSingleton(commonProps.getMessageQueueClassName(), commonProps);
+        } catch (FactoryException e) {
+            AssertionError ae = new AssertionError("Instantiation error");
+            ae.initCause(e);
+            throw ae;
+        }
 
         error = "The factory does not return a singleton, or does not reset properly";
-        assertThat(error, messageQ1, is(not(sameInstance(messageQ3))));
+        assertThat(error, messageQ1, is(not(sameInstance(messageQ4))));
+        assertThat(error, messageQ2, is(not(sameInstance(messageQ4))));
+        assertThat(error, messageQ3, is(not(sameInstance(messageQ4))));
     }
 }

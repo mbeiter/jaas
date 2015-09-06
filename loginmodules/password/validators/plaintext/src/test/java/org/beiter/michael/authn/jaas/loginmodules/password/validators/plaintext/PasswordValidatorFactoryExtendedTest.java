@@ -48,7 +48,15 @@ import static org.junit.Assert.assertThat;
 
 public class PasswordValidatorFactoryExtendedTest {
 
+    /**
+     * The logger object for this class
+     */
     private static final Logger LOG = LoggerFactory.getLogger(PasswordValidatorFactoryExtendedTest.class);
+
+    /**
+     * The test class to instantiate
+     */
+    String className = "org.beiter.michael.authn.jaas.loginmodules.password.validators.plaintext.PlainTextPasswordValidator";
 
     /**
      * Reset the password validator factory to allow creating several instances of the underlying password validator
@@ -67,7 +75,6 @@ public class PasswordValidatorFactoryExtendedTest {
     @Test
     public void getSpecificImplementationTest() {
 
-        String className = "org.beiter.michael.authn.jaas.loginmodules.password.validators.plaintext.PlainTextPasswordValidator";
         CommonProperties commonProps = JaasBasedCommonPropsBuilder.buildDefault();
 
         PasswordValidator passwordValidator;
@@ -84,16 +91,12 @@ public class PasswordValidatorFactoryExtendedTest {
     }
 
     /**
-     * Retrieve two instances of a specific implementation of the PasswordValidator interface, and assert that the
-     * two returned objects are identical (i.e. the factory returns a singleton).
-     * <p>
-     * Then the factory is reset, and another instance is retrieved. If the factory resets properly, the third instance
-     * must be unequal to the first two instances.
+     * Retrieve two instances of a specific implementation of the PasswordValidator interface, and asserts that the
+     * returned objects are two separate instances.
      */
     @Test
-    public void factoryReturnsSingletonTest() {
+    public void twoInstancesAreDifferentTest() {
 
-        String className = "org.beiter.michael.authn.jaas.loginmodules.password.validators.plaintext.PlainTextPasswordValidator";
         CommonProperties commonProps = JaasBasedCommonPropsBuilder.buildDefault();
 
         PasswordValidator passwordValidator1, passwordValidator2;
@@ -106,13 +109,40 @@ public class PasswordValidatorFactoryExtendedTest {
             throw ae;
         }
 
+        String error = "The factory returns a singleton instead of a new object";
+        assertThat(error, passwordValidator1, is(not(sameInstance(passwordValidator2))));
+    }
+
+    /**
+     * Retrieve two singleton instances of a specific implementation of the PasswordValidator interface, and asserts
+     * that the two returned objects are identical (i.e. the factory returns a singleton).
+     * <p>
+     * Then, a regular (non-singleton) instance is retrieved, which are asserted to be different than the previously
+     * retrieved objects.
+     * <p>
+     * Finally, the factory is reset, and another instance is retrieved. If the factory resets properly, the third
+     * instance must be unequal to the first three instances.
+     */
+    @Test
+    public void factoryReturnsSingletonTest() {
+
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.buildDefault();
+
+        // test that two singletons retrieved from the factory are identical
+        PasswordValidator passwordValidator1, passwordValidator2;
+        try {
+            passwordValidator1 = PasswordValidatorFactory.getSingleton(className, commonProps);
+            passwordValidator2 = PasswordValidatorFactory.getSingleton(className, commonProps);
+        } catch (FactoryException e) {
+            AssertionError ae = new AssertionError("Instantiation error");
+            ae.initCause(e);
+            throw ae;
+        }
+
         String error = "The factory does not return a singleton";
         assertThat(error, passwordValidator1, is(sameInstance(passwordValidator2)));
 
-        // reset the factory
-        PasswordValidatorFactory.reset();
-
-        // now test that the factory return a new object (i.e. a new singleton)
+        // then test that a regular (non-singleton) instance is different
         PasswordValidator passwordValidator3;
         try {
             passwordValidator3 = PasswordValidatorFactory.getInstance(className, commonProps);
@@ -121,8 +151,26 @@ public class PasswordValidatorFactoryExtendedTest {
             ae.initCause(e);
             throw ae;
         }
+        error = "The factory returns a singleton instead of a new object";
+        assertThat(error, passwordValidator1, is(not(sameInstance(passwordValidator3))));
+        assertThat(error, passwordValidator2, is(not(sameInstance(passwordValidator3))));
+
+        // reset the factory
+        PasswordValidatorFactory.reset();
+
+        // now test that the factory return a new object (i.e. a new singleton)
+        PasswordValidator passwordValidator4;
+        try {
+            passwordValidator4 = PasswordValidatorFactory.getSingleton(className, commonProps);
+        } catch (FactoryException e) {
+            AssertionError ae = new AssertionError("Instantiation error");
+            ae.initCause(e);
+            throw ae;
+        }
 
         error = "The factory does not return a singleton, or does not reset properly";
-        assertThat(error, passwordValidator1, is(not(sameInstance(passwordValidator3))));
+        assertThat(error, passwordValidator1, is(not(sameInstance(passwordValidator4))));
+        assertThat(error, passwordValidator2, is(not(sameInstance(passwordValidator4))));
+        assertThat(error, passwordValidator3, is(not(sameInstance(passwordValidator4))));
     }
 }

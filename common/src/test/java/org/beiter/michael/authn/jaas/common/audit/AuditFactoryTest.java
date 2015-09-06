@@ -170,14 +170,11 @@ public class AuditFactoryTest {
     }
 
     /**
-     * Retrieve two instances of a specific implementation of the Audit interface, and asserts that the two returned
-     * objects are identical (i.e. the factory returns a singleton).
-     * <p/>
-     * Then the factory is reset, and another instance is retrieved. If the factory resets properly, the third instance
-     * must be unequal to the first two instances.
+     * Retrieve two instances of a specific implementation of the Audit interface, and asserts that the returned
+     * objects are two separate instances.
      */
     @Test
-    public void factoryReturnsSingletonTest() {
+    public void twoInstancesAreDifferentTest() {
 
         Map<String, Object> config = new ConcurrentHashMap<String, Object>();
         config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
@@ -194,13 +191,43 @@ public class AuditFactoryTest {
             throw ae;
         }
 
+        String error = "The factory returns a singleton instead of a new object";
+        assertThat(error, audit1, is(not(sameInstance(audit2))));
+    }
+
+    /**
+     * Retrieve two singleton instances of a specific implementation of the Audit interface, and asserts that the two
+     * returned objects are identical (i.e. the factory returns a singleton).
+     * <p>
+     * Then, a regular (non-singleton) instance is retrieved, which are asserted to be different than the previously
+     * retrieved objects.
+     * <p>
+     * Finally, the factory is reset, and another instance is retrieved. If the factory resets properly, the third
+     * instance must be unequal to the first three instances.
+     */
+    @Test
+    public void factoryReturnsSingletonTest() {
+
+        Map<String, Object> config = new ConcurrentHashMap<String, Object>();
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_ENABLED, "true");
+        config.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_CLASS_NAME, "org.beiter.michael.authn.jaas.common.audit.SampleAuditLogger");
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(config);
+
+        // test that two singletons retrieved from the factory are identical
+        Audit audit1, audit2;
+        try {
+            audit1 = AuditFactory.getSingleton(commonProps.getAuditClassName(), commonProps);
+            audit2 = AuditFactory.getSingleton(commonProps.getAuditClassName(), commonProps);
+        } catch (FactoryException e) {
+            AssertionError ae = new AssertionError("Instantiation error");
+            ae.initCause(e);
+            throw ae;
+        }
+
         String error = "The factory does not return a singleton";
         assertThat(error, audit1, is(sameInstance(audit2)));
 
-        // reset the factory
-        AuditFactory.reset();
-
-        // now test that the factory return a new object (i.e. a new singleton)
+        // then test that a regular (non-singleton) instance is different
         Audit audit3;
         try {
             audit3 = AuditFactory.getInstance(commonProps.getAuditClassName(), commonProps);
@@ -209,8 +236,26 @@ public class AuditFactoryTest {
             ae.initCause(e);
             throw ae;
         }
+        error = "The factory returns a singleton instead of a new object";
+        assertThat(error, audit1, is(not(sameInstance(audit3))));
+        assertThat(error, audit2, is(not(sameInstance(audit3))));
+
+        // reset the factory
+        AuditFactory.reset();
+
+        // now test that the factory return a new object (i.e. a new singleton)
+        Audit audit4;
+        try {
+            audit4 = AuditFactory.getSingleton(commonProps.getAuditClassName(), commonProps);
+        } catch (FactoryException e) {
+            AssertionError ae = new AssertionError("Instantiation error");
+            ae.initCause(e);
+            throw ae;
+        }
 
         error = "The factory does not return a singleton, or does not reset properly";
-        assertThat(error, audit1, is(not(sameInstance(audit3))));
+        assertThat(error, audit1, is(not(sameInstance(audit4))));
+        assertThat(error, audit2, is(not(sameInstance(audit4))));
+        assertThat(error, audit3, is(not(sameInstance(audit4))));
     }
 }

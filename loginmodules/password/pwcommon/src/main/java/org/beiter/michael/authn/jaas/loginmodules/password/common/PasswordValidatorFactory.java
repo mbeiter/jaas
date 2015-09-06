@@ -65,8 +65,62 @@ public final class PasswordValidatorFactory {
     }
 
     /**
-     * Return an instance of an {@link PasswordValidator} class to use for JAAS authentication.
-     * <p/>
+     * Return a new, fully initialized instance of a {@link PasswordValidator} class to use for JAAS authentication.
+     * <p>
+     * Classes implementing the {@link PasswordValidator} interface <b>must</b> be thread safe.
+     *
+     * @param className  The name of a class that implements the PasswordValidator interface
+     * @param properties The properties to initialize the instance with
+     * @return An instance of a class implementing the {@code PasswordValidator} interface
+     * @throws FactoryException When the class cannot be instantiated
+     */
+    public static PasswordValidator getInstance(final String className, final CommonProperties properties)
+            throws FactoryException {
+
+        Validate.notBlank(className);
+        Validate.notNull(properties);
+
+        final Class<? extends PasswordValidator> validatorClazz;
+        try {
+            validatorClazz = Class.forName(className).asSubclass(PasswordValidator.class);
+        } catch (ClassNotFoundException e) {
+            final String error = "Class not found: " + className;
+            LOG.warn(error);
+            throw new FactoryException(error, e);
+        } catch (ClassCastException e) {
+            final String error = "The provided registry factory class name ('" + className
+                    + "') is not a subclass of '" + PasswordValidator.class.getCanonicalName() + "'";
+            LOG.warn(error);
+            throw new FactoryException(error, e);
+        }
+
+        final PasswordValidator pwValidator;
+        try {
+            final Constructor<? extends PasswordValidator> constructor
+                    = validatorClazz.getDeclaredConstructor();
+            if (!constructor.isAccessible()) {
+                final String error = "Constructor of class '" + validatorClazz.getCanonicalName()
+                        + "' is not accessible, changing the accessible flag to instantiate the class";
+                LOG.info(error);
+                constructor.setAccessible(true);
+            }
+            pwValidator = constructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException
+                | NoSuchMethodException | IllegalArgumentException e) {
+            final String error = "Cannot instantiate class '" + validatorClazz.getCanonicalName() + "'";
+            LOG.warn(error, e);
+            throw new FactoryException(error, e);
+        }
+
+        pwValidator.init(properties);
+
+        return pwValidator;
+    }
+
+    /**
+     * Return a singleton, fully initialized instance of a {@link PasswordValidator} class to use for
+     * JAAS authentication.
+     * <p>
      * Classes implementing the {@link PasswordValidator} interface <b>must</b> be thread safe.
      *
      * @param className  The name of a class that implements the PasswordValidator interface
@@ -75,7 +129,7 @@ public final class PasswordValidatorFactory {
      * @throws FactoryException When the class cannot be instantiated
      */
     @SuppressWarnings("PMD.NonThreadSafeSingleton")
-    public static PasswordValidator getInstance(final String className, final CommonProperties properties)
+    public static PasswordValidator getSingleton(final String className, final CommonProperties properties)
             throws FactoryException {
 
         Validate.notBlank(className);
@@ -85,38 +139,8 @@ public final class PasswordValidatorFactory {
             synchronized (PasswordValidatorFactory.class) {
                 if (passwordValidatorInstance == null) {
 
-                    final Class<? extends PasswordValidator> validatorClazz;
-                    try {
-                        validatorClazz = Class.forName(className).asSubclass(PasswordValidator.class);
-                    } catch (ClassNotFoundException e) {
-                        final String error = "Class not found: " + className;
-                        LOG.warn(error);
-                        throw new FactoryException(error, e);
-                    } catch (ClassCastException e) {
-                        final String error = "The provided registry factory class name ('" + className
-                                + "') is not a subclass of '" + PasswordValidator.class.getCanonicalName() + "'";
-                        LOG.warn(error);
-                        throw new FactoryException(error, e);
-                    }
 
-                    try {
-                        final Constructor<? extends PasswordValidator> constructor
-                                = validatorClazz.getDeclaredConstructor();
-                        if (!constructor.isAccessible()) {
-                            final String error = "Constructor of class '" + validatorClazz.getCanonicalName()
-                                    + "' is not accessible, changing the accessible flag to instantiate the class";
-                            LOG.info(error);
-                            constructor.setAccessible(true);
-                        }
-                        passwordValidatorInstance = constructor.newInstance();
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                            | NoSuchMethodException | IllegalArgumentException e) {
-                        final String error = "Cannot instantiate class '" + validatorClazz.getCanonicalName() + "'";
-                        LOG.warn(error, e);
-                        throw new FactoryException(error, e);
-                    }
-
-                    passwordValidatorInstance.init(properties);
+                    passwordValidatorInstance = getInstance(className, properties);
                 }
             }
         }
@@ -125,7 +149,9 @@ public final class PasswordValidatorFactory {
     }
 
     /**
-     * Resets the internal state of the factory.
+     * Resets the internal state of the factory, which causes the
+     * {@link PasswordAuthenticatorFactory#getSingleton(String, CommonProperties)} method to return a new
+     * {@link PasswordAuthenticator} instance the next time it is called.
      */
     // CHECKSTYLE:OFF
     // this is flagged in checkstyle with a missing whitespace before '}', which is a bug in checkstyle

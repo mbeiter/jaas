@@ -93,14 +93,11 @@ public class PasswordAuthenticatorFactoryExtendedTest {
     }
 
     /**
-     * Retrieve two instances of a specific implementation of the PasswordAuthenticator interface, and assert that
-     * the two returned objects are identical (i.e. the factory returns a singleton).
-     * <p>
-     * Then the factory is reset, and another instance is retrieved. If the factory resets properly, the third instance
-     * must be unequal to the first two instances.
+     * Retrieve two instances of a specific implementation of the PasswordAuthenticator interface, and asserts that the
+     * returned objects are two separate instances.
      */
     @Test
-    public void factoryReturnsSingletonTest() {
+    public void twoInstancesAreDifferentTest() {
 
         CommonProperties commonProps = JaasBasedCommonPropsBuilder.buildDefault();
 
@@ -114,13 +111,40 @@ public class PasswordAuthenticatorFactoryExtendedTest {
             throw ae;
         }
 
+        String error = "The factory returns a singleton instead of a new object";
+        assertThat(error, passwordAuthenticator1, is(not(sameInstance(passwordAuthenticator2))));
+    }
+
+    /**
+     * Retrieve two singleton instances of a specific implementation of the PasswordAuthenticator interface, and asserts
+     * that the two returned objects are identical (i.e. the factory returns a singleton).
+     * <p>
+     * Then, a regular (non-singleton) instance is retrieved, which are asserted to be different than the previously
+     * retrieved objects.
+     * <p>
+     * Finally, the factory is reset, and another instance is retrieved. If the factory resets properly, the third
+     * instance must be unequal to the first three instances.
+     */
+    @Test
+    public void factoryReturnsSingletonTest() {
+
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.buildDefault();
+
+        // test that two singletons retrieved from the factory are identical
+        PasswordAuthenticator passwordAuthenticator1, passwordAuthenticator2;
+        try {
+            passwordAuthenticator1 = PasswordAuthenticatorFactory.getSingleton(className, commonProps);
+            passwordAuthenticator2 = PasswordAuthenticatorFactory.getSingleton(className, commonProps);
+        } catch (FactoryException e) {
+            AssertionError ae = new AssertionError("Instantiation error");
+            ae.initCause(e);
+            throw ae;
+        }
+
         String error = "The factory does not return a singleton";
         assertThat(error, passwordAuthenticator1, is(sameInstance(passwordAuthenticator2)));
 
-        // reset the factory
-        PasswordAuthenticatorFactory.reset();
-
-        // now test that the factory return a new object (i.e. a new singleton)
+        // then test that a regular (non-singleton) instance is different
         PasswordAuthenticator passwordAuthenticator3;
         try {
             passwordAuthenticator3 = PasswordAuthenticatorFactory.getInstance(className, commonProps);
@@ -129,8 +153,26 @@ public class PasswordAuthenticatorFactoryExtendedTest {
             ae.initCause(e);
             throw ae;
         }
+        error = "The factory returns a singleton instead of a new object";
+        assertThat(error, passwordAuthenticator1, is(not(sameInstance(passwordAuthenticator3))));
+        assertThat(error, passwordAuthenticator2, is(not(sameInstance(passwordAuthenticator3))));
+
+        // reset the factory
+        PasswordAuthenticatorFactory.reset();
+
+        // now test that the factory return a new object (i.e. a new singleton)
+        PasswordAuthenticator passwordAuthenticator4;
+        try {
+            passwordAuthenticator4 = PasswordAuthenticatorFactory.getSingleton(className, commonProps);
+        } catch (FactoryException e) {
+            AssertionError ae = new AssertionError("Instantiation error");
+            ae.initCause(e);
+            throw ae;
+        }
 
         error = "The factory does not return a singleton, or does not reset properly";
-        assertThat(error, passwordAuthenticator1, is(not(sameInstance(passwordAuthenticator3))));
+        assertThat(error, passwordAuthenticator1, is(not(sameInstance(passwordAuthenticator4))));
+        assertThat(error, passwordAuthenticator2, is(not(sameInstance(passwordAuthenticator4))));
+        assertThat(error, passwordAuthenticator3, is(not(sameInstance(passwordAuthenticator4))));
     }
 }
