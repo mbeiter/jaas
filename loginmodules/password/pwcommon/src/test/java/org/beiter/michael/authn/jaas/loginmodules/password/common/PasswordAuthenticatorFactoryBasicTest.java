@@ -58,6 +58,9 @@ public class PasswordAuthenticatorFactoryBasicTest {
         PasswordAuthenticatorFactory.reset();
     }
 
+    // Some advanced tests requires an Authenticator and a Validator implementation.
+    // See org.beiter.michael.authn.jaas.loginmodules.authenticators.dummy.PasswordAuthenticatorFactoryExtendedTest
+
     /**
      * A non-existing class name (i.e. a class not in the class path) should throw an exception
      */
