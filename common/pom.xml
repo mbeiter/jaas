@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.beiter.michael.authn.jaas</groupId>
         <artifactId>jaas-parent</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>2.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>common</artifactId>
     <packaging>jar</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>2.0</version>
 
     <name>common</name>
     <description>
