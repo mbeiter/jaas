@@ -161,6 +161,8 @@ public final class JaasBasedCommonPropsBuilder {
     /**
      * @see CommonProperties#setPasswordAuthenticatorSingleton(boolean)
      */
+    // Fortify will report a violation here for handling a hardcoded password, which is not the case.
+    // This is a non-issue / false positive.
     public static final String KEY_PASSWORD_AUTHENTICATOR_IS_SINGLETON = "jaas.password.authenticator.isSingleton";
 
     /**
@@ -173,6 +175,8 @@ public final class JaasBasedCommonPropsBuilder {
     /**
      * @see CommonProperties#setPasswordValidatorSingleton(boolean)
      */
+    // Fortify will report a violation here for handling a hardcoded password, which is not the case.
+    // This is a non-issue / false positive.
     public static final String KEY_PASSWORD_VALIDATOR_IS_SINGLETON = "jaas.password.validator.isSingleton";
 
     /**
