@@ -13,7 +13,18 @@ Allowed values:
 | `true`            | Auditing enabled  |
 | `false` (default) | Auditing disabled |
 
-### jaas.audit.class 
+### jaas.audit.isSingleton
+
+Determines whether the auditing instance is created as a singleton.
+
+Allowed values:
+
+| Value             | Setting                              |
+|-------------------|--------------------------------------|
+| `true`            | Auditing instance is a singleton     |
+| `false` (default) | Auditing instance is not a singleton |
+
+### jaas.audit.class
 
 The audit class to instantiate. Must implement the `org.beiter.michael.authn.jaas.common.audit.Audit` interface.
  
@@ -32,6 +43,17 @@ Allowed values:
 | `true`            | Message queue enabled   |
 | `false` (default) | Message queue  disabled |
 
+### jaas.messageq.isSingleton
+
+Determines whether the message queue instance is created as a singleton.
+
+Allowed values:
+
+| Value             | Setting                                   |
+|-------------------|-------------------------------------------|
+| `true`            | Message queue instance is a singleton     |
+| `false` (default) | Message queue instance is not a singleton |
+
 ### jaas.messageq.class
 
 The message queue class to instantiate. Must implement the `org.beiter.michael.authn.jaas.common.messageq.MessageQ`
@@ -40,6 +62,17 @@ interface.
 Default: `org.beiter.michael.authn.jaas.common.messageq.SampleMessageLogger`
 
 ## Password Validation
+
+### jaas.password.validator.isSingleton
+
+Determines whether the password validator instance is created as a singleton.
+
+Allowed values:
+
+| Value             | Setting                                        |
+|-------------------|------------------------------------------------|
+| `true`            | Password validator instance is a singleton     |
+| `false` (default) | Password validator instance is not a singleton |
 
 ### jaas.password.validator.class
 
@@ -50,7 +83,18 @@ For security reasons, this setting has no default, and is **required**. Logins a
 **will fail** while this setting is not configured.
 
 ## Password Based Authentication
- 
+
+ ### jaas.password.authenticator.isSingleton
+
+ Determines whether the password authenticator instance is created as a singleton.
+
+ Allowed values:
+
+ | Value             | Setting                                            |
+ |-------------------|----------------------------------------------------|
+ | `true`            | Password authenticator instance is a singleton     |
+ | `false` (default) | Password authenticator instance is not a singleton |
+
 ### jaas.password.authenticator.class
 
 The username / password based authenticator class to instantiate. Must implement the 

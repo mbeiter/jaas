@@ -57,6 +57,11 @@ public class CommonProperties {
     private boolean auditEnabled;
 
     /**
+     * @see CommonProperties#setAuditSingleton(boolean)
+     */
+    private boolean auditSingleton;
+
+    /**
      * @see CommonProperties#setMessageQueueClassName(String)
      */
     private String messageQueueClassName;
@@ -67,14 +72,29 @@ public class CommonProperties {
     private boolean messageQueueEnabled;
 
     /**
+     * @see CommonProperties#setMessageQueueSingleton(boolean)
+     */
+    private boolean messageQueueSingleton;
+
+    /**
      * @see CommonProperties#setPasswordAuthenticatorClassName(String)
      */
     private String passwordAuthenticatorClassName;
 
     /**
+     * @see CommonProperties#setPasswordAuthenticatorSingleton(boolean)
+     */
+    private boolean passwordAuthenticatorSingleton;
+
+    /**
      * @see CommonProperties#setPasswordValidatorClassName(String)
      */
     private String passwordValidatorClassName;
+
+    /**
+     * @see CommonProperties#setPasswordValidatorSingleton(boolean)
+     */
+    private boolean passwordValidatorSingleton;
 
     /**
      * @see CommonProperties#setAdditionalProperties(Map <String, String>)
@@ -86,7 +106,7 @@ public class CommonProperties {
      * (depending on the type of the property). Usually this constructor is used if this configuration POJO is populated
      * in an automated fashion (e.g. injection). If you need to build them manually (possibly with defaults), use or
      * create a properties builder.
-     * <p/>
+     * <p>
      * You can change the defaults with the setters.
      *
      * @see org.beiter.michael.authn.jaas.common.propsbuilder.JaasBasedCommonPropsBuilder#buildDefault()
@@ -100,8 +120,8 @@ public class CommonProperties {
     /**
      * Creates a set of common properties from an existing set of common properties, making a defensive copy.
      *
-     * @see CommonProperties()
      * @param properties The set of properties to copy
+     * @see CommonProperties()
      */
     public CommonProperties(final CommonProperties properties) {
 
@@ -109,10 +129,14 @@ public class CommonProperties {
 
         setAuditClassName(properties.getAuditClassName());
         setAuditEnabled(properties.isAuditEnabled());
+        setAuditSingleton(properties.isAuditSingleton());
         setMessageQueueClassName(properties.getMessageQueueClassName());
         setMessageQueueEnabled(properties.isMessageQueueEnabled());
+        setMessageQueueSingleton(properties.isMessageQueueSingleton());
         setPasswordAuthenticatorClassName(properties.getPasswordAuthenticatorClassName());
+        setPasswordAuthenticatorSingleton(properties.isPasswordAuthenticatorSingleton());
         setPasswordValidatorClassName(properties.getPasswordValidatorClassName());
+        setPasswordValidatorSingleton(properties.isPasswordValidatorSingleton());
         setAdditionalProperties(properties.getAdditionalProperties());
     }
 
@@ -129,7 +153,7 @@ public class CommonProperties {
 
     /**
      * Set the audit class name (i.e. the class to instantiate for auditing).
-     * <p/>
+     * <p>
      * The class must implement the {@link org.beiter.michael.authn.jaas.common.audit.Audit} interface.
      *
      * @param auditClassName A class implementing the {@link org.beiter.michael.authn.jaas.common.audit.Audit} interface
@@ -169,6 +193,30 @@ public class CommonProperties {
     }
 
     /**
+     * @return Indication of whether auditing is instantiated as a singleton, or not
+     * @see CommonProperties#setAuditSingleton(boolean)
+     */
+    public final boolean isAuditSingleton() {
+
+        // no need for defensive copies of boolean
+
+        return auditSingleton;
+    }
+
+    /**
+     * Set the indication of whether auditing is instantiated as a singleton.
+     *
+     * @param auditSingleton the indication of whether auditing is instantiated as a singleton
+     */
+    public final void setAuditSingleton(final boolean auditSingleton) {
+
+        // no need for validation, as boolean cannot be null and all possible values are allowed
+        // no need for defensive copies of boolean
+
+        this.auditSingleton = auditSingleton;
+    }
+
+    /**
      * @return The message queue class name to instantiate for creating event messages
      * @see CommonProperties#setMessageQueueClassName(String)
      */
@@ -181,7 +229,7 @@ public class CommonProperties {
 
     /**
      * Set the message queue class name (i.e. the class to instantiate for creating even messages).
-     * <p/>
+     * <p>
      * The class must implement the {@link org.beiter.michael.authn.jaas.common.messageq.MessageQ} interface.
      *
      * @param messageQueueClassName A class implementing the
@@ -221,6 +269,31 @@ public class CommonProperties {
         this.messageQueueEnabled = messageQueueEnabled;
     }
 
+
+    /**
+     * @return Indication of whether message queues are instantiated as a singleton, or not
+     * @see CommonProperties#setMessageQueueSingleton(boolean)
+     */
+    public final boolean isMessageQueueSingleton() {
+
+        // no need for defensive copies of boolean
+
+        return messageQueueSingleton;
+    }
+
+    /**
+     * Set the indication of whether message queues are instantiated as a singleton.
+     *
+     * @param messageQueueSingleton the indication of whether message queues are instantiated as a singleton
+     */
+    public final void setMessageQueueSingleton(final boolean messageQueueSingleton) {
+
+        // no need for validation, as boolean cannot be null and all possible values are allowed
+        // no need for defensive copies of boolean
+
+        this.messageQueueSingleton = messageQueueSingleton;
+    }
+
     /**
      * @return The password authenticator class name to instantiate for authenticating password style credentials
      * @see CommonProperties#setPasswordAuthenticatorClassName(String)
@@ -238,9 +311,9 @@ public class CommonProperties {
     /**
      * Set the password authenticator class name. This class is instantiated for authenticating username / password
      * style credentials.
-     * <p/>
+     * <p>
      * The class must implement the <code>PasswordAuthenticator</code> interface.
-     * <p/>
+     * <p>
      *
      * @param passwordAuthenticatorClassName A class implementing the <code>PasswordAuthenticator</code> interface
      */
@@ -253,6 +326,32 @@ public class CommonProperties {
         // no need for defensive copies of String
 
         this.passwordAuthenticatorClassName = passwordAuthenticatorClassName;
+    }
+
+
+    /**
+     * @return Indication of whether the password authenticator is instantiated as a singleton, or not
+     * @see CommonProperties#setPasswordAuthenticatorSingleton(boolean)
+     */
+    public final boolean isPasswordAuthenticatorSingleton() {
+
+        // no need for defensive copies of boolean
+
+        return passwordAuthenticatorSingleton;
+    }
+
+    /**
+     * Set the indication of whether the password authenticator is instantiated as a singleton.
+     *
+     * @param passwordAuthenticatorSingleton the indication of whether the password authenticator is instantiated as a
+     *                                       singleton
+     */
+    public final void setPasswordAuthenticatorSingleton(final boolean passwordAuthenticatorSingleton) {
+
+        // no need for validation, as boolean cannot be null and all possible values are allowed
+        // no need for defensive copies of boolean
+
+        this.passwordAuthenticatorSingleton = passwordAuthenticatorSingleton;
     }
 
     /**
@@ -272,9 +371,9 @@ public class CommonProperties {
     /**
      * Set the password validator class name. This class is instantiated for validating username / password
      * style credentials.
-     * <p/>
+     * <p>
      * The class must implement the <code>PasswordValidator</code> interface.
-     * <p/>
+     * <p>
      *
      * @param passwordValidatorClassName A class implementing the <code>PasswordValidator</code> interface
      */
@@ -287,6 +386,30 @@ public class CommonProperties {
         // no need for defensive copies of String
 
         this.passwordValidatorClassName = passwordValidatorClassName;
+    }
+
+    /**
+     * @return Indication of whether the password validator is instantiated as a singleton, or not
+     * @see CommonProperties#setPasswordAuthenticatorSingleton(boolean)
+     */
+    public final boolean isPasswordValidatorSingleton() {
+
+        // no need for defensive copies of boolean
+
+        return passwordValidatorSingleton;
+    }
+
+    /**
+     * Set the indication of whether the password validator is instantiated as a singleton.
+     *
+     * @param passwordValidatorSingleton the indication of whether the password validator is instantiated as a singleton
+     */
+    public final void setPasswordValidatorSingleton(final boolean passwordValidatorSingleton) {
+
+        // no need for validation, as boolean cannot be null and all possible values are allowed
+        // no need for defensive copies of boolean
+
+        this.passwordValidatorSingleton = passwordValidatorSingleton;
     }
 
     /**

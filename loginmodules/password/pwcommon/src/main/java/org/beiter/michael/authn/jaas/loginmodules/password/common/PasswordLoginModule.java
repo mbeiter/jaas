@@ -528,8 +528,15 @@ public class PasswordLoginModule
                 LOG.error(error);
                 throw new IllegalStateException(error);
             } else {
-                LOG.debug("Requesting audit class instance of '" + auditClassName + "' from the audit factory");
-                this.audit = AuditFactory.getInstance(auditClassName, commonProps);
+                if (commonProps.isAuditSingleton()) {
+                    LOG.debug("Requesting singleton audit class instance of '" + auditClassName
+                            + "' from the audit factory");
+                    this.audit = AuditFactory.getSingleton(auditClassName, commonProps);
+                } else {
+                    LOG.debug("Requesting non-singleton audit class instance of '" + auditClassName
+                            + "' from the audit factory");
+                    this.audit = AuditFactory.getInstance(auditClassName, commonProps);
+                }
             }
         } catch (FactoryException e) {
             final String error = "The audit class cannot be instantiated. This is most likely a configuration"
@@ -559,8 +566,15 @@ public class PasswordLoginModule
                 LOG.error(error);
                 throw new IllegalStateException(error);
             } else {
-                LOG.debug("Requesting message class instance of '" + messageClassName + "' from the message factory");
-                this.messageQ = MessageQFactory.getInstance(messageClassName, commonProps);
+                if (commonProps.isMessageQueueSingleton()) {
+                    LOG.debug("Requesting singleton message class instance of '" + messageClassName
+                            + "' from the message factory");
+                    this.messageQ = MessageQFactory.getSingleton(messageClassName, commonProps);
+                } else {
+                    LOG.debug("Requesting non-singleton message class instance of '" + messageClassName
+                            + "' from the message factory");
+                    this.messageQ = MessageQFactory.getInstance(messageClassName, commonProps);
+                }
             }
         } catch (FactoryException e) {
             final String error = "The message class cannot be instantiated. This is most likely a configuration"
@@ -583,9 +597,15 @@ public class PasswordLoginModule
                 LOG.error(error);
                 throw new IllegalStateException(error);
             } else {
-                LOG.debug("Requesting validator class instance of '" + validatorClass
-                        + "' from the validator factory");
-                this.pwValidator = PasswordValidatorFactory.getInstance(validatorClass, commonProps);
+                if (commonProps.isPasswordValidatorSingleton()) {
+                    LOG.debug("Requesting singleton validator class instance of '" + validatorClass
+                            + "' from the validator factory");
+                    this.pwValidator = PasswordValidatorFactory.getSingleton(validatorClass, commonProps);
+                } else {
+                    LOG.debug("Requesting non-singleton validator class instance of '" + validatorClass
+                            + "' from the validator factory");
+                    this.pwValidator = PasswordValidatorFactory.getInstance(validatorClass, commonProps);
+                }
             }
         } catch (FactoryException e) {
             final String error = "The validator class cannot be instantiated. This is most likely a configuration"
@@ -608,9 +628,15 @@ public class PasswordLoginModule
                 LOG.error(error);
                 throw new IllegalStateException(error);
             } else {
-                LOG.debug("Requesting authenticator class instance of '" + authNticatorClass
-                        + "' from the authenticator factory");
-                this.pwAuthenticator = PasswordAuthenticatorFactory.getInstance(authNticatorClass, commonProps);
+                if (commonProps.isPasswordAuthenticatorSingleton()) {
+                    LOG.debug("Requesting singleton authenticator class instance of '" + authNticatorClass
+                            + "' from the authenticator factory");
+                    this.pwAuthenticator = PasswordAuthenticatorFactory.getSingleton(authNticatorClass, commonProps);
+                } else {
+                    LOG.debug("Requesting non-singleton authenticator class instance of '" + authNticatorClass
+                            + "' from the authenticator factory");
+                    this.pwAuthenticator = PasswordAuthenticatorFactory.getInstance(authNticatorClass, commonProps);
+                }
             }
         } catch (FactoryException e) {
             final String error = "The validator class cannot be instantiated. This is most likely a configuration"

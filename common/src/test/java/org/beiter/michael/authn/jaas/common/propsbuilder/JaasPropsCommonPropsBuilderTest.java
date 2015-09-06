@@ -119,6 +119,45 @@ public class JaasPropsCommonPropsBuilderTest {
     }
 
     /**
+     * default audit is_singleton test
+     */
+    @Test
+    public void defaultAuditIsSingletonTest() {
+
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.buildDefault();
+
+        String error = "audit is_singleton does not match expected default value";
+        assertThat(error, commonProps.isAuditSingleton(), is(equalTo(true)));
+        error = "audit is_singleton does not match expected value";
+        commonProps.setAuditSingleton(false);
+        assertThat(error, commonProps.isAuditSingleton(), is(equalTo(false)));
+    }
+
+    /**
+     * audit is_singleton test
+     */
+    @Test
+    public void auditIsSingletonTest() {
+
+        Map<String, String> map = new HashMap<>();
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_SINGLETON, null);
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(map);
+        String error = "audit is_singleton does not match expected default value";
+        assertThat(error, commonProps.isAuditSingleton(), is(equalTo(true)));
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_SINGLETON, "asdf");
+        commonProps = JaasBasedCommonPropsBuilder.build(map);
+        error = "audit is_singleton does not match expected value";
+        assertThat(error, commonProps.isAuditSingleton(), is(equalTo(false)));
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_AUDIT_IS_SINGLETON, "tRuE");
+        commonProps = JaasBasedCommonPropsBuilder.build(map);
+        error = "audit is_singleton does not match expected value";
+        assertThat(error, commonProps.isAuditSingleton(), is(equalTo(true)));
+    }
+
+    /**
      * default messageQ class name test
      */
     @Test
@@ -194,6 +233,45 @@ public class JaasPropsCommonPropsBuilderTest {
     }
 
     /**
+     * default messageQ is_singleton test
+     */
+    @Test
+    public void defaultMessageQIsSingletonTest() {
+
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.buildDefault();
+
+        String error = "messageQ is_singleton does not match expected default value";
+        assertThat(error, commonProps.isMessageQueueSingleton(), is(equalTo(true)));
+        error = "messageQ is_singleton does not match expected value";
+        commonProps.setMessageQueueSingleton(false);
+        assertThat(error, commonProps.isMessageQueueSingleton(), is(equalTo(false)));
+    }
+
+    /**
+     * messageQ is_singleton test
+     */
+    @Test
+    public void messageQIsSingletonTest() {
+
+        Map<String, String> map = new HashMap<>();
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_SINGLETON, null);
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(map);
+        String error = "messageQ is_singleton does not match expected default value";
+        assertThat(error, commonProps.isMessageQueueSingleton(), is(equalTo(true)));
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_SINGLETON, "asdf");
+        commonProps = JaasBasedCommonPropsBuilder.build(map);
+        error = "messageQ is_singleton does not match expected value";
+        assertThat(error, commonProps.isMessageQueueSingleton(), is(equalTo(false)));
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_MESSAGEQ_IS_SINGLETON, "tRuE");
+        commonProps = JaasBasedCommonPropsBuilder.build(map);
+        error = "messageQ is_singleton does not match expected value";
+        assertThat(error, commonProps.isMessageQueueSingleton(), is(equalTo(true)));
+    }
+
+    /**
      * default password authenticator class name test
      */
     @Test
@@ -228,6 +306,45 @@ public class JaasPropsCommonPropsBuilderTest {
     }
 
     /**
+     * default password authenticator is_singleton test
+     */
+    @Test
+    public void defaultPasswordAuthenticatorIsSingletonTest() {
+
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.buildDefault();
+
+        String error = "password authenticator is_singleton does not match expected default value";
+        assertThat(error, commonProps.isPasswordAuthenticatorSingleton(), is(equalTo(true)));
+        error = "password authenticator is_singleton does not match expected value";
+        commonProps.setPasswordAuthenticatorSingleton(false);
+        assertThat(error, commonProps.isPasswordAuthenticatorSingleton(), is(equalTo(false)));
+    }
+
+    /**
+     * password authenticator is_singleton test
+     */
+    @Test
+    public void passwordAuthenticatorIsSingletonTest() {
+
+        Map<String, String> map = new HashMap<>();
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_IS_SINGLETON, null);
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(map);
+        String error = "password authenticator is_singleton does not match expected default value";
+        assertThat(error, commonProps.isPasswordAuthenticatorSingleton(), is(equalTo(true)));
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_IS_SINGLETON, "asdf");
+        commonProps = JaasBasedCommonPropsBuilder.build(map);
+        error = "password authenticator is_singleton does not match expected value";
+        assertThat(error, commonProps.isPasswordAuthenticatorSingleton(), is(equalTo(false)));
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_PASSWORD_AUTHENTICATOR_IS_SINGLETON, "tRuE");
+        commonProps = JaasBasedCommonPropsBuilder.build(map);
+        error = "password authenticator is_singleton does not match expected value";
+        assertThat(error, commonProps.isPasswordAuthenticatorSingleton(), is(equalTo(true)));
+    }
+
+    /**
      * default password validator class name test
      */
     @Test
@@ -259,6 +376,45 @@ public class JaasPropsCommonPropsBuilderTest {
         commonProps = JaasBasedCommonPropsBuilder.build(map);
         error = "password validator class name does not match expected value";
         assertThat(error, commonProps.getPasswordValidatorClassName(), is(equalTo("42")));
+    }
+
+    /**
+     * default password validator is_singleton test
+     */
+    @Test
+    public void defaultPasswordValidatorIsSingletonTest() {
+
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.buildDefault();
+
+        String error = "password validator is_singleton does not match expected default value";
+        assertThat(error, commonProps.isPasswordValidatorSingleton(), is(equalTo(true)));
+        error = "password validator is_singleton does not match expected value";
+        commonProps.setPasswordValidatorSingleton(false);
+        assertThat(error, commonProps.isPasswordValidatorSingleton(), is(equalTo(false)));
+    }
+
+    /**
+     * password validator is_singleton test
+     */
+    @Test
+    public void passwordValidatorIsSingletonTest() {
+
+        Map<String, String> map = new HashMap<>();
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_IS_SINGLETON, null);
+        CommonProperties commonProps = JaasBasedCommonPropsBuilder.build(map);
+        String error = "password validator is_singleton does not match expected default value";
+        assertThat(error, commonProps.isPasswordValidatorSingleton(), is(equalTo(true)));
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_IS_SINGLETON, "asdf");
+        commonProps = JaasBasedCommonPropsBuilder.build(map);
+        error = "password validator is_singleton does not match expected value";
+        assertThat(error, commonProps.isPasswordValidatorSingleton(), is(equalTo(false)));
+
+        map.put(JaasBasedCommonPropsBuilder.KEY_PASSWORD_VALIDATOR_IS_SINGLETON, "tRuE");
+        commonProps = JaasBasedCommonPropsBuilder.build(map);
+        error = "password validator is_singleton does not match expected value";
+        assertThat(error, commonProps.isPasswordValidatorSingleton(), is(equalTo(true)));
     }
 
     /**

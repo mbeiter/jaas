@@ -77,6 +77,11 @@ public final class JaasBasedCommonPropsBuilder {
     public static final boolean DEFAULT_AUDIT_IS_ENABLED = false;
 
     /**
+     * @see CommonProperties#setAuditSingleton(boolean)
+     */
+    public static final boolean DEFAULT_AUDIT_IS_SINGLETON = true;
+
+    /**
      * @see CommonProperties#setMessageQueueClassName(String)
      */
     public static final String DEFAULT_MESSAGEQ_CLASS_NAME =
@@ -88,14 +93,29 @@ public final class JaasBasedCommonPropsBuilder {
     public static final boolean DEFAULT_MESSAGEQ_IS_ENABLED = false;
 
     /**
+     * @see CommonProperties#setMessageQueueSingleton(boolean)
+     */
+    public static final boolean DEFAULT_MESSAGEQ_IS_SINGLETON = true;
+
+    /**
      * @see CommonProperties#setPasswordAuthenticatorClassName(String)
      */
     public static final String DEFAULT_PASSWORD_AUTHENTICATOR_CLASS_NAME = null;
 
     /**
+     * @see CommonProperties#setPasswordAuthenticatorSingleton(boolean)
+     */
+    public static final boolean DEFAULT_PASSWORD_AUTHENTICATOR_IS_SINGLETON = true;
+
+    /**
      * @see CommonProperties#setPasswordValidatorClassName(String)
      */
     public static final String DEFAULT_PASSWORD_VALIDATOR_CLASS_NAME = null;
+
+    /**
+     * @see CommonProperties#setPasswordValidatorSingleton(boolean)
+     */
+    public static final boolean DEFAULT_PASSWORD_VALIDATOR_IS_SINGLETON = true;
 
     // #####################
     // # Configuration Keys
@@ -112,6 +132,11 @@ public final class JaasBasedCommonPropsBuilder {
     public static final String KEY_AUDIT_IS_ENABLED = "jaas.audit.isEnabled";
 
     /**
+     * @see CommonProperties#setAuditSingleton(boolean) (boolean)
+     */
+    public static final String KEY_AUDIT_IS_SINGLETON = "jaas.audit.isSingleton";
+
+    /**
      * @see CommonProperties#setMessageQueueClassName(String)
      */
     public static final String KEY_MESSAGEQ_CLASS_NAME = "jaas.messageq.class";
@@ -122,6 +147,11 @@ public final class JaasBasedCommonPropsBuilder {
     public static final String KEY_MESSAGEQ_IS_ENABLED = "jaas.messageq.isEnabled";
 
     /**
+     * @see CommonProperties#setMessageQueueSingleton(boolean)
+     */
+    public static final String KEY_MESSAGEQ_IS_SINGLETON = "jaas.messageq.isSingleton";
+
+    /**
      * @see CommonProperties#setPasswordAuthenticatorClassName(String)
      */
     // Fortify will report a violation here for handling a hardcoded password, which is not the case.
@@ -129,11 +159,21 @@ public final class JaasBasedCommonPropsBuilder {
     public static final String KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME = "jaas.password.authenticator.class";
 
     /**
+     * @see CommonProperties#setPasswordAuthenticatorSingleton(boolean)
+     */
+    public static final String KEY_PASSWORD_AUTHENTICATOR_IS_SINGLETON = "jaas.password.authenticator.isSingleton";
+
+    /**
      * @see CommonProperties#setPasswordValidatorClassName(String)
      */
     // Fortify will report a violation here for handling a hardcoded password, which is not the case.
     // This is a non-issue / false positive.
     public static final String KEY_PASSWORD_VALIDATOR_CLASS_NAME = "jaas.password.validator.class";
+
+    /**
+     * @see CommonProperties#setPasswordValidatorSingleton(boolean)
+     */
+    public static final String KEY_PASSWORD_VALIDATOR_IS_SINGLETON = "jaas.password.validator.isSingleton";
 
     /**
      * A private constructor to prevent instantiation of this class
@@ -161,8 +201,9 @@ public final class JaasBasedCommonPropsBuilder {
      */
     // CHECKSTYLE:OFF
     // this is flagged in checkstyle with a missing whitespace before '}', which is a bug in checkstyle
+    // suppress warnings about this method being too long (not much point in splitting up this one!)
     // suppress warnings about this method being too complex (can't extract a generic subroutine to reduce exec paths)
-    @SuppressWarnings({"PMD.NPathComplexity", "PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.NPathComplexity", "PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
     // CHECKSTYLE:ON
     public static CommonProperties build(final Map<String, ?> properties) {
 
@@ -187,6 +228,15 @@ public final class JaasBasedCommonPropsBuilder {
             logDefault(KEY_AUDIT_IS_ENABLED, String.valueOf(DEFAULT_AUDIT_IS_ENABLED));
         }
 
+        tmp = getOption(KEY_AUDIT_IS_SINGLETON, properties);
+        if (StringUtils.isNotEmpty(tmp)) {
+            commonProps.setAuditSingleton(Boolean.parseBoolean(tmp));
+            logValue(KEY_AUDIT_IS_SINGLETON, tmp);
+        } else {
+            commonProps.setAuditSingleton(DEFAULT_AUDIT_IS_SINGLETON);
+            logDefault(KEY_AUDIT_IS_SINGLETON, String.valueOf(DEFAULT_AUDIT_IS_SINGLETON));
+        }
+
         tmp = getOption(KEY_MESSAGEQ_CLASS_NAME, properties);
         if (StringUtils.isNotEmpty(tmp)) {
             commonProps.setMessageQueueClassName(tmp);
@@ -205,6 +255,15 @@ public final class JaasBasedCommonPropsBuilder {
             logDefault(KEY_MESSAGEQ_IS_ENABLED, String.valueOf(DEFAULT_MESSAGEQ_IS_ENABLED));
         }
 
+        tmp = getOption(KEY_MESSAGEQ_IS_SINGLETON, properties);
+        if (StringUtils.isNotEmpty(tmp)) {
+            commonProps.setMessageQueueSingleton(Boolean.parseBoolean(tmp));
+            logValue(KEY_MESSAGEQ_IS_SINGLETON, tmp);
+        } else {
+            commonProps.setMessageQueueSingleton(DEFAULT_MESSAGEQ_IS_SINGLETON);
+            logDefault(KEY_MESSAGEQ_IS_SINGLETON, String.valueOf(DEFAULT_MESSAGEQ_IS_SINGLETON));
+        }
+
         tmp = getOption(KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, properties);
         if (StringUtils.isNotEmpty(tmp)) {
             commonProps.setPasswordAuthenticatorClassName(tmp);
@@ -214,6 +273,16 @@ public final class JaasBasedCommonPropsBuilder {
             logDefault(KEY_PASSWORD_AUTHENTICATOR_CLASS_NAME, DEFAULT_PASSWORD_AUTHENTICATOR_CLASS_NAME);
         }
 
+        tmp = getOption(KEY_PASSWORD_AUTHENTICATOR_IS_SINGLETON, properties);
+        if (StringUtils.isNotEmpty(tmp)) {
+            commonProps.setPasswordAuthenticatorSingleton(Boolean.parseBoolean(tmp));
+            logValue(KEY_PASSWORD_AUTHENTICATOR_IS_SINGLETON, tmp);
+        } else {
+            commonProps.setPasswordAuthenticatorSingleton(DEFAULT_PASSWORD_AUTHENTICATOR_IS_SINGLETON);
+            logDefault(KEY_PASSWORD_AUTHENTICATOR_IS_SINGLETON,
+                    String.valueOf(DEFAULT_PASSWORD_AUTHENTICATOR_IS_SINGLETON));
+        }
+
         tmp = getOption(KEY_PASSWORD_VALIDATOR_CLASS_NAME, properties);
         if (StringUtils.isNotEmpty(tmp)) {
             commonProps.setPasswordValidatorClassName(tmp);
@@ -221,6 +290,15 @@ public final class JaasBasedCommonPropsBuilder {
         } else {
             commonProps.setPasswordValidatorClassName(DEFAULT_PASSWORD_VALIDATOR_CLASS_NAME);
             logDefault(KEY_PASSWORD_VALIDATOR_CLASS_NAME, DEFAULT_PASSWORD_VALIDATOR_CLASS_NAME);
+        }
+
+        tmp = getOption(KEY_PASSWORD_VALIDATOR_IS_SINGLETON, properties);
+        if (StringUtils.isNotEmpty(tmp)) {
+            commonProps.setPasswordValidatorSingleton(Boolean.parseBoolean(tmp));
+            logValue(KEY_PASSWORD_VALIDATOR_IS_SINGLETON, tmp);
+        } else {
+            commonProps.setPasswordValidatorSingleton(DEFAULT_PASSWORD_VALIDATOR_IS_SINGLETON);
+            logDefault(KEY_PASSWORD_VALIDATOR_IS_SINGLETON, String.valueOf(DEFAULT_PASSWORD_VALIDATOR_IS_SINGLETON));
         }
 
         // set the additional properties, preserving the originally provided properties
