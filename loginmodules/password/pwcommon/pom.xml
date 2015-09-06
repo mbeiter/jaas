@@ -10,11 +10,11 @@
     </parent>
 
 	<groupId>org.beiter.michael.authn.jaas.loginmodules.password</groupId>
-    <artifactId>common</artifactId>
+    <artifactId>pwcommon</artifactId>
     <packaging>jar</packaging>
     <version>1.1-SNAPSHOT</version>
 
-    <name>dummy</name>
+    <name>pwcommon</name>
     <description>
         This module is part of a JAAS library, provoding common classes for password based 
 		credential handling. 

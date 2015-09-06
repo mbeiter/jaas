@@ -259,7 +259,7 @@
             </dependency>
             <dependency>
                 <groupId>org.beiter.michael.authn.jaas.loginmodules.password</groupId>
-                <artifactId>common</artifactId>
+                <artifactId>pwcommon</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

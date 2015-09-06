@@ -32,7 +32,7 @@
         </dependency>
         <dependency>
             <groupId>org.beiter.michael.authn.jaas.loginmodules.password</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>pwcommon</artifactId>
         </dependency>
         <dependency>
             <groupId>org.beiter.michael.util</groupId>
