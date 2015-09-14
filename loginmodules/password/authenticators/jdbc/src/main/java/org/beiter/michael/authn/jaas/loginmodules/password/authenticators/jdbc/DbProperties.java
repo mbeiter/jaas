@@ -60,7 +60,7 @@ public class DbProperties {
     /**
      * @see DbProperties#setAdditionalProperties(Map <String, String>)
      */
-    private Map<String, String> additionalProperties;
+    private Map<String, String> additionalProperties = new ConcurrentHashMap<>();
 
     /**
      * Constructs an empty set of database properties, with most values being set to <code>null</code>, 0, or empty
@@ -151,7 +151,8 @@ public class DbProperties {
 
         // create a defensive copy of the map and all its properties
         if (this.additionalProperties == null) {
-            return null;
+            // this should never happen!
+            return new ConcurrentHashMap<>();
         } else {
             final Map<String, String> tempMap = new ConcurrentHashMap<>();
             tempMap.putAll(additionalProperties);
@@ -173,16 +174,11 @@ public class DbProperties {
      *
      * @param additionalProperties The additional properties to store
      */
-    // CHECKSTYLE:OFF
-    // this is flagged in checkstyle with a missing whitespace before '}', which is a bug in checkstyle
-    // suppress warnings about the null assignment. This is to allow the caller to dereference the object.
-    @SuppressWarnings({"PMD.NullAssignment"})
-    // CHECKSTYLE:ON
     public final void setAdditionalProperties(final Map<String, String> additionalProperties) {
 
         // create a defensive copy of the map and all its properties
         if (additionalProperties == null) {
-            this.additionalProperties = null;
+            this.additionalProperties = new ConcurrentHashMap<>();
         } else {
             this.additionalProperties = new ConcurrentHashMap<>();
             this.additionalProperties.putAll(additionalProperties);

@@ -54,7 +54,7 @@ public class DbPropertiesTest {
      * This is executed before every test to ensure consistency even if one of the tests mock with field accessibility.
      */
     @Before
-    public void makeMessageLoggerPrivateFieldsAccessible() {
+    public void makeAdditionalPropertiesPrivateFieldsAccessible() {
 
         // make the "enabled" field in the default implementation accessible
         try {
@@ -65,6 +65,48 @@ public class DbPropertiesTest {
             throw ae;
         }
         field_additionalProperties.setAccessible(true);
+    }
+
+    /**
+     * Test that the additional properties are never <code>null</code>
+     */
+    @Test
+    public void additionalPropertiesAreNeverNullTest() {
+
+        String key = "some property";
+        String value = "some value";
+
+        Map<String, String> originalMap = new HashMap<>();
+
+        originalMap.put(key, value);
+        DbProperties dbProps = new DbProperties();
+
+        String error = "The additional properties are null after create";
+        try {
+            Map<String, String> mapInObject = (Map<String, String>) field_additionalProperties.get(dbProps);
+            assertThat(error, mapInObject, is(not(nullValue())));
+        } catch (IllegalAccessException e) {
+            AssertionError ae = new AssertionError("Cannot access private field");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        dbProps = new DbProperties();
+        error = "The additional properties are null after null put";
+        dbProps.setAdditionalProperties(null);
+        try {
+            Map<String, String> mapInObject = (Map<String, String>) field_additionalProperties.get(dbProps);
+            assertThat(error, mapInObject, is(not(nullValue())));
+        } catch (IllegalAccessException e) {
+            AssertionError ae = new AssertionError("Cannot access private field");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        dbProps = new DbProperties();
+        error = "The additional properties are null at get";
+        Map<String, String> mapInObject = dbProps.getAdditionalProperties();
+        assertThat(error, mapInObject, is(not(nullValue())));
     }
 
     /**

@@ -53,7 +53,7 @@ public class CommonPropertiesTest {
      * This is executed before every test to ensure consistency even if one of the tests mock with field accessibility.
      */
     @Before
-    public void makeMessageLoggerPrivateFieldsAccessible() {
+    public void makeAdditionalPropertiesPrivateFieldsAccessible() {
 
         // make the "enabled" field in the default implementation accessible
         try {
@@ -64,6 +64,48 @@ public class CommonPropertiesTest {
             throw ae;
         }
         field_additionalProperties.setAccessible(true);
+    }
+
+    /**
+     * Test that the additional properties are never <code>null</code>
+     */
+    @Test
+    public void additionalPropertiesAreNeverNullTest() {
+
+        String key = "some property";
+        String value = "some value";
+
+        Map<String, String> originalMap = new HashMap<>();
+
+        originalMap.put(key, value);
+        CommonProperties commonProps = new CommonProperties();
+
+        String error = "The additional properties are null after create";
+        try {
+            Map<String, String> mapInObject = (Map<String, String>) field_additionalProperties.get(commonProps);
+            assertThat(error, mapInObject, is(not(nullValue())));
+        } catch (IllegalAccessException e) {
+            AssertionError ae = new AssertionError("Cannot access private field");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        commonProps = new CommonProperties();
+        error = "The additional properties are null after null put";
+        commonProps.setAdditionalProperties(null);
+        try {
+            Map<String, String> mapInObject = (Map<String, String>) field_additionalProperties.get(commonProps);
+            assertThat(error, mapInObject, is(not(nullValue())));
+        } catch (IllegalAccessException e) {
+            AssertionError ae = new AssertionError("Cannot access private field");
+            ae.initCause(e);
+            throw ae;
+        }
+
+        commonProps = new CommonProperties();
+        error = "The additional properties are null at get";
+        Map<String, String> mapInObject = commonProps.getAdditionalProperties();
+        assertThat(error, mapInObject, is(not(nullValue())));
     }
 
     /**
