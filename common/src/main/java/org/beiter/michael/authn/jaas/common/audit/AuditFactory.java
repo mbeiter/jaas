@@ -117,6 +117,19 @@ public final class AuditFactory {
     /**
      * Return a singleton, fully initialized instance of an {@link Audit} class to use for JAAS event auditing.
      * <p>
+     * Retrieving a singleton by this method will cause the factory to keep state, and store a reference to the
+     * singleton for later use. You may reset the factory state using the {@code reset()} method to retrieve a new
+     * / different singleton the next time this method is called..
+     * <p>
+     * Note that any properties of the singleton (e.g. configuration) cannot necessarily be changed easily. You may call
+     * the singleton's {@code init()} method, but depending on the implementation provided by the respective class, this
+     * may or may not have the expected effect.
+     * <p>
+     * If you need tight control over the singleton, including its lifecycle and configuration, or you require more than
+     * one singleton that are different in their internal state (e.g. with different configurations), then you should
+     * create such objects with the {@code getInstance()} method and maintain their state as "singletons" in your
+     * application's business logic.
+     * <p>
      * Classes implementing the {@link Audit} interface <b>must</b> be thread safe.
      *
      * @param className  The name of a class that implements the Audit interface
