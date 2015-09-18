@@ -49,8 +49,8 @@ public interface PasswordAuthenticator {
      * Initializes the authenticator configuration
      * <p/>
      * A class implementing this interface must provide a reasonable default configuration and handle situations where
-     * the {@code validate()} method is called without a previous call of {@code init()} (i.e. do not throw a runtime
-     * exception).
+     * the {@code authenticate()} method is called without a previous call of {@code init()} (i.e. do not throw a
+     * runtime exception).
      * <p/>
      * A class implementing this interface must ensure that subsequent calls to this method update the class'
      * configuration in a thread-safe way.

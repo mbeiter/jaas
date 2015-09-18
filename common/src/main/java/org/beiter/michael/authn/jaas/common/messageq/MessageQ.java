@@ -46,7 +46,7 @@ public interface MessageQ {
      * Initializes the message queue configuration
      * <p/>
      * A class implementing this interface must provide a reasonable default configuration and handle situations where
-     * the {@code validate()} method is called without a previous call of {@code init()} (i.e. do not throw a runtime
+     * the {@code create()} methods are called without a previous call of {@code init()} (i.e. do not throw a runtime
      * exception).
      * <p/>
      * A class implementing this interface must ensure that subsequent calls to this method update the class'
