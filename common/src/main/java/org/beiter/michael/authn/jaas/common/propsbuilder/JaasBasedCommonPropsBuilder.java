@@ -197,7 +197,7 @@ public final class JaasBasedCommonPropsBuilder {
     }
 
     /**
-     * Initialize a set of database properties based on key / values in a <code>HashMap</code>.
+     * Initialize a set of common properties based on key / values in a <code>HashMap</code>.
      *
      * @param properties A <code>HashMap</code> with configuration properties as required by the init() method in JAAS,
      *                   using the keys as specified in this class
