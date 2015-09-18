@@ -201,7 +201,7 @@ public final class JaasBasedCommonPropsBuilder {
      *
      * @param properties A <code>HashMap</code> with configuration properties as required by the init() method in JAAS,
      *                   using the keys as specified in this class
-     * @return A <code>DbProperties</code> object with default values, plus the provided parameters
+     * @return A {@link CommonProperties} object with default values, plus the provided parameters
      */
     // CHECKSTYLE:OFF
     // this is flagged in checkstyle with a missing whitespace before '}', which is a bug in checkstyle
