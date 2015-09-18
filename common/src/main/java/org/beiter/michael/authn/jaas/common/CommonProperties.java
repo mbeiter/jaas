@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * This class specifies database properties.
+ * This class specifies common properties.
  */
 // CHECKSTYLE:OFF
 // this is flagged in checkstyle with a missing whitespace before '}', which is a bug in checkstyle
