@@ -186,7 +186,7 @@ public final class JaasBasedCommonPropsBuilder {
     }
 
     /**
-     * Creates a set of database properties that use the defaults as specified in this class.
+     * Creates a set of common properties that use the defaults as specified in this class.
      *
      * @return A set of database properties with (reasonable) defaults
      * @see JaasBasedCommonPropsBuilder
