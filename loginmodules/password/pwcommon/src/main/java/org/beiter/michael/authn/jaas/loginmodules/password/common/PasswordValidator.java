@@ -45,9 +45,10 @@ public interface PasswordValidator {
     /**
      * Initializes the password validator configuration.
      * <p>
-     * A class implementing this interface must provide a reasonable default configuration and handle situations where
-     * the {@code validate()} method is called without a previous call of {@code init()} (i.e. do not throw a runtime
-     * exception).
+     * A class implementing this interface may provide a reasonable default configuration and handle situations where
+     * the {@code validate()} method is called without a previous call of {@code init()} (i.e. do not throw any
+     * exception), but this is not guaranteed (i.e. calling the {@code validate()} method without proper initialization
+     * may throw an exception, such as an {@link IllegalStateException}).
      * <p>
      * A class implementing this interface must ensure that subsequent calls to this method update the class'
      * configuration in a thread-safe way.

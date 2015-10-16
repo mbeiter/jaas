@@ -37,18 +37,19 @@ import org.beiter.michael.authn.jaas.common.Events;
 
 /**
  * An interface to connect a per-JAAS module auditing subsystem.
- * <p/>
+ * <p>
  * Classes implementing this interface <b>must</b> be thread safe.
  */
 public interface Audit {
 
     /**
      * Initializes the audit subsystem configuration
-     * <p/>
-     * A class implementing this interface must provide a reasonable default configuration and handle situations where
-     * the {@code audit()} methods are called without a previous call of {@code init()} (i.e. do not throw a runtime
-     * exception).
-     * <p/>
+     * <p>
+     * A class implementing this interface may provide a reasonable default configuration and handle situations where
+     * the {@code audit()} method is called without a previous call of {@code init()} (i.e. do not throw any
+     * exception), but this is not guaranteed (i.e. calling the {@code audit()} method without proper initialization
+     * may throw an exception, such as an {@link IllegalStateException} or a {@link AuditException}).
+     * <p>
      * A class implementing this interface must ensure that subsequent calls to this method update the class'
      * configuration in a thread-safe way.
      *
@@ -69,7 +70,7 @@ public interface Audit {
 
     /**
      * Audit an event for the provided username (<b>not</b> for the principal) in the specified white label domain.
-     * <p/>
+     * <p>
      * A user is uniquely identified by the combination of domain and username.
      *
      * @param event    The event to audit
