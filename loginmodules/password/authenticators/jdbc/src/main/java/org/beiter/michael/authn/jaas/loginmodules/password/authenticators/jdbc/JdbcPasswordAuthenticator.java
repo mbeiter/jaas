@@ -88,11 +88,12 @@ public class JdbcPasswordAuthenticator
      * {@inheritDoc}
      * <p>
      * See module documentation for a list of available options.
+     * @throws NullPointerException When {@code properties} is {@code null}
      */
     @Override
     public final void init(final CommonProperties properties) {
 
-        Validate.notNull(properties);
+        Validate.notNull(properties, "The validated object 'properties' is null");
 
         // no need for defensive copies here, as all internal config values are calculated
 

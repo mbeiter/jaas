@@ -86,12 +86,14 @@ public final class Util {
      *                method). (A <tt>null</tt> value is permitted, and indicates that the cause is nonexistent or
      *                unknown.)
      * @return a new {@code LoginException}
+     * @throws NullPointerException     When the {@code message} or {@code cause} are {@code null}
+     * @throws IllegalArgumentException When {@code message} is empty
      * @see Exception#Exception(String, Throwable)
      */
     public static LoginException newLoginException(final String message, final Throwable cause) {
 
-        Validate.notNull(message);
-        Validate.notNull(cause);
+        Validate.notBlank(message, "The validated character sequence 'message' is null or empty");
+        Validate.notNull(cause, "The validated object 'cause' is null");
 
         final LoginException loginException = new LoginException(message);
         loginException.initCause(cause);

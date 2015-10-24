@@ -68,6 +68,7 @@ public final class UserRecord {
      */
     public UserRecord(final String domain, final String userName, final String userId, final String credential) {
 
+        // All of this information may be null (e.g. if it is not available in the user store)
         this.domain = domain;
         this.userName = userName;
         this.userId = userId;

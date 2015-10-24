@@ -70,13 +70,15 @@ public final class AuditFactory {
      * @param className  The name of a class that implements the Audit interface
      * @param properties The properties to initialize the instance with
      * @return An instance of a class implementing the {@link Audit} interface
-     * @throws FactoryException When the class cannot be instantiated
+     * @throws FactoryException         When the class cannot be instantiated
+     * @throws NullPointerException     When the {@code className} or {@code properties} are {@code null}
+     * @throws IllegalArgumentException When {@code className} is empty
      */
     public static Audit getInstance(final String className, final CommonProperties properties)
             throws FactoryException {
 
-        Validate.notBlank(className);
-        Validate.notNull(properties);
+        Validate.notBlank(className, "The validated character sequence 'className' is null or empty");
+        Validate.notNull(properties, "The validated object 'properties' is null");
 
         final Class<? extends Audit> auditClazz;
         try {
@@ -135,14 +137,16 @@ public final class AuditFactory {
      * @param className  The name of a class that implements the Audit interface
      * @param properties The properties to initialize the instance with
      * @return An instance of a class implementing the {@link Audit} interface
-     * @throws FactoryException When the class cannot be instantiated
+     * @throws FactoryException         When the class cannot be instantiated
+     * @throws NullPointerException     When the {@code className} or {@code properties} are {@code null}
+     * @throws IllegalArgumentException When {@code className} is empty
      */
     @SuppressWarnings("PMD.NonThreadSafeSingleton")
     public static Audit getSingleton(final String className, final CommonProperties properties)
             throws FactoryException {
 
-        Validate.notBlank(className);
-        Validate.notNull(properties);
+        Validate.notBlank(className, "The validated character sequence 'className' is null or empty");
+        Validate.notNull(properties, "The validated object 'properties' is null");
 
         // The double-check idiom is safe and acceptable here (Bloch, 2nd ed. p 284)
         if (auditInstance == null) {

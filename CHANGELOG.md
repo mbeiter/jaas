@@ -37,3 +37,4 @@ Initial release
 ### Enhancements
 
 * Upgrade build tools to 1.3 (fixes #21)
+* Runtime exceptions thrown by the Validate.*() methods should be documented (fixes #12)

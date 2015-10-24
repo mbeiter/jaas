@@ -133,6 +133,9 @@ public class PasswordLoginModule
 
     /**
      * {@inheritDoc}
+     *
+     * @throws NullPointerException When the {@code subject}, {@code callbackHandler}, {@code sharedState}, or
+     *                              {@code options} are {@code null}
      */
     @Override
     public final void initialize(final Subject subject, final CallbackHandler callbackHandler,
@@ -140,10 +143,10 @@ public class PasswordLoginModule
 
         LOG.debug("Initializing");
 
-        Validate.notNull(subject);
-        Validate.notNull(callbackHandler);
-        Validate.notNull(sharedState);
-        Validate.notNull(options);
+        Validate.notNull(subject, "The validated object 'subject' is null");
+        Validate.notNull(callbackHandler, "The validated object 'callbackHandler' is null");
+        Validate.notNull(sharedState, "The validated object 'sharedState' is null");
+        Validate.notNull(options, "The validated object 'options' is null");
 
         // keep a reference to the originally provided arguments (no defensive copy)
         this.pSubject = subject;

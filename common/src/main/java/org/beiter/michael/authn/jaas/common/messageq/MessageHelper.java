@@ -58,7 +58,7 @@ public final class MessageHelper {
 
     /**
      * Post a message queue event (during a login workflow).
-     * <p/>
+     * <p>
      * If {@code messageQ} is {@code null}, then messaging is considered disabled.
      *
      * @param messageQ The message queue object to use for posting the message
@@ -67,16 +67,20 @@ public final class MessageHelper {
      * @param event    The event to post
      * @param error    The error message to be logged in the application log if the message queue post fails (i.e. no
      *                 message queue event can be created)
-     * @throws LoginException If posting to the message queue fails (i.e. no message can be created)
+     * @throws LoginException           If posting to the message queue fails (i.e. no message can be created)
+     * @throws NullPointerException     When the {@code domain}, {@code username}, {@code event}, or {@code error} are
+     *                                  {@code null}
+     * @throws IllegalArgumentException When {@code domain}, {@code username}, or {@code error} are empty
      */
     public static void postMessage(final MessageQ messageQ, final String domain, final String username,
                                    final Events event, final String error)
             throws LoginException {
 
-        Validate.notBlank(domain);
-        Validate.notBlank(username);
-        Validate.notNull(event);
-        Validate.notBlank(error);
+        // "messageQ" may be null, not validating here (see below)
+        Validate.notBlank(domain, "The validated character sequence 'domain' is null or empty");
+        Validate.notBlank(username, "The validated character sequence 'username' is null or empty");
+        Validate.notNull(event, "The validated object 'event' is null");
+        Validate.notBlank(error, "The validated character sequence 'error' is null or empty");
 
         // if message queues are disabled, the messageQ object will not have been initialized
         if (messageQ == null) {

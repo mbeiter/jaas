@@ -202,6 +202,7 @@ public final class JaasBasedCommonPropsBuilder {
      * @param properties A <code>HashMap</code> with configuration properties as required by the init() method in JAAS,
      *                   using the keys as specified in this class
      * @return A {@link CommonProperties} object with default values, plus the provided parameters
+     * @throws NullPointerException When {@code properties} is {@code null}
      */
     // CHECKSTYLE:OFF
     // this is flagged in checkstyle with a missing whitespace before '}', which is a bug in checkstyle
@@ -211,7 +212,7 @@ public final class JaasBasedCommonPropsBuilder {
     // CHECKSTYLE:ON
     public static CommonProperties build(final Map<String, ?> properties) {
 
-        Validate.notNull(properties);
+        Validate.notNull(properties, "The validated object 'properties' is null");
 
         final CommonProperties commonProps = new CommonProperties();
         String tmp = getOption(KEY_AUDIT_CLASS_NAME, properties);

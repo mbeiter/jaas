@@ -75,12 +75,14 @@ public final class PasswordAuthenticatorFactory {
      * @param properties The properties to initialize the instance with
      * @return An instance of a class implementing the {@code PasswordAuthenticator} interface
      * @throws FactoryException When the class cannot be instantiated
+     * @throws NullPointerException     When the {@code className} or {@code properties} are {@code null}
+     * @throws IllegalArgumentException When {@code className} is empty
      */
     public static PasswordAuthenticator getInstance(final String className, final CommonProperties properties)
             throws FactoryException {
 
-        Validate.notBlank(className);
-        Validate.notNull(properties);
+        Validate.notBlank(className, "The validated character sequence 'className' is null or empty");
+        Validate.notNull(properties, "The validated object 'properties' is null");
 
         final Class<? extends PasswordAuthenticator> authNticatorClazz;
         try {
@@ -144,13 +146,15 @@ public final class PasswordAuthenticatorFactory {
      * @param properties The properties to initialize the instance with
      * @return An instance of a class implementing the {@code PasswordAuthenticator} interface
      * @throws FactoryException When the class cannot be instantiated
+     * @throws NullPointerException     When the {@code className} or {@code properties} are {@code null}
+     * @throws IllegalArgumentException When {@code className} is empty
      */
     @SuppressWarnings("PMD.NonThreadSafeSingleton")
     public static PasswordAuthenticator getSingleton(final String className, final CommonProperties properties)
             throws FactoryException {
 
-        Validate.notBlank(className);
-        Validate.notNull(properties);
+        Validate.notBlank(className, "The validated character sequence 'className' is null or empty");
+        Validate.notNull(properties, "The validated object 'properties' is null");
 
         if (passwordAuthenticatorInstance == null) {
             synchronized (PasswordAuthenticatorFactory.class) {

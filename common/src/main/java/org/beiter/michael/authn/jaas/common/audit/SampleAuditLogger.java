@@ -32,6 +32,7 @@
  */
 package org.beiter.michael.authn.jaas.common.audit;
 
+import org.apache.commons.lang3.Validate;
 import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.Events;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This default audit implementation logs all audit messages to the Java logging subsystem.
- * <p/>
+ * <p>
  * This is commonly <b>not</b> recommended for production.
  */
 public class SampleAuditLogger
@@ -62,11 +63,17 @@ public class SampleAuditLogger
 
     /**
      * {@inheritDoc}
+     *
+     * @throws NullPointerException     When the {@code event} or {@code userId} are {@code null}
+     * @throws IllegalArgumentException When {@code userId} is empty
      */
     @Override
     // Check is broken [LOG.info()]: PMD reports issues although log stmt is guarded. @todo revisit when upgrading PMD.
     @SuppressWarnings("PMD.GuardLogStatementJavaUtil")
     public final void audit(final Events event, final String userId) {
+
+        Validate.notNull(event, "The validated object 'event' is null");
+        Validate.notBlank(userId, "The validated character sequence 'userId' is null or empty");
 
         // PMD does not recognize the guarded log statement
         if (LOG.isInfoEnabled()) {
@@ -76,11 +83,18 @@ public class SampleAuditLogger
 
     /**
      * {@inheritDoc}
+     *
+     * @throws NullPointerException     When the {@code event}, {@code domain} or {@code username} are {@code null}
+     * @throws IllegalArgumentException When {@code domain}, {@code username} is empty
      */
     @Override
     // Check is broken [LOG.info()]: PMD reports issues although log stmt is guarded. @todo revisit when upgrading PMD.
     @SuppressWarnings("PMD.GuardLogStatementJavaUtil")
     public final void audit(final Events event, final String domain, final String username) {
+
+        Validate.notNull(event, "The validated object 'event' is null");
+        Validate.notBlank(domain, "The validated character sequence 'domain' is null or empty");
+        Validate.notBlank(username, "The validated character sequence 'username' is null or empty");
 
         // PMD does not recognize the guarded log statement
         if (LOG.isInfoEnabled()) {

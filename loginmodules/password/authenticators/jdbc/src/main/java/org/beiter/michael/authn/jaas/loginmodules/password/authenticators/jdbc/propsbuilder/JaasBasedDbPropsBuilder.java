@@ -45,8 +45,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * This class builds a set of {@link DbProperties} using the settings obtained from a
  * JAAS Properties Map.
- *
- * <p/>
+ * <p>
+ * <p>
  * Use the keys from the various KEY_* fields to properly populate the JAAS Properties Map before calling this class'
  * methods.
  */
@@ -114,10 +114,11 @@ public final class JaasBasedDbPropsBuilder {
      * @param properties A <code>HashMap</code> with configuration properties as required by the init() method in JAAS,
      *                   using the keys as specified in this class
      * @return A <code>DbProperties</code> object with default values, plus the provided parameters
+     * @throws NullPointerException When {@code properties} is {@code null}
      */
     public static DbProperties build(final Map<String, ?> properties) {
 
-        Validate.notNull(properties);
+        Validate.notNull(properties, "The validated object 'properties' is null");
 
         final DbProperties dbProps = new DbProperties();
         String tmp = getOption(KEY_JNDI_CONNECTION_NAME, properties);

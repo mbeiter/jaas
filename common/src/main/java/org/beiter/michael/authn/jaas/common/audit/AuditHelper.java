@@ -58,7 +58,7 @@ public final class AuditHelper {
 
     /**
      * Audit an event (during a login workflow).
-     * <p/>
+     * <p>
      * If {@code audit} is {@code null}, then auditing is considered disabled
      *
      * @param audit    The audit object to use for auditing the event
@@ -67,16 +67,20 @@ public final class AuditHelper {
      *                 * @param event     The event to audit
      * @param error    The error message to be logged in the application log if auditing fails (i.e. no audit message
      *                 can be created)
-     * @throws LoginException If auditing fails (i.e. no audit message can be created)
+     * @throws LoginException           If auditing fails (i.e. no audit message can be created)
+     * @throws NullPointerException     When the {@code domain}, {@code username}, {@code event}, or {@code error} are
+     *                                  {@code null}
+     * @throws IllegalArgumentException When {@code domain}, {@code username}, or {@code error} are empty
      */
     public static void auditEvent(final Audit audit, final String domain, final String username,
                                   final Events event, final String error)
             throws LoginException {
 
-        Validate.notBlank(domain);
-        Validate.notBlank(username);
-        Validate.notNull(event);
-        Validate.notBlank(error);
+        // "audit" may be null, not validating here (see below)
+        Validate.notBlank(domain, "The validated character sequence 'domain' is null or empty");
+        Validate.notBlank(username, "The validated character sequence 'username' is null or empty");
+        Validate.notNull(event, "The validated object 'event' is null");
+        Validate.notBlank(error, "The validated character sequence 'error' is null or empty");
 
         // if auditing is disabled, the audit object will not have been initialized
         if (audit == null) {

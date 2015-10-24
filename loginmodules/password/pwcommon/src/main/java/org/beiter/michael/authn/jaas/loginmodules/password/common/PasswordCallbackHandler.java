@@ -33,6 +33,7 @@
  */
 package org.beiter.michael.authn.jaas.loginmodules.password.common;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,12 +109,15 @@ public class PasswordCallbackHandler
      * @throws java.io.IOException          if an input or output error occurs. <p>
      * @throws UnsupportedCallbackException if the implementation of this method does not support one or more of the
      *                                      Callbacks specified in the {@code callbacks} parameter.
+     * @throws NullPointerException         When {@code callbacks} is {@code null}
      */
     @Override
     // Cannot change the interface to use varags, this interface is owned by javax.security
     @SuppressWarnings("PMD.UseVarargs")
     public final void handle(final Callback[] callbacks)
             throws IOException, UnsupportedCallbackException {
+
+        Validate.notNull(callbacks, "The validated object 'callbacks' is null");
 
         for (final Callback callback : callbacks) {
             if (callback instanceof NameCallback) {

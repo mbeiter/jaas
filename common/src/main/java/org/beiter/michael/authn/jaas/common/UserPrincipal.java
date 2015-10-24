@@ -38,10 +38,10 @@ import java.security.Principal;
 
 /**
  * This class implements a generic user principal.
- * <p/>
+ * <p>
  * In addition to the {@code name} attribute (which uniquely identifies this principal), it has two additional optional
  * attributes: a {@code username} and {@code domain} that were used during authentication.
- * <p/>
+ * <p>
  * Usually the principal uniquely identifies a specific identity by either the {@code name} attribute, or by the
  * combination of <{@code username} and {@code domain}.
  */
@@ -50,7 +50,7 @@ public class UserPrincipal
 
     /**
      * The principal's unique ID.
-     * <p/>
+     * <p>
      * This is what is used as the "name" in Java Principal terms.
      */
     private final String name;
@@ -69,12 +69,13 @@ public class UserPrincipal
      * Create a new principal without a username or domain set (only use the principal's name).
      *
      * @param name The principal's identifier (the "name" in Java Principal terms).
+     * @throws NullPointerException When the {@code name} is {@code null}
      */
     // The null assignment allows to make username and domain final
     @SuppressWarnings("PMD.NullAssignment")
     public UserPrincipal(final String name) {
 
-        Validate.notNull(name);
+        Validate.notNull(name, "The validated object 'name' is null");
 
         // no need for defensive copies of String
 
@@ -92,10 +93,13 @@ public class UserPrincipal
      * @param name     The principal's identifier (the "name" in Java Principal terms).
      * @param domain   The domain used to authenticate the principal
      * @param username The username used to authenticate the principal
+     * @throws NullPointerException When the {@code name}, {@code domain}, or {@code username} are {@code null}
      */
     public UserPrincipal(final String name, final String domain, final String username) {
 
-        Validate.notNull(name);
+        Validate.notNull(name, "The validated object 'name' is null");
+        Validate.notNull(domain, "The validated object 'domain' is null");
+        Validate.notNull(username, "The validated object 'username' is null");
 
         // no need for defensive copies of String
 
@@ -114,7 +118,7 @@ public class UserPrincipal
 
     /**
      * Return the principal's domain that was used for authentication.
-     * <p/>
+     * <p>
      * This is an optional field, and may return a {@code null} value if username and domain were not provided for
      * this principal.
      *
@@ -129,7 +133,7 @@ public class UserPrincipal
 
     /**
      * Return the principal's username that was used for authentication.
-     * <p/>
+     * <p>
      * This is an optional field, and may return a {@code null} value if username and domain were not provided for
      * this principal.
      *

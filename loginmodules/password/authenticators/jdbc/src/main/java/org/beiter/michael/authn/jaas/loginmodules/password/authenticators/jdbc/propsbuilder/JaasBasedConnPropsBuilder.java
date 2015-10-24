@@ -208,10 +208,11 @@ public final class JaasBasedConnPropsBuilder {
      * @param properties A <code>HashMap</code> with configuration properties as required by the init() method in JAAS,
      *                   using the keys as specified in this class
      * @return A <code>ConnectionProperties</code> object with default values, plus the provided parameters
+     * @throws NullPointerException When {@code properties} is {@code null}
      */
     public static ConnectionProperties build(final Map<String, ?> properties) {
 
-        Validate.notNull(properties);
+        Validate.notNull(properties, "The validated object 'properties' is null");
 
         // tmpConfig now holds all the configuration values with the keys expected by the Util libs connection
         // properties builder. We will let that library do all the hard work of setting reasonable defaults and
