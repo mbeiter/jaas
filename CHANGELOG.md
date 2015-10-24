@@ -17,7 +17,7 @@ Initial release
 ### Enhancements
 
 * Upgrade org.beiter.michael.util.db dependency to 1.1 (#1)
-* Upgrade build tools to 1.1 enhancement (#4)
+* Upgrade build tools to 1.1 (#4)
 * Change the configuration mechanism to use a properties POJO (#5)
 * Clean up JAAS configuration parameter names (#7)
 * Audit and message queue sample implementations no longer require direct access to both the main configuration POJO
@@ -31,3 +31,9 @@ Initial release
 * Operator can configure if the message queue subsystem should be instantiated as a singleton (#17)
 * Operator can configure if the password validator subsystem should be instantiated as a singleton (#18)
 * Operator can configure if the password authenticator subsystem should be instantiated as a singleton (#19)
+
+## 2.1
+
+### Enhancements
+
+* Upgrade build tools to 1.3 (fixes #21)
