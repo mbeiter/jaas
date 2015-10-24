@@ -34,6 +34,7 @@
 package org.beiter.michael.authn.jaas.loginmodules.password.common;
 
 import org.apache.commons.lang3.Validate;
+import org.beiter.michael.array.Cleanser;
 import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.Events;
 import org.beiter.michael.authn.jaas.common.FactoryException;
@@ -236,7 +237,7 @@ public class PasswordLoginModule
             pendingSubject = pwAuthenticator.authenticate(domain, username, password, pwValidator);
 
             // then clear the password
-            Util.zeroArray(password);
+            Cleanser.wipe(password);
 
             final String baseError = new StringBuilder().
                     append("Login successful for '").
@@ -506,7 +507,7 @@ public class PasswordLoginModule
         // null-assignments for de-referencing objects are okay
         domain = null;
         username = null;
-        Util.zeroArray(password);
+        Cleanser.wipe(password);
         pendingSubject = null;
         committedSubject = null;
     }

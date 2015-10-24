@@ -35,6 +35,7 @@ package org.beiter.michael.authn.jaas.loginmodules.password.authenticators.jdbc;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.beiter.michael.array.Cleanser;
 import org.beiter.michael.authn.jaas.common.CommonProperties;
 import org.beiter.michael.authn.jaas.common.UserPrincipal;
 import org.beiter.michael.authn.jaas.common.Util;
@@ -195,10 +196,10 @@ public class JdbcPasswordAuthenticator
         // Create the subject and clean up confidential data as far as possible.
 
         // clear the char representation of the credential
-        Util.zeroArray(myCredential);
+        Cleanser.wipe(myCredential);
 
         // clear the defensive copy of the password created earlier
-        Util.zeroArray(myPassword);
+        Cleanser.wipe(myPassword);
 
         // create a principal that includes the username and domain name that were used to authenticate the user
         final UserPrincipal userPrincipal = new UserPrincipal(userRecord.getUserId(), domain, userName);

@@ -35,7 +35,6 @@ package org.beiter.michael.authn.jaas.common;
 import org.apache.commons.lang3.Validate;
 
 import javax.security.auth.login.LoginException;
-import java.util.Arrays;
 
 /**
  * A utility class with various utility methods.
@@ -47,34 +46,6 @@ public final class Util {
      * A private constructor to prevent instantiation of this class
      */
     private Util() {
-    }
-
-    /**
-     * Zero the contents of the provided array.
-     *
-     * @param src the array to zeroArray
-     */
-    // Cannot use varargs here, this would be against the point!
-    @SuppressWarnings("PMD.UseVarargs")
-    public static void zeroArray(final char[] src) {
-
-        if (src != null) {
-            Arrays.fill(src, '\0');
-        }
-    }
-
-    /**
-     * Zero the contents of the provided array.
-     *
-     * @param src the array to zeroArray
-     */
-    // Cannot use varargs here, this would be against the point!
-    @SuppressWarnings("PMD.UseVarargs")
-    public static void zeroArray(final byte[] src) {
-
-        if (src != null) {
-            Arrays.fill(src, (byte) 0);
-        }
     }
 
     /**

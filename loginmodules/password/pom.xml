@@ -9,54 +9,26 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-	<groupId>org.beiter.michael.authn.jaas.loginmodules</groupId>
+    <groupId>org.beiter.michael.authn.jaas.loginmodules</groupId>
     <artifactId>password</artifactId>
     <packaging>pom</packaging>
     <version>2.1-SNAPSHOT</version>
 
     <name>password</name>
     <description>
-        This module is part of a JAAS library, provoding password based login modules (JAAS modules). 
-		This partiuclar Maven module is a container for JAAS module implementations.		
+        This module is part of a JAAS library, provoding password based login modules (JAAS modules).
+        This partiuclar Maven module is a container for JAAS module implementations.
 
-        Some of the provided default implementations may not intended for production, and may have 
-		to be adjusted to meet deployment specific requirements.
+        Some of the provided default implementations may not intended for production, and may have
+        to be adjusted to meet deployment specific requirements.
     </description>
     <url>http://mbeiter.github.io/jaas/docs/${project.version}/${project.artifactId}/</url>
 
     <modules>
-	    <module>pwcommon</module>
+        <module>pwcommon</module>
         <module>authenticators</module>
         <module>validators</module>
     </modules>
-
-    <dependencies>
-        <!-- Included dependencies -->
-        <dependency>
-            <groupId>org.beiter.michael.authn.jaas</groupId>
-            <artifactId>common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-
-        <!-- Test dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <scm>
         <url>https://github.com/mbeiter/jaas</url>

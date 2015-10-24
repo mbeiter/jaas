@@ -38,3 +38,4 @@ Initial release
 
 * Upgrade build tools to 1.3 (fixes #21)
 * Runtime exceptions thrown by the Validate.*() methods should be documented (fixes #12)
+* Use shared utility methods for array management (instead of library specific implementations) (fixes #22)
