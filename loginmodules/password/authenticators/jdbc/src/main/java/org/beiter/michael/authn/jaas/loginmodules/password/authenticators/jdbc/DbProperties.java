@@ -3,7 +3,7 @@
  * This file is part of a universal JAAS library, providing a universal JDBC
  * authenticator implementation.
  * %%
- * Copyright (C) 2014 - 2015 Michael Beiter <michael@beiter.org>
+ * Copyright (C) 2014 - 2016 Michael Beiter <michael@beiter.org>
  * %%
  * All rights reserved.
  * .
@@ -32,6 +32,8 @@
  * #L%
  */
 package org.beiter.michael.authn.jaas.loginmodules.password.authenticators.jdbc;
+
+import org.apache.commons.lang3.Validate;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,7 +69,7 @@ public class DbProperties {
      * (depending on the type of the property). Usually this constructor is used if this configuration POJO is populated
      * in an automated fashion (e.g. injection). If you need to build them manually (possibly with defaults), use or
      * create a properties builder.
-     * <p/>
+     * <p>
      * You can change the defaults with the setters.
      *
      * @see org.beiter.michael.authn.jaas.loginmodules.password.authenticators.jdbc.propsbuilder.JaasBasedDbPropsBuilder
@@ -80,12 +82,15 @@ public class DbProperties {
     /**
      * Creates a set of database properties from an existing set of database properties, making a defensive copy.
      *
-     * @see DbProperties()
      * @param properties The set of properties to copy
+     * @throws NullPointerException When {@code properties} is {@code null}
+     * @see DbProperties()
      */
     public DbProperties(final DbProperties properties) {
 
         this();
+
+        Validate.notNull(properties, "The validated object 'properties' is null");
 
         setJndiConnectionName(properties.getJndiConnectionName());
         setSqlUserQuery(properties.getSqlUserQuery());

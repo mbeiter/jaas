@@ -3,7 +3,7 @@
  * This file is part of a universal JAAS library, providing a dummy authenticator
  * for password based credential authentication.
  * %%
- * Copyright (C) 2014 - 2015 Michael Beiter <michael@beiter.org>
+ * Copyright (C) 2014 - 2016 Michael Beiter <michael@beiter.org>
  * %%
  * All rights reserved.
  * .

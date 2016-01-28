@@ -2,7 +2,7 @@
  * #%L
  * This file is part of a common library for a set of universal JAAS modules.
  * %%
- * Copyright (C) 2014 - 2015 Michael Beiter <michael@beiter.org>
+ * Copyright (C) 2014 - 2016 Michael Beiter <michael@beiter.org>
  * %%
  * All rights reserved.
  * .
@@ -31,6 +31,8 @@
  * #L%
  */
 package org.beiter.michael.authn.jaas.common;
+
+import org.apache.commons.lang3.Validate;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -121,11 +123,14 @@ public class CommonProperties {
      * Creates a set of common properties from an existing set of common properties, making a defensive copy.
      *
      * @param properties The set of properties to copy
+     * @throws NullPointerException When {@code properties} is {@code null}
      * @see CommonProperties()
      */
     public CommonProperties(final CommonProperties properties) {
 
         this();
+
+        Validate.notNull(properties, "The validated object 'properties' is null");
 
         setAuditClassName(properties.getAuditClassName());
         setAuditEnabled(properties.isAuditEnabled());

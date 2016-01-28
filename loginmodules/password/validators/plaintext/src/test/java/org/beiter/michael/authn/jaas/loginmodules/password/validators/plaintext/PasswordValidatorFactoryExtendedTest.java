@@ -3,7 +3,7 @@
  * This file is part of a universal JAAS library, providing a plaintext password
  * validator.
  * %%
- * Copyright (C) 2014 - 2015 Michael Beiter <michael@beiter.org>
+ * Copyright (C) 2014 - 2016 Michael Beiter <michael@beiter.org>
  * %%
  * All rights reserved.
  * .

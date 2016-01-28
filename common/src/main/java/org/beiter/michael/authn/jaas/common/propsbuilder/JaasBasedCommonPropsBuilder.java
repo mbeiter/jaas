@@ -2,7 +2,7 @@
  * #%L
  * This file is part of a common library for a set of universal JAAS modules.
  * %%
- * Copyright (C) 2014 - 2015 Michael Beiter <michael@beiter.org>
+ * Copyright (C) 2014 - 2016 Michael Beiter <michael@beiter.org>
  * %%
  * All rights reserved.
  * .
