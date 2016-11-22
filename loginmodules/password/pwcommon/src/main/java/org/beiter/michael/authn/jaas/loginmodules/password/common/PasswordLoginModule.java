@@ -196,25 +196,25 @@ public class PasswordLoginModule
             throw new LoginException(error);
         }
         Callback[] callbacks = new Callback[3];
-        callbacks[0] = new NameCallback("Username: ");
-        callbacks[1] = new PasswordCallback("Password: ", false);
-        callbacks[2] = new TextInputCallback("Domain: ");
+        callbacks[0] = new TextInputCallback("j_domain");
+        callbacks[1] = new NameCallback("j_username");
+        callbacks[2] = new PasswordCallback("j_password", false);
 
         try {
             pCallbackHandler.handle(callbacks);
 
+            // store the domain
+            domain = ((TextInputCallback) callbacks[0]).getText();
+
             // store the username
-            username = ((NameCallback) callbacks[0]).getName();
+            username = ((NameCallback) callbacks[1]).getName();
 
             // store the password (i.e. a copy of the password)
-            final char[] tempPassword = ((PasswordCallback) callbacks[1]).getPassword();
+            final char[] tempPassword = ((PasswordCallback) callbacks[2]).getPassword();
             password = tempPassword.clone();
 
             // clear the password in the callback
-            ((PasswordCallback) callbacks[1]).clearPassword();
-
-            // store the domain
-            domain = ((TextInputCallback) callbacks[2]).getText();
+            ((PasswordCallback) callbacks[2]).clearPassword();
         } catch (java.io.IOException e) {
             cleanState();
             final String error = "Encountered an I/O exception during login";
